@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Калькулятор ТЭП — Технико-экономические показатели</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --good: #16a34a;
+      --good-bg: #f0fdf4;
+      --warn: #d97706;
+      --warn-bg: #fffbeb;
+      --bad: #dc2626;
+      --bad-bg: #fef2f2;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--accent);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(37,99,235,.35);
+    }
+    header svg { flex-shrink: 0; }
+    header h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
+    header p  { font-size: 12px; opacity: .82; margin-top: 1px; }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+      max-width: 1280px;
+      margin: 20px auto;
+      padding: 0 16px 40px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-header .icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .card-header h2 { font-size: 13px; font-weight: 600; color: var(--text); }
+    .card-body { padding: 14px 16px; }
+
+    /* ── Input groups ── */
+    .section { margin-bottom: 18px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 1fr 110px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .field label {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.35;
+    }
+    .field label small {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+    .field input[type="number"] {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text);
+      background: #fff;
+      text-align: right;
+      transition: border-color .15s;
+      -moz-appearance: textfield;
+    }
+    .field input[type="number"]::-webkit-outer-spin-button,
+    .field input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .field input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+    }
+    .field input[type="number"].derived {
+      background: var(--surface2);
+      color: var(--text-muted);
+      border-style: dashed;
+    }
+
+    /* квартирография — таблица */
+    .apt-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .apt-table th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      padding: 0 6px 6px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    .apt-table th:first-child { text-align: left; }
+    .apt-table td { padding: 5px 6px; border-bottom: 1px solid var(--border); }
+    .apt-table td:first-child { font-weight: 500; color: var(--text); }
+    .apt-table td input[type="number"] {
+      width: 70px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 13px;
+      text-align: right;
+      background: #fff;
+      -moz-appearance: textfield;
+    }
+    .apt-table td input[type="number"]::-webkit-outer-spin-button,
+    .apt-table td input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .apt-table td input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .apt-table td.derived { color: var(--text-muted); text-align: right; font-size: 12px; }
+    .apt-table tfoot td {
+      font-weight: 700;
+      background: var(--surface2);
+      font-size: 12px;
+      border-bottom: none;
+    }
+    .apt-table tfoot td:not(:first-child) { text-align: right; }
+
+    /* ── Results panel ── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } }
+
+    .res-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .res-card-head {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .res-row:last-child { border-bottom: none; }
+    .res-row.highlight { background: var(--accent-light); }
+
+    .res-label {
+      font-size: 12.5px;
+      color: var(--text);
+      flex: 1;
+      line-height: 1.35;
+    }
+    .res-label small { display: block; font-size: 11px; color: var(--text-muted); }
+
+    .res-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .res-unit {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .badge.good  { background: var(--good-bg);  color: var(--good); }
+    .badge.warn  { background: var(--warn-bg);  color: var(--warn); }
+    .badge.bad   { background: var(--bad-bg);   color: var(--bad); }
+    .badge.neutral { background: #f1f5f9; color: #475569; }
+
+    .coef-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .coef-row:last-child { border-bottom: none; }
+    .coef-info { flex: 1; }
+    .coef-name { font-size: 13px; font-weight: 600; }
+    .coef-desc { font-size: 11px; color: var(--text-muted); }
+    .coef-norm { font-size: 11px; color: var(--text-muted); margin-right: 8px; }
+    .coef-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .coef-val { font-size: 18px; font-weight: 700; }
+
+    /* ── Bar charts ── */
+    .bar-wrap { padding: 12px; }
+    .bar-item { margin-bottom: 10px; }
+    .bar-item:last-child { margin-bottom: 0; }
+    .bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; }
+    .bar-label span:last-child { font-weight: 600; }
+    .bar-bg { background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; background: var(--accent); transition: width .4s ease; }
+    .bar-fill.green { background: var(--good); }
+    .bar-fill.orange { background: var(--warn); }
+    .bar-fill.red { background: var(--bad); }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-outline { background: #fff; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background: var(--surface2); }
+    .btn-danger  { background: #fee2e2; color: var(--bad); }
+    .btn-danger:hover { background: #fecaca; }
+
+    /* ── XML export modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      width: 600px;
+      max-width: 95vw;
+      max-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .modal-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-head h3 { font-size: 15px; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      font-size: 20px; color: var(--text-muted); line-height: 1;
+    }
+    .modal-body { flex: 1; overflow: auto; padding: 14px 18px; }
+    .modal-body pre {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      overflow: auto;
+      white-space: pre;
+    }
+    .modal-foot {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    /* ── Print ── */
+    @media print {
+      header { background: #1e293b !important; -webkit-print-color-adjust: exact; }
+      .no-print { display: none !important; }
+      .layout { grid-template-columns: 1fr 1fr; margin: 10px; }
+      .modal-overlay { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+    <rect width="36" height="36" rx="8" fill="rgba(255,255,255,.15)"/>
+    <path d="M8 27V16l10-8 10 8v11H22v-7h-4v7H8Z" fill="white" opacity=".9"/>
+    <rect x="15" y="21" width="6" height="6" rx="1" fill="rgba(255,255,255,.5)"/>
+  </svg>
+  <div>
+    <h1>Калькулятор ТЭП</h1>
+    <p>Технико-экономические показатели объекта строительства</p>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ════ LEFT — INPUTS ════ -->
+  <div>
+
+    <!-- Земельный участок -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">🗺</div>
+        <h2>Земельный участок</h2>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <div class="field">
+            <label>Площадь участка <small>Sу</small></label>
+            <input type="number" id="siteArea" min="0" step="10" value="5000" />
+          </div>
+          <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:-4px;margin-bottom:8px">
+            = <span id="siteAreaHa">0.50</span> га
+          </div>
+          <div class="field">
+            <label>Площадь застройки <small>Sз — проекция здания на землю</small></label>
+            <input type="number" id="buildingFootprint" min="0" step="10" value="1200" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Параметры здания -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">🏗</div>
+        <h2>Параметры здания</h2>
+      </div>
+      <div class="card-body">
+
+        <div class="section">
+          <div class="section-title">Этажность</div>
+          <div class="field">
+            <label>Надземных этажей <small>включая мансарду</small></label>
+            <input type="number" id="floorsAbove" min="1" step="1" value="17" />
+          </div>
+          <div class="field">
+            <label>Подземных этажей <small>0 — если нет</small></label>
+            <input type="number" id="floorsBelow" min="0" step="1" value="1" />
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Высоты</div>
+          <div class="field">
+            <label>Высота 1-го этажа <small>м</small></label>
+            <input type="number" id="h1" min="2" step="0.1" value="3.3" />
+          </div>
+          <div class="field">
+            <label>Высота типового этажа <small>м</small></label>
+            <input type="number" id="hTypical" min="2" step="0.1" value="3.0" />
+          </div>
+          <div class="field">
+            <label>Высота подземного этажа <small>м</small></label>
+            <input type="number" id="hBelow" min="2" step="0.1" value="3.0" />
+          </div>
+          <div class="field">
+            <label style="color:var(--text-muted)">Высота надземной части <small>расчётная, м</small></label>
+            <input type="number" id="heightAbove" class="derived" readonly />
+          </div>
+          <div class="field">
+            <label style="color:var(--text-muted)">Полная высота здания <small>расчётная, м</small></label>
+            <input type="number" id="heightTotal" class="derived" readonly />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Площади -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">📐</div>
+        <h2>Площади</h2>
+      </div>
+      <div class="card-body">
+
+        <div class="section">
+          <div class="section-title">Жилая часть</div>
+          <div class="field">
+            <label>Суммарная площадь квартир <small>Sкв, м² — сумма площадей всех квартир</small></label>
+            <input type="number" id="totalAptArea" min="0" step="10" value="14500" />
+          </div>
+          <div class="field">
+            <label>Жилая площадь <small>Sжил, м² — только жилые комнаты</small></label>
+            <input type="number" id="livingArea" min="0" step="10" value="8700" />
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Нежилая часть</div>
+          <div class="field">
+            <label>Нежилые (коммерческие) помещения <small>м² — 1-й этаж, встроенные</small></label>
+            <input type="number" id="commercialArea" min="0" step="10" value="800" />
+          </div>
+          <div class="field">
+            <label>МОП, лестнично-лифтовые холлы <small>м² — общедомовое имущество</small></label>
+            <input type="number" id="commonArea" min="0" step="10" value="3200" />
+          </div>
+          <div class="field">
+            <label>Технические помещения <small>м² — ИТП, насосные, электрощитовые</small></label>
+            <input type="number" id="techArea" min="0" step="10" value="300" />
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Паркинг</div>
+          <div class="field">
+            <label>Площадь подземного паркинга <small>м²</small></label>
+            <input type="number" id="parkingArea" min="0" step="10" value="3500" />
+          </div>
+          <div class="field">
+            <label>Машино-мест (подземный) <small>шт</small></label>
+            <input type="number" id="parkingUnderground" min="0" step="1" value="80" />
+          </div>
+          <div class="field">
+            <label>Машино-мест (наземная стоянка) <small>шт</small></label>
+            <input type="number" id="parkingSurface" min="0" step="1" value="20" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Квартирография -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">🏠</div>
+        <h2>Квартирография</h2>
+      </div>
+      <div class="card-body">
+        <table class="apt-table">
+          <thead>
+            <tr>
+              <th>Тип</th>
+              <th>Кол-во</th>
+              <th>Ср. пл., м²</th>
+              <th>Итого, м²</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Студии / 1к</td>
+              <td><input type="number" id="apt1count" min="0" value="60" /></td>
+              <td><input type="number" id="apt1area"  min="0" step="0.1" value="32.5" /></td>
+              <td class="derived" id="apt1total">—</td>
+            </tr>
+            <tr>
+              <td>2-комнатные</td>
+              <td><input type="number" id="apt2count" min="0" value="80" /></td>
+              <td><input type="number" id="apt2area"  min="0" step="0.1" value="58.0" /></td>
+              <td class="derived" id="apt2total">—</td>
+            </tr>
+            <tr>
+              <td>3-комнатные</td>
+              <td><input type="number" id="apt3count" min="0" value="40" /></td>
+              <td><input type="number" id="apt3area"  min="0" step="0.1" value="82.0" /></td>
+              <td class="derived" id="apt3total">—</td>
+            </tr>
+            <tr>
+              <td>4+ комнатные</td>
+              <td><input type="number" id="apt4count" min="0" value="10" /></td>
+              <td><input type="number" id="apt4area"  min="0" step="0.1" value="115.0" /></td>
+              <td class="derived" id="apt4total">—</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Итого</td>
+              <td id="aptTotalCount">—</td>
+              <td id="aptAvgArea">ср: —</td>
+              <td id="aptTotalSum">—</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="margin-top:12px">
+          <div class="field">
+            <label>Расчётное кол-во жителей <small>норматив: 2.8 чел/кв или вручную</small></label>
+            <input type="number" id="residents" min="0" step="1" value="" placeholder="авто" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- кнопки -->
+    <div class="btn-row no-print">
+      <button class="btn btn-primary" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Печать
+      </button>
+      <button class="btn btn-outline" onclick="showXml()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Экспорт XML
+      </button>
+      <button class="btn btn-danger" onclick="resetForm()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.01"/></svg>
+        Сбросить
+      </button>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- ════ RIGHT — RESULTS ════ -->
+  <div>
+
+    <!-- Территориальные показатели -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">🗺</div>
+        <h2>Территориальные показатели</h2>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="res-row">
+          <div class="res-label">Площадь земельного участка</div>
+          <div><span class="res-val" id="r-siteArea">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">Площадь застройки <small>горизонтальная проекция здания</small></div>
+          <div><span class="res-val" id="r-footprint">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row highlight">
+          <div class="res-label"><b>Коэффициент застройки</b> <small>Кз = Sз / Sу &nbsp;|&nbsp; норма ≤ 0.40</small></div>
+          <div style="text-align:right">
+            <div class="res-val" id="r-kz">—</div>
+            <div id="r-kz-badge"></div>
+          </div>
+        </div>
+        <div class="res-row highlight">
+          <div class="res-label"><b>Коэффициент плотности (ФАР)</b> <small>КПЗ = Sобщ.надз / Sу &nbsp;|&nbsp; норма ≤ 3.0</small></div>
+          <div style="text-align:right">
+            <div class="res-val" id="r-kpz">—</div>
+            <div id="r-kpz-badge"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Объёмно-планировочные -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">📦</div>
+        <h2>Объёмно-планировочные показатели</h2>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="results-grid" style="padding:12px; gap:8px">
+
+          <div class="res-card">
+            <div class="res-card-head">Этажность</div>
+            <div class="res-row"><div class="res-label">Надземная</div><div><span class="res-val" id="r-floorsAbove">—</span><span class="res-unit">эт</span></div></div>
+            <div class="res-row"><div class="res-label">Подземная</div><div><span class="res-val" id="r-floorsBelow">—</span><span class="res-unit">эт</span></div></div>
+            <div class="res-row"><div class="res-label">Высота надз. части</div><div><span class="res-val" id="r-hAbove">—</span><span class="res-unit">м</span></div></div>
+          </div>
+
+          <div class="res-card">
+            <div class="res-card-head">Строительный объём</div>
+            <div class="res-row"><div class="res-label">Надземная часть</div><div><span class="res-val" id="r-volAbove">—</span><span class="res-unit">м³</span></div></div>
+            <div class="res-row"><div class="res-label">Подземная часть</div><div><span class="res-val" id="r-volBelow">—</span><span class="res-unit">м³</span></div></div>
+            <div class="res-row"><div class="res-label"><b>Итого</b></div><div><span class="res-val" id="r-volTotal">—</span><span class="res-unit">м³</span></div></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Площадные показатели -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">📐</div>
+        <h2>Площадные показатели</h2>
+      </div>
+      <div class="card-body" style="padding:0">
+
+        <div class="res-row highlight">
+          <div class="res-label"><b>Общая площадь надземной части</b></div>
+          <div><span class="res-val" id="r-totalAbove">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">— в т.ч. суммарная площадь квартир</div>
+          <div><span class="res-val" id="r-aptArea">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">— в т.ч. жилая площадь <small>только жилые комнаты</small></div>
+          <div><span class="res-val" id="r-living">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">— в т.ч. вспомогательная площадь квартир</div>
+          <div><span class="res-val" id="r-auxiliary">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">— в т.ч. нежилые (коммерческие) помещения</div>
+          <div><span class="res-val" id="r-commercial">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">— в т.ч. МОП и технические помещения</div>
+          <div><span class="res-val" id="r-mop">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row">
+          <div class="res-label">Площадь подземного паркинга</div>
+          <div><span class="res-val" id="r-parkArea">—</span><span class="res-unit">м²</span></div>
+        </div>
+        <div class="res-row highlight">
+          <div class="res-label"><b>Общая площадь здания (с подземной)</b></div>
+          <div><span class="res-val" id="r-totalAll">—</span><span class="res-unit">м²</span></div>
+        </div>
+
+        <!-- Bar chart структура площадей -->
+        <div class="bar-wrap">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px">Структура надземной части</div>
+          <div class="bar-item">
+            <div class="bar-label"><span>Квартиры</span><span id="bar-apt-pct">—%</span></div>
+            <div class="bar-bg"><div class="bar-fill green" id="bar-apt" style="width:0%"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>Коммерция</span><span id="bar-com-pct">—%</span></div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-com" style="width:0%"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label"><span>МОП + тех.</span><span id="bar-mop-pct">—%</span></div>
+            <div class="bar-bg"><div class="bar-fill orange" id="bar-mop" style="width:0%"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Квартирные показатели -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-header">
+        <div class="icon">🏠</div>
+        <h2>Квартирные показатели</h2>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="results-grid" style="padding:12px; gap:8px">
+
+          <div class="res-card">
+            <div class="res-card-head">Количество</div>
+            <div class="res-row"><div class="res-label">Квартир всего</div><div><span class="res-val" id="r-aptCount">—</span><span class="res-unit">шт</span></div></div>
+            <div class="res-row"><div class="res-label">Расчётное число жителей</div><div><span class="res-val" id="r-residents">—</span><span class="res-unit">чел</span></div></div>
+            <div class="res-row"><div class="res-label">М/м подземных</div><div><span class="res-val" id="r-parkU">—</span><span class="res-unit">шт</span></div></div>
+            <div class="res-row"><div class="res-label">М/м наземных</div><div><span class="res-val" id="r-parkS">—</span><span class="res-unit">шт</span></div></div>
+          </div>
+
+          <div class="res-card">
+            <div class="res-card-head">Средние показатели</div>
+            <div class="res-row"><div class="res-label">Средняя площадь квартиры</div><div><span class="res-val" id="r-avgApt">—</span><span class="res-unit">м²</span></div></div>
+            <div class="res-row"><div class="res-label">Квартир на 1 га участка</div><div><span class="res-val" id="r-aptPerHa">—</span><span class="res-unit">шт/га</span></div></div>
+            <div class="res-row"><div class="res-label">М/м на 1 квартиру</div><div><span class="res-val" id="r-parkPerApt">—</span><span class="res-unit">шт</span></div></div>
+            <div class="res-row"><div class="res-label">м² квартир / жители</div><div><span class="res-val" id="r-areaPerRes">—</span><span class="res-unit">м²/чел</span></div></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Коэффициенты эффективности -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">📊</div>
+        <h2>Коэффициенты эффективности</h2>
+      </div>
+      <div class="card-body" style="padding:0">
+
+        <div class="coef-row">
+          <div class="coef-info">
+            <div class="coef-name">К<sub>1</sub> — Планировочная эффективность</div>
+            <div class="coef-desc">Sжил / Sкв</div>
+          </div>
+          <div class="coef-norm">норма ≥ 0.50</div>
+          <div class="coef-right">
+            <div class="coef-val" id="r-k1">—</div>
+            <div id="r-k1-badge"></div>
+          </div>
+        </div>
+
+        <div class="coef-row">
+          <div class="coef-info">
+            <div class="coef-name">К<sub>2</sub> — Жилищная эффективность</div>
+            <div class="coef-desc">Sкв / Sобщ.надз</div>
+          </div>
+          <div class="coef-norm">норма ≥ 0.55</div>
+          <div class="coef-right">
+            <div class="coef-val" id="r-k2">—</div>
+            <div id="r-k2-badge"></div>
+          </div>
+        </div>
+
+        <div class="coef-row">
+          <div class="coef-info">
+            <div class="coef-name">К<sub>об</sub> — Объёмный коэффициент</div>
+            <div class="coef-desc">Vнадз / Sжил</div>
+          </div>
+          <div class="coef-norm">норма 3.5 – 5.5</div>
+          <div class="coef-right">
+            <div class="coef-val" id="r-kob">—</div>
+            <div id="r-kob-badge"></div>
+          </div>
+        </div>
+
+        <div class="coef-row">
+          <div class="coef-info">
+            <div class="coef-name">К<sub>3</sub> — Обеспеченность парковкой</div>
+            <div class="coef-desc">(М/м подз + нап) / квартиры</div>
+          </div>
+          <div class="coef-norm">норма ≥ 0.8</div>
+          <div class="coef-right">
+            <div class="coef-val" id="r-k3">—</div>
+            <div id="r-k3-badge"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /right -->
+
+</div><!-- /layout -->
+
+<!-- XML Modal -->
+<div class="modal-overlay" id="xmlModal" onclick="if(event.target===this)closeXml()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Ведомость ТЭП — XML</h3>
+      <button class="modal-close" onclick="closeXml()">×</button>
+    </div>
+    <div class="modal-body">
+      <pre id="xmlContent"></pre>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="copyXml()">Копировать</button>
+      <button class="btn btn-primary" onclick="downloadXml()">Скачать .xml</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Helpers ──
+  const $ = id => document.getElementById(id);
+  const val = id => parseFloat($(id).value) || 0;
+  const fmt = (n, d=0) => n == null || isNaN(n) ? '—' : n.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const set = (id, v, d=0) => { const el = $(id); if(el) el.textContent = fmt(v, d); };
+
+  function badge(id, v, ok, warn, bad, labels=['норма','допустимо','вне нормы']) {
+    const el = $(id); if(!el) return;
+    let cls, txt;
+    if(ok(v))   { cls='good';    txt=labels[0]; }
+    else if(warn && warn(v)) { cls='warn'; txt=labels[1]; }
+    else        { cls='bad';     txt=labels[2]; }
+    el.innerHTML = `<span class="badge ${cls}">${txt}</span>`;
+  }
+
+  // ── Core calculation ──
+  function calculate() {
+    // inputs
+    const siteArea   = val('siteArea');
+    const footprint  = val('buildingFootprint');
+    const floorsA    = val('floorsAbove');
+    const floorsB    = val('floorsBelow');
+    const h1         = val('h1');
+    const hTyp       = val('hTypical');
+    const hBelow     = val('hBelow');
+    const aptArea    = val('totalAptArea');
+    const living     = val('livingArea');
+    const commercial = val('commercialArea');
+    const commonA    = val('commonArea');
+    const techA      = val('techArea');
+    const parkArea   = val('parkingArea');
+    const parkU      = val('parkingUnderground');
+    const parkS      = val('parkingSurface');
+
+    // квартирография
+    const a1c = val('apt1count'), a1a = val('apt1area');
+    const a2c = val('apt2count'), a2a = val('apt2area');
+    const a3c = val('apt3count'), a3a = val('apt3area');
+    const a4c = val('apt4count'), a4a = val('apt4area');
+
+    const a1t = a1c * a1a, a2t = a2c * a2a, a3t = a3c * a3a, a4t = a4c * a4a;
+    const aptCount = a1c + a2c + a3c + a4c;
+    const aptSum   = a1t + a2t + a3t + a4t;
+    const aptAvg   = aptCount > 0 ? aptSum / aptCount : 0;
+
+    set('apt1total', a1t);  set('apt2total', a2t);
+    set('apt3total', a3t);  set('apt4total', a4t);
+    $('aptTotalCount').textContent = aptCount || '—';
+    $('aptAvgArea').textContent    = aptCount > 0 ? 'ср: ' + fmt(aptAvg, 1) : 'ср: —';
+    $('aptTotalSum').textContent   = fmt(aptSum);
+
+    // высоты
+    const hAbove = floorsA > 0 ? h1 + (floorsA - 1) * hTyp : 0;
+    const hBelowTotal = floorsB * hBelow;
+    $('heightAbove').value = hAbove.toFixed(1);
+    $('heightTotal').value = (hAbove + hBelowTotal).toFixed(1);
+
+    // площади
+    const mopTotal   = commonA + techA;
+    const totalAbove = aptArea + commercial + mopTotal;
+    const totalAll   = totalAbove + parkArea;
+
+    // объёмы
+    const volAbove = footprint * hAbove;
+    const volBelow = footprint * hBelowTotal;
+    const volTotal = volAbove + volBelow;
+
+    // жители
+    const residentsInput = parseFloat($('residents').value);
+    const residents = isNaN(residentsInput) || $('residents').value==='' ? aptCount * 2.8 : residentsInput;
+
+    // коэффициенты
+    const kz   = siteArea > 0 ? footprint / siteArea : 0;
+    const kpz  = siteArea > 0 ? totalAbove / siteArea : 0;
+    const k1   = aptArea  > 0 ? living / aptArea      : 0;
+    const k2   = totalAbove > 0 ? aptArea / totalAbove : 0;
+    const kob  = living   > 0 ? volAbove / living      : 0;
+    const k3   = aptCount > 0 ? (parkU + parkS) / aptCount : 0;
+    const aptPerHa = siteArea > 0 ? aptCount / (siteArea / 10000) : 0;
+    const parkPerApt = aptCount > 0 ? (parkU + parkS) / aptCount : 0;
+    const areaPerRes = residents > 0 ? aptArea / residents : 0;
+
+    // site area in ha
+    $('siteAreaHa').textContent = fmt(siteArea / 10000, 2);
+
+    // ── Output ──
+    set('r-siteArea',   siteArea);
+    set('r-footprint',  footprint);
+    set('r-floorsAbove', floorsA);
+    set('r-floorsBelow', floorsB);
+    set('r-hAbove',     hAbove, 1);
+    set('r-volAbove',   volAbove);
+    set('r-volBelow',   volBelow);
+    set('r-volTotal',   volTotal);
+    set('r-totalAbove', totalAbove);
+    set('r-aptArea',    aptArea);
+    set('r-living',     living);
+    set('r-auxiliary',  aptArea - living);
+    set('r-commercial', commercial);
+    set('r-mop',        mopTotal);
+    set('r-parkArea',   parkArea);
+    set('r-totalAll',   totalAll);
+    set('r-aptCount',   aptCount);
+    set('r-residents',  residents, 0);
+    set('r-parkU',      parkU);
+    set('r-parkS',      parkS);
+    set('r-avgApt',     aptAvg, 1);
+    set('r-aptPerHa',   aptPerHa, 0);
+    set('r-parkPerApt', parkPerApt, 2);
+    set('r-areaPerRes', areaPerRes, 1);
+
+    // коэф
+    set('r-kz',  kz,  3);
+    set('r-kpz', kpz, 2);
+    set('r-k1',  k1,  3);
+    set('r-k2',  k2,  3);
+    set('r-kob', kob, 2);
+    set('r-k3',  k3,  2);
+
+    badge('r-kz-badge',  kz,  v=>v<=0.40, v=>v<=0.50, null);
+    badge('r-kpz-badge', kpz, v=>v<=3.0,  v=>v<=4.0,  null);
+    badge('r-k1-badge',  k1,  v=>v>=0.50, v=>v>=0.45, null, ['норма','пониженный','низкий']);
+    badge('r-k2-badge',  k2,  v=>v>=0.55, v=>v>=0.48, null, ['норма','пониженный','низкий']);
+    badge('r-kob-badge', kob, v=>v>=3.5&&v<=5.5, v=>v>=3.0&&v<=6.5, null, ['норма','допустимо','вне нормы']);
+    badge('r-k3-badge',  k3,  v=>v>=0.8,  v=>v>=0.5,  null, ['норма','допустимо','дефицит']);
+
+    // bars
+    if(totalAbove > 0) {
+      const pApt = aptArea / totalAbove * 100;
+      const pCom = commercial / totalAbove * 100;
+      const pMop = mopTotal / totalAbove * 100;
+      $('bar-apt').style.width = pApt + '%';
+      $('bar-com').style.width = pCom + '%';
+      $('bar-mop').style.width = pMop + '%';
+      $('bar-apt-pct').textContent = fmt(pApt, 1) + '%';
+      $('bar-com-pct').textContent = fmt(pCom, 1) + '%';
+      $('bar-mop-pct').textContent = fmt(pMop, 1) + '%';
+    }
+  }
+
+  // ── XML export ──
+  function getXml() {
+    const now = new Date().toISOString().slice(0,10);
+    const v = id => $(id)?.value || $(id)?.textContent || '';
+    const n = id => parseFloat($(id)?.value || $(id)?.textContent) || 0;
+
+    const siteArea   = n('siteArea');
+    const footprint  = n('buildingFootprint');
+    const floorsA    = n('floorsAbove');
+    const floorsB    = n('floorsBelow');
+    const hAbove     = n('heightAbove');
+    const aptArea    = n('totalAptArea');
+    const living     = n('livingArea');
+    const commercial = n('commercialArea');
+    const commonA    = n('commonArea');
+    const techA      = n('techArea');
+    const parkArea   = n('parkingArea');
+    const parkU      = n('parkingUnderground');
+    const parkS      = n('parkingSurface');
+    const totalAbove = aptArea + commercial + commonA + techA;
+    const volAbove   = footprint * hAbove;
+    const aptCount   = n('apt1count')+n('apt2count')+n('apt3count')+n('apt4count');
+    const residentsInput = parseFloat($('residents').value);
+    const residents  = isNaN(residentsInput)||$('residents').value==='' ? aptCount*2.8 : residentsInput;
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<ТЭП дата="${now}">
+
+  <!-- Земельный участок -->
+  <ЗемельныйУчасток>
+    <ПлощадьУчастка единица="м²">${siteArea}</ПлощадьУчастка>
+    <ПлощадьЗастройки единица="м²">${footprint}</ПлощадьЗастройки>
+    <КоэффициентЗастройки>${(siteArea>0?footprint/siteArea:0).toFixed(3)}</КоэффициентЗастройки>
+    <КоэффициентПлотности>${(siteArea>0?totalAbove/siteArea:0).toFixed(2)}</КоэффициентПлотности>
+  </ЗемельныйУчасток>
+
+  <!-- Объёмно-планировочные показатели -->
+  <ОбъёмноПланировочные>
+    <ЭтажностьНадземная единица="эт">${floorsA}</ЭтажностьНадземная>
+    <ЭтажностьПодземная единица="эт">${floorsB}</ЭтажностьПодземная>
+    <ВысотаНадземнойЧасти единица="м">${hAbove}</ВысотаНадземнойЧасти>
+    <СтроительныйОбъёмНадземный единица="м³">${volAbove.toFixed(0)}</СтроительныйОбъёмНадземный>
+  </ОбъёмноПланировочные>
+
+  <!-- Площадные показатели -->
+  <Площади>
+    <ОбщаяПлощадьНадземной единица="м²">${totalAbove}</ОбщаяПлощадьНадземной>
+    <СуммарнаяПлощадьКвартир единица="м²">${aptArea}</СуммарнаяПлощадьКвартир>
+    <ЖилаяПлощадь единица="м²">${living}</ЖилаяПлощадь>
+    <ВспомогательнаяПлощадь единица="м²">${aptArea-living}</ВспомогательнаяПлощадь>
+    <НежилыеПомещения единица="м²">${commercial}</НежилыеПомещения>
+    <МОПиТехнические единица="м²">${commonA+techA}</МОПиТехнические>
+    <ПлощадьПаркинга единица="м²">${parkArea}</ПлощадьПаркинга>
+  </Площади>
+
+  <!-- Квартирные показатели -->
+  <КвартирныеПоказатели>
+    <КоличествоКвартир единица="шт">${aptCount}</КоличествоКвартир>
+    <КвалтирыСтудии_1к количество="${n('apt1count')}" средняяПлощадь="${n('apt1area')}"/>
+    <Квартиры2к количество="${n('apt2count')}" средняяПлощадь="${n('apt2area')}"/>
+    <Квартиры3к количество="${n('apt3count')}" средняяПлощадь="${n('apt3area')}"/>
+    <Квартиры4кПлюс количество="${n('apt4count')}" средняяПлощадь="${n('apt4area')}"/>
+    <РасчётноеКоличествоЖителей единица="чел">${residents.toFixed(0)}</РасчётноеКоличествоЖителей>
+    <МашиноМестПодземных единица="шт">${parkU}</МашиноМестПодземных>
+    <МашиноМестНаземных единица="шт">${parkS}</МашиноМестНаземных>
+  </КвартирныеПоказатели>
+
+  <!-- Коэффициенты -->
+  <Коэффициенты>
+    <К1_ПланировочнаяЭффективность>${(aptArea>0?living/aptArea:0).toFixed(3)}</К1_ПланировочнаяЭффективность>
+    <К2_ЖилищнаяЭффективность>${(totalAbove>0?aptArea/totalAbove:0).toFixed(3)}</К2_ЖилищнаяЭффективность>
+    <Коб_ОбъёмныйКоэффициент>${(living>0?volAbove/living:0).toFixed(2)}</Коб_ОбъёмныйКоэффициент>
+    <К3_ОбеспеченностьПарковкой>${(aptCount>0?(parkU+parkS)/aptCount:0).toFixed(2)}</К3_ОбеспеченностьПарковкой>
+  </Коэффициенты>
+
+</ТЭП>`;
+  }
+
+  function showXml() {
+    $('xmlContent').textContent = getXml();
+    $('xmlModal').classList.add('open');
+  }
+  function closeXml() { $('xmlModal').classList.remove('open'); }
+  function copyXml() {
+    navigator.clipboard.writeText(getXml()).then(()=>{
+      const btn = event.target;
+      btn.textContent = 'Скопировано!';
+      setTimeout(()=>btn.textContent='Копировать',1500);
+    });
+  }
+  function downloadXml() {
+    const blob = new Blob([getXml()], {type:'application/xml'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tep_' + new Date().toISOString().slice(0,10) + '.xml';
+    a.click();
+  }
+
+  // ── Reset ──
+  const DEFAULTS = {
+    siteArea:1000, buildingFootprint:300, floorsAbove:9, floorsBelow:1,
+    h1:3.3, hTypical:3.0, hBelow:3.0,
+    totalAptArea:2200, livingArea:1320, commercialArea:120, commonArea:480, techArea:60,
+    parkingArea:600, parkingUnderground:20, parkingSurface:5,
+    apt1count:12, apt1area:32.5, apt2count:15, apt2area:58.0,
+    apt3count:8,  apt3area:82.0, apt4count:2,  apt4area:115.0
+  };
+  function resetForm() {
+    if(!confirm('Сбросить все данные к значениям по умолчанию?')) return;
+    Object.entries(DEFAULTS).forEach(([k,v]) => { const el = $(k); if(el) el.value=v; });
+    $('residents').value = '';
+    calculate();
+  }
+
+  // ── Live updates ──
+  document.querySelectorAll('input').forEach(el => el.addEventListener('input', calculate));
+
+  // ── Init ──
+  calculate();
+</script>
+</body>
+</html>
