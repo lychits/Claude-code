@@ -53,14 +53,27 @@ body {
 }
 .field input[type=number]:focus, .field select:focus { border-color: var(--black); }
 .field input[type=number]::-webkit-inner-spin-button { opacity: .3; }
+.field .text-input {
+  width: 100%; height: 36px; padding: 0 10px;
+  border: 1px solid var(--g200); border-radius: 0;
+  font-family: var(--font); font-size: 14px; color: var(--black);
+  background: var(--white); outline: none;
+  transition: border-color .15s;
+}
+.field .text-input:focus { border-color: var(--black); }
+.derived-value {
+  height: 36px; padding: 0 10px; background: var(--g50);
+  border: 1px solid var(--g100); display: flex; align-items: center;
+  font-size: 14px; font-weight: 200; color: var(--black); gap: 8px;
+}
 .toggle-row { display: flex; align-items: center; gap: 10px; }
-.toggle { position: relative; width: 36px; height: 20px; cursor: pointer; }
-.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; cursor: pointer; }
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
 .toggle-track { position: absolute; inset: 0; background: var(--g200); border-radius: 10px; transition: background .2s; }
 .toggle input:checked ~ .toggle-track { background: var(--black); }
-.toggle-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: var(--white); border-radius: 50%; transition: transform .2s; }
+.toggle-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: var(--white); border-radius: 50%; transition: transform .2s; z-index: 1; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
 .toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
-.toggle-label { font-size: 13px; color: var(--g600); cursor: pointer; }
+.toggle-label { font-size: 13px; color: var(--g600); cursor: pointer; user-select: none; }
 
 /* Results panel */
 .results { }
@@ -128,7 +141,7 @@ body {
 
 /* Map modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal { background: var(--white); padding: 32px; max-width: 520px; width: 90%; position: relative; }
+.modal { background: var(--white); padding: 32px; max-width: 560px; width: 90%; position: relative; max-height: 85vh; overflow-y: auto; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--g400); }
 .modal h2 { font-size: 14px; font-weight: 500; margin-bottom: 20px; text-transform: uppercase; letter-spacing: .06em; }
 .zone-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
