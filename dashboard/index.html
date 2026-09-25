@@ -258,6 +258,40 @@ section.block { margin-top: 34px; }
 .stable .sn i { width: 18px; height: 0; border-top: 2px dashed; flex: none; }
 .stable .cond { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
 
+/* info tips */
+.ti {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; padding: 0; margin-left: 6px; vertical-align: 1px;
+  border-radius: 50%; border: 1px solid var(--line); background: var(--card-2); color: var(--muted);
+  font: 800 10px/1 Manrope, system-ui, sans-serif; font-style: italic; cursor: help; transition: color .15s, border-color .15s, background .15s;
+}
+.ti:hover, .ti[aria-expanded="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.kpi.hi .ti { background: rgba(26,16,8,.12); border-color: rgba(26,16,8,.25); color: var(--on-accent); }
+.kpi.hi .ti:hover, .kpi.hi .ti[aria-expanded="true"] { background: var(--on-accent); color: var(--accent-2); }
+.ph h3, .kh, .flabel { display: inline-flex; align-items: center; }
+.tipbox {
+  position: fixed; z-index: 100; max-width: min(340px, calc(100vw - 24px)); pointer-events: none;
+  background: var(--tip-bg); border: 1px solid #343843; border-radius: 14px; padding: 13px 15px;
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,.7); font-size: 12.5px; line-height: 1.5; color: var(--ink-2);
+  opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s;
+}
+.tipbox.on { opacity: 1; transform: none; pointer-events: auto; }
+.tipbox b { display: block; color: var(--accent-2); font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+.tipbox .l { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 800; margin-top: 8px; }
+.tipbox p { margin: 2px 0 0; }
+@media (prefers-reduced-motion: reduce) { .tipbox { transition: none; } }
+
+/* glossary */
+.gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1200px) { .gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .gloss { grid-template-columns: 1fr; } }
+.gcol { display: grid; gap: 12px; align-content: start; }
+.gcol h3 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; margin: 4px 2px 0; }
+.gitem { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.gitem b { display: block; font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+.gitem p { margin: 6px 0 0; color: var(--ink-2); font-size: 12.5px; line-height: 1.55; font-weight: 500; }
+.gitem p.h { color: var(--muted); }
+.gitem p.h::before { content: "Как читать. "; color: var(--ink-2); font-weight: 700; }
+
 footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 22px; font-size: 12px; color: var(--muted); }
 .foot .fg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 28px; }
 .foot h4 { margin: 0 0 6px; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 800; }
@@ -279,9 +313,10 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <a href="#deviations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Отклонения</a>
       <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
       <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
+      <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
     </nav>
     <div class="rate-card">
-      <div class="l">Ключевая ставка</div>
+      <div class="l">Ключевая ставка<button class="ti" type="button" data-tip="keyrate">i</button></div>
       <div class="v">14<small>%</small></div>
       <div class="d">Пауза ЦБ 11.09.2026. Новые вклады около 12,8%.</div>
     </div>
@@ -301,9 +336,9 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
     </header>
 
     <div class="filters" role="group" aria-label="Фильтры среза">
-      <div class="fgroup"><span class="flabel" id="lbl-zone">Макрозона</span><div class="seg" data-key="zone" role="group" aria-labelledby="lbl-zone"></div></div>
-      <div class="fgroup"><span class="flabel" id="lbl-klass">Класс</span><div class="seg" data-key="klass" role="group" aria-labelledby="lbl-klass"></div></div>
-      <div class="fgroup"><span class="flabel" id="lbl-dev">Застройщик</span><div class="seg" data-key="dev" role="group" aria-labelledby="lbl-dev"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-zone">Макрозона</span><button class="ti" type="button" data-tip="zone" style="margin-left:-6px">i</button><div class="seg" data-key="zone" role="group" aria-labelledby="lbl-zone"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-klass">Класс</span><button class="ti" type="button" data-tip="klass" style="margin-left:-6px">i</button><div class="seg" data-key="klass" role="group" aria-labelledby="lbl-klass"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-dev">Застройщик</span><button class="ti" type="button" data-tip="dev" style="margin-left:-6px">i</button><div class="seg" data-key="dev" role="group" aria-labelledby="lbl-dev"></div></div>
       <div class="freset"><button class="btn" id="reset" type="button">Сбросить</button></div>
     </div>
     <div class="ctx" id="ctx"></div>
@@ -318,17 +353,17 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       </div></div>
       <div class="g">
         <div class="panel c7">
-          <div class="ph"><h3>Портфель стройки по группам</h3><span class="u">млн м²</span></div>
+          <div class="ph"><h3>Портфель стройки по группам<button class="ti" type="button" data-tip="portfolio">i</button></h3><span class="u">млн м²</span></div>
           <div class="box h300"><canvas id="chDev" role="img" aria-label="Портфель по группам застройщиков"></canvas></div>
           <div class="cap" id="devCap"></div>
         </div>
         <div class="panel c5">
-          <div class="ph"><h3>Структура по классам</h3><span class="u">доля площади</span></div>
+          <div class="ph"><h3>Структура по классам<button class="ti" type="button" data-tip="classes">i</button></h3><span class="u">доля площади</span></div>
           <div class="stack" id="stack" aria-hidden="true"></div>
           <div class="tscroll"><table class="ctable" id="ctable"></table></div>
         </div>
         <div class="panel c12">
-          <div class="ph"><h3>Когорты ввода</h3><span class="u">млн м² по году сдачи</span></div>
+          <div class="ph"><h3>Когорты ввода<button class="ti" type="button" data-tip="cohort">i</button></h3><span class="u">млн м² по году сдачи</span></div>
           <div class="box h240"><canvas id="chYear" role="img" aria-label="Когорты ввода по годам"></canvas></div>
           <div class="cap">Год ввода по проектной декларации. Корпуса с уточнённым сроком учтены по последней дате.</div>
         </div>
@@ -343,11 +378,11 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       </div></div>
       <div class="g">
         <div class="panel c5">
-          <div class="ph"><h3>ДДУ I пол. 2026 по округам</h3><span class="u">тыс. договоров</span></div>
+          <div class="ph"><h3>ДДУ I пол. 2026 по округам<button class="ti" type="button" data-tip="ddu">i</button></h3><span class="u">тыс. договоров</span></div>
           <div class="box h340"><canvas id="chOkrug" role="img" aria-label="ДДУ по округам"></canvas></div>
         </div>
         <div class="panel c7">
-          <div class="ph"><h3>Ставка против спроса</h3><span class="u">окт. 2024 – сен. 2026</span></div>
+          <div class="ph"><h3>Ставка против спроса<button class="ti" type="button" data-tip="rateVsDemand">i</button></h3><span class="u">окт. 2024 – сен. 2026</span></div>
           <div class="macro">
             <div class="macro-facts" id="macroFacts"></div>
             <div>
@@ -368,7 +403,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
           <h2>Двенадцать индикаторов одного среза</h2>
           <p>Ставка, ипотечные каналы, продажи к готовности, сроки, аренда и экономика входа на котловане.</p>
         </div>
-        <div class="legend" style="margin:0"><span class="st good">норма</span><span class="st warn">наблюдать</span><span class="st crit">аномалия</span></div>
+        <div class="legend" style="margin:0;align-items:center"><span style="font-size:12px;color:var(--muted)">Отметки<button class="ti" type="button" data-tip="status">i</button></span><span class="st good">норма</span><span class="st warn">наблюдать</span><span class="st crit">аномалия</span></div>
       </div>
       <div class="panel"><div class="sheet" id="sheet"></div></div>
     </section>
@@ -392,7 +427,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
         <article class="persona c6" id="pSelf"></article>
         <article class="persona c6" id="pInv"></article>
         <div class="panel c12">
-          <div class="ph"><h3>Доходность инвестора против вклада</h3><span class="u">% годовых</span></div>
+          <div class="ph"><h3>Доходность инвестора против вклада<button class="ti" type="button" data-tip="invChart">i</button></h3><span class="u">% годовых</span></div>
           <div class="box h240"><canvas id="chInv" role="img" aria-label="Доходность инвестора против вклада"></canvas></div>
           <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>выше ставки вклада</span><span><i class="sq hatch"></i>ниже ставки вклада</span></div>
         </div>
@@ -411,12 +446,12 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       </div>
       <div class="g">
         <div class="panel c7">
-          <div class="ph"><h3>Индекс спроса среза</h3><span class="u">окт. 2024 = 100</span></div>
+          <div class="ph"><h3>Индекс спроса среза<button class="ti" type="button" data-tip="demandIndex">i</button></h3><span class="u">окт. 2024 = 100</span></div>
           <div class="box h340"><canvas id="chFc" role="img" aria-label="Прогноз спроса по сценариям"></canvas></div>
           <div class="legend" id="fcLegend"></div>
         </div>
         <div class="panel c5">
-          <div class="ph"><h3>Изменение спроса к сен. 2026</h3></div>
+          <div class="ph"><h3>Изменение спроса к сен. 2026<button class="ti" type="button" data-tip="scenarios">i</button></h3></div>
           <table class="stable">
             <thead><tr><th>Сценарий</th><th>IV кв. 26</th><th>I пол. 27</th></tr></thead>
             <tbody id="fcTable"></tbody>
@@ -424,6 +459,15 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
         </div>
       </div>
       <div class="cards" id="fcNotes" style="margin-top:12px"></div>
+    </section>
+
+    <section class="block" id="glossary">
+      <div class="shead"><div>
+        <div class="eyebrow">Словарь</div>
+        <h2>Что означают термины и как их читать</h2>
+        <p>Те же пояснения открываются по значку «i» рядом с показателем. Наведите курсор, нажмите или перейдите к значку клавишей Tab.</p>
+      </div></div>
+      <div class="gloss" id="gloss"></div>
     </section>
 
     <footer class="foot">
@@ -435,6 +479,8 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
     </footer>
   </div>
 </div>
+
+<div class="tipbox" id="tipbox" role="tooltip"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
@@ -493,6 +539,116 @@ const OPTS = {
   dev:   [["all","Все группы"],["ПИК","ПИК"],["MR Group","MR Group"],["Самолет","Самолет"],["Донстрой","Донстрой"],["ФСК","ФСК"]]
 };
 const KLASS_NAMES = { mass:"Массовый", business:"Бизнес", premium:"Премиум / элит" };
+
+/* ================= GLOSSARY ================= */
+/* t: термин, d: что это, h: как читать, g: группа для словаря */
+const GLOSS = {
+  zone: { g:"Фильтры", t:"Макрозона",
+    d:"Часть города. Старая Москва: территория в границах до расширения 2012 года. ТиНАО: Троицкий и Новомосковский округа, так называемая Новая Москва.",
+    h:"В ТиНАО метр дешевле примерно на треть, и туда уходит массовый ипотечный спрос. В старой Москве строят в основном бизнес и премиум." },
+  klass: { g:"Фильтры", t:"Класс жилья",
+    d:"Массовый: стандарт и комфорт. Бизнес: лучше локация, отделка и благоустройство. Премиум и элит: центр, уникальные проекты. Класс задаёт цена, место и качество проекта.",
+    h:"Чем выше класс, тем меньше покупатель зависит от ипотеки и ставки ЦБ и тем больше от своих накоплений." },
+  dev: { g:"Фильтры", t:"Группа застройщика",
+    d:"Все юрлица одного девелопера, объединённые в группу по данным ЕРЗ и ДОМ.РФ.",
+    h:"При выборе группы показатели считаются по её доле в срезе. У каждой группы своя дисциплина сроков и свой покупатель." },
+  portfolio: { g:"Предложение", t:"Портфель среза",
+    d:"Площадь жилья в текущем строительстве, млн м². Источник: ЕИСЖС (единая информационная система жилищного строительства ДОМ.РФ).",
+    h:"Это будущее предложение. Если портфель велик, а ДДУ мало, копится непроданный объём и растёт вероятность скидок." },
+  classes: { g:"Предложение", t:"Структура по классам",
+    d:"Как площадь в стройке делится между массовым, бизнес- и премиум-классом, плюс прайс и распроданность по каждому.",
+    h:"Смотрите, где сосредоточен объём и где он хуже продаётся. Старая Москва смещена в бизнес и выше." },
+  cohort: { g:"Предложение", t:"Когорта ввода",
+    d:"Площадь, которую застройщики должны сдать в данном году по проектной декларации.",
+    h:"Большая когорта ближайших лет означает много готового жилья на рынке. Это давит на цену ключей и на перепродажу инвесторов." },
+  delay: { g:"Предложение", t:"Переносы срока",
+    d:"Доля площади, по которой застройщик уже сдвинул срок ввода в проектной декларации.",
+    h:"До 8% считается нормой. Выше 40% значит, что дате ключей верить нельзя: закладывайте аренду на время ожидания и более длинный цикл для инвестиции." },
+  ddu: { g:"Спрос", t:"ДДУ",
+    d:"Договор долевого участия: так покупают квартиру в строящемся доме. Каждый ДДУ регистрирует Росреестр, поэтому это главный счётчик продаж новостроек.",
+    h:"Показано число договоров в тысячах за I полугодие 2026. Переуступки и вторичка сюда не входят." },
+  yoy: { g:"Спрос", t:"Спрос г/г",
+    d:"Изменение числа и площади ДДУ к тому же периоду прошлого года, в процентах.",
+    h:"Ниже −30%: обвал, из рынка выпал ипотечный покупатель. От −30% до −15%: охлаждение. Выше −15%: срез устойчивее города, где спад около −38%." },
+  demandIndex: { g:"Спрос", t:"Индекс спроса",
+    d:"Число ДДУ в срезе, приведённое к октябрю 2024 года, который принят за 100.",
+    h:"Значение 60 означает, что продаж на 40% меньше, чем в октябре 2024. Индекс удобен, чтобы сравнивать срезы разного размера." },
+  rateVsDemand: { g:"Спрос", t:"Ставка против спроса",
+    d:"Два графика с общей осью времени: ключевая ставка ЦБ и индекс спроса среза.",
+    h:"Ставка снизилась с 21% до 14%, а спрос продолжил падать. Значит, дело не только в ставке: сузилась семейная ипотека, а рыночная всё ещё около 16%." },
+  sold: { g:"Баланс", t:"Распроданность",
+    d:"Доля площади в строящихся корпусах, которая уже продана по ДДУ.",
+    h:"Сама по себе мало говорит. Её сравнивают со строительной готовностью: см. «Продажи / готовность»." },
+  ready: { g:"Баланс", t:"Строительная готовность",
+    d:"Техническая готовность корпусов в процентах по данным ЕИСЖС.",
+    h:"Чем выше готовность, тем больше квартир уже должно быть продано, чтобы стройка шла ровно." },
+  bal: { g:"Баланс", t:"Продажи / готовность",
+    d:"Распроданность, делённая на строительную готовность, ×100. Метрика ДОМ.РФ для оценки баланса рынка.",
+    h:"Норма 70–80%: продажи идут вровень со стройкой. Ниже 70% означает навес: строят быстрее, чем продают, эскроу-счета наполняются медленно, вероятны скидки. Выше 88% означает дефицит: лотов мало, цена под давлением вверх." },
+  status: { g:"Баланс", t:"Норма, наблюдать, аномалия",
+    d:"Отметка сравнивает значение показателя с типичным для здорового рынка.",
+    h:"Норма: в пределах коридора. Наблюдать: на границе или зависит от контекста. Аномалия: заметное отклонение, которое объясняет поведение среза." },
+  price: { g:"Деньги и ставки", t:"Цена, тыс. ₽/м²",
+    d:"Средневзвешенная цена предложения за квадратный метр по прайс-листам, без индивидуальных скидок.",
+    h:"Реальная цена сделки при рассрочке или торге может быть ниже на 3–10%." },
+  mortgage: { g:"Деньги и ставки", t:"Доля ипотеки",
+    d:"Доля ДДУ, оплаченных с ипотечным кредитом, льготным или рыночным.",
+    h:"Чем выше доля, тем сильнее срез зависит от ставки и банковских программ. Выше 60% значит, что срез живёт на кредите." },
+  family: { g:"Деньги и ставки", t:"Семейная ипотека",
+    d:"Льготная программа для семей с детьми под 6%. В 2026 году она узкая: лимиты банков, жёсткие требования и одна льгота на семью.",
+    h:"Доля показывает, сколько сделок среза закрывает льгота. Ниже 20% значит, что большинство покупателей её не получает и упирается в рыночную ставку." },
+  keyrate: { g:"Деньги и ставки", t:"Ключевая ставка ЦБ",
+    d:"Базовая ставка Банка России: 14% после паузы на заседании 11.09.2026. Пик был 21% в октябре 2024 года.",
+    h:"От неё отсчитываются ставки по рыночной ипотеке (обычно ключевая плюс 2–3 п.п.) и по вкладам." },
+  pp: { g:"Деньги и ставки", t:"п.п. (процентный пункт)",
+    d:"Разница между двумя значениями в процентах.",
+    h:"Снижение ставки с 21% до 14% составляет 7 п.п., хотя в относительном выражении это −33%." },
+  ticket: { g:"Деньги и ставки", t:"Чек",
+    d:"Полная стоимость типичной квартиры в срезе: цена метра, умноженная на типичную площадь лота.",
+    h:"От чека зависят первый взнос и платёж. В премиуме чек в разы выше, но и покупатель другой." },
+  payMarket: { g:"Деньги и ставки", t:"Платёж по рыночной ставке",
+    d:"Ориентир ежемесячного платежа за типичный лот: кредит на 55–60% чека под 16% годовых на 20 лет, остальное первый взнос.",
+    h:"Это модельный ориентир, а не расчёт банка. Сравните с доходом семьи: банки обычно ограничивают платёж половиной дохода." },
+  payFamily: { g:"Деньги и ставки", t:"Платёж по льготе",
+    d:"Тот же лот и тот же кредит по семейной ипотеке под 6%.",
+    h:"Разница с рыночным платежом показывает, насколько сделка держится на льготе." },
+  deposit: { g:"Деньги и ставки", t:"Ставка вклада",
+    d:"Типичная ставка нового годового депозита в крупных банках, около 12,8%.",
+    h:"Безрисковая альтернатива деньгам покупателя. Инвестиция в квартиру имеет смысл, только если обгоняет вклад с запасом на риск." },
+  pit: { g:"Инвестор", t:"Котлован → ввод",
+    d:"Ожидаемый рост прайса от старта продаж на котловане до ввода дома за весь цикл стройки. Рядом тот же рост в пересчёте на год.",
+    h:"Годовое значение сравнивайте со вкладом. В 2020–21 годах путь давал 25–40% за цикл, сейчас модель закладывает заметно меньше." },
+  cycle: { g:"Инвестор", t:"Цикл",
+    d:"Месяцы от старта продаж до ввода дома с поправкой на переносы в срезе.",
+    h:"Чем длиннее цикл, тем ниже годовая доходность при том же росте цены." },
+  pitDisc: { g:"Инвестор", t:"Дисконт котлована",
+    d:"Насколько цена на старте продаж ниже цены сопоставимой готовой квартиры.",
+    h:"Это плата покупателю за риск и ожидание. Хорошим считается дисконт от 12%." },
+  irr: { g:"Инвестор", t:"Котлован с дисконтом стадии",
+    d:"Годовая доходность, если купить на старте и продать на вводе: дисконт стадии плюс рост прайса, приведённые к году.",
+    h:"Грубая оценка без налогов, комиссий, ремонта и риска не найти покупателя на выходе." },
+  rent: { g:"Инвестор", t:"Валовая аренда",
+    d:"Годовой арендный доход, делённый на цену квартиры. До налогов, простоя и расходов на содержание.",
+    h:"Чистая доходность обычно на 1–1,5 п.п. ниже. От 5% считается нормой для Москвы." },
+  totalAnn: { g:"Инвестор", t:"Рост + 55% аренды",
+    d:"Грубая полная доходность: годовой рост цены плюс чуть больше половины арендной доходности.",
+    h:"Аренда учитывается частично, потому что начинается только после ключей. Если значение ниже вклада, модель «купить и сдавать» проигрывает депозиту." },
+  invChart: { g:"Инвестор", t:"Доходность инвестора против вклада",
+    d:"Четыре способа посчитать доходность квартиры в срезе рядом со ставкой вклада, отмеченной вертикальной линией.",
+    h:"Оранжевые столбцы обгоняют вклад, заштрихованные не обгоняют. Если все заштрихованы, деньги рациональнее держать на депозите." },
+  wall: { g:"Прогноз", t:"Стена вкладов",
+    d:"Гипотеза: в IV квартале 2026 и I полугодии 2027 истекают 18–24-месячные вклады, открытые под 20% и выше на пике ставки. Часть этих денег может пойти в жильё.",
+    h:"Это сценарий, а не факт. Он сработает, только если новые вклады станут заметно ниже 12%." },
+  sticky: { g:"Прогноз", t:"Липкие вклады",
+    d:"Сценарий, в котором истекающие деньги остаются на депозитах: их продлевают под 12–13%.",
+    h:"Липкость показывает долю денег, которая не уйдёт с вкладов. Чем она выше, тем слабее волна спроса." },
+  base: { g:"Прогноз", t:"Базовый сценарий",
+    d:"Вклады около 13%, часть денег перекладывается в жильё, ипотека без расширения льгот.",
+    h:"Самый вероятный путь при нынешних условиях: небольшой рост спроса от низкой базы." },
+  scenarios: { g:"Прогноз", t:"Изменение спроса по сценариям",
+    d:"Насколько индекс спроса среза изменится к концу 2026 года и к середине 2027 года относительно сентября 2026.",
+    h:"Разброс между сценариями показывает, насколько срез чувствителен к судьбе вкладов." }
+};
 
 /* ================= STATE ================= */
 const STORE_KEY = "msk-primary-slice";
@@ -783,6 +939,7 @@ function syncControls() {
 
 /* ================= HTML RENDER ================= */
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const ti = k => GLOSS[k] ? `<button class="ti" type="button" data-tip="${k}" aria-label="Что такое: ${esc(GLOSS[k].t)}">i</button>` : "";
 const stHtml = st => st ? `<span class="st ${st[0]}">${st[1]}</span>` : "";
 
 function renderHtml(v) {
@@ -791,20 +948,20 @@ function renderHtml(v) {
   document.getElementById("ctx").innerHTML = `Активный срез: <b>${esc(lbl)}</b>`;
 
   const kpis = [
-    { c:"Портфель среза", v:fmt(v.m2, 2), u:"млн м²", s:`${v.houses} корпусов в стройке` },
-    { c:"ДДУ I пол. 2026", v:fmt(v.ddu), u:"тыс.", s:"договоров в контуре фильтра" },
-    { c:"Спрос г/г", v:sgn(v.yoy, 0) + "%", s:"ДДУ, площадь",
+    { g:"portfolio", c:"Портфель среза", v:fmt(v.m2, 2), u:"млн м²", s:`${v.houses} корпусов в стройке` },
+    { g:"ddu", c:"ДДУ I пол. 2026", v:fmt(v.ddu), u:"тыс.", s:"договоров в контуре фильтра" },
+    { g:"yoy", c:"Спрос г/г", v:sgn(v.yoy, 0) + "%", s:"ДДУ, площадь",
       st: v.yoy <= -30 ? ["crit","обвал"] : v.yoy <= -15 ? ["warn","охлаждение"] : ["good","устойчивее города"] },
-    { c:"Распроданность", v:v.sold + "%", s:`строительная готовность ${v.ready}%` },
-    { c:"Продажи / готовность", v:fmt(v.bal) + "%", s:"коридор ДОМ.РФ 70–80%",
+    { g:"sold", c:"Распроданность", v:v.sold + "%", s:`строительная готовность ${v.ready}%` },
+    { g:"bal", c:"Продажи / готовность", v:fmt(v.bal) + "%", s:"коридор ДОМ.РФ 70–80%",
       st: v.bal >= 88 ? ["warn","дефицит экспозиции"] : v.bal >= 70 ? ["good","в коридоре"] : ["crit","навес"] },
-    { c:"Цена и ипотека", v:fmt(v.price, 0), u:"тыс. ₽/м²", s:`ипотека ${v.mort}% сделок, семейная ${v.fam}%` },
-    { c:"Котлован → ввод", v:"+" + v.growth + "%", s:`за ${v.cycle} мес., ${fmt(v.growthAnn)}% в год`,
+    { g:"price", c:"Цена и ипотека", v:fmt(v.price, 0), u:"тыс. ₽/м²", s:`ипотека ${v.mort}% сделок, семейная ${v.fam}%` },
+    { g:"pit", c:"Котлован → ввод", v:"+" + v.growth + "%", s:`за ${v.cycle} мес., ${fmt(v.growthAnn)}% в год`,
       st: v.growthAnn >= v.deposit ? ["good","выше вклада"] : v.growthAnn >= v.deposit - 5 ? ["warn","ниже вклада"] : ["crit","сильно ниже вклада"] }
   ];
   document.getElementById("kpis").innerHTML = kpis.map((k, i) => `
     <div class="kpi${i === 0 ? " hi" : ""}">
-      <div class="kh"><span class="c">${k.c}</span></div>
+      <div class="kh"><span class="c">${k.c}</span>${ti(k.g)}</div>
       <div class="v">${k.v}${k.u ? `<small>${k.u}</small>` : ""}</div>
       <div class="s">${k.s}</div>
       ${stHtml(k.st)}
@@ -833,28 +990,28 @@ function renderHtml(v) {
   /* macro facts */
   const first = v.demand[0], lastD = v.demand[v.demand.length - 1];
   document.getElementById("macroFacts").innerHTML = `
-    <div class="fact"><div class="v">14<small>%</small></div><div class="c">ключевая ставка, пауза 11.09</div></div>
-    <div class="fact"><div class="v">−7<small>п.п.</small></div><div class="c">снижение от пика 21% в окт. 2024</div></div>
-    <div class="fact"><div class="v">${sgn(lastD - first, 0)}<small>%</small></div><div class="c">спрос среза за тот же период</div></div>`;
+    <div class="fact"><div class="v">14<small>%</small></div><div class="c">ключевая ставка, пауза 11.09${ti("keyrate")}</div></div>
+    <div class="fact"><div class="v">−7<small>п.п.</small></div><div class="c">снижение от пика 21% в окт. 2024${ti("pp")}</div></div>
+    <div class="fact"><div class="v">${sgn(lastD - first, 0)}<small>%</small></div><div class="c">спрос среза за тот же период${ti("demandIndex")}</div></div>`;
 
   /* balance sheet */
   const rows = [
-    ["Ключевая ставка", "14,00%", "warn"],
-    ["Семейная ипотека в срезе", v.fam + "% сделок", v.fam >= 20 ? "good" : "warn"],
-    ["Рыночная ипотека в срезе", v.mort + "% сделок", v.mort >= 60 ? "crit" : "warn"],
-    ["Продажи / готовность", fmt(v.bal) + "%", v.bal >= 88 ? "crit" : v.bal >= 70 ? "good" : "crit"],
-    ["Переносы срока", fmt(v.delay) + "% площади", v.delay >= 40 ? "crit" : v.delay <= 8 ? "good" : "warn"],
-    ["Валовая аренда", fmt(v.yieldP) + "%", v.yieldP >= 5 ? "good" : "crit"],
-    ["Ориентир чека", fmt(v.ticket / 1000, 1) + " млн ₽", "warn"],
-    ["Платёж рынок / льгота", fmt(v.payMarket, 0) + " / " + fmt(v.payFamily, 0) + " тыс. ₽", "warn"],
-    ["Рост котлован → ключи", v.growth + "% за " + v.cycle + " мес.", v.growth >= 14 ? "good" : v.growth <= 8 ? "crit" : "warn"],
-    ["Тот же рост в год", fmt(v.growthAnn) + "% при вкладе " + fmt(v.deposit) + "%", v.growthAnn >= v.deposit ? "good" : "crit"],
-    ["Дисконт котлована к готовому", v.pitDisc + "%", v.pitDisc >= 12 ? "good" : "warn"],
-    ["Рост + 55% аренды в год", fmt(v.totalAnn) + "%", v.beatDeposit >= 0 ? "good" : "crit"]
+    ["Ключевая ставка", "14,00%", "warn", "keyrate"],
+    ["Семейная ипотека в срезе", v.fam + "% сделок", v.fam >= 20 ? "good" : "warn", "family"],
+    ["Рыночная ипотека в срезе", v.mort + "% сделок", v.mort >= 60 ? "crit" : "warn", "mortgage"],
+    ["Продажи / готовность", fmt(v.bal) + "%", v.bal >= 88 ? "crit" : v.bal >= 70 ? "good" : "crit", "bal"],
+    ["Переносы срока", fmt(v.delay) + "% площади", v.delay >= 40 ? "crit" : v.delay <= 8 ? "good" : "warn", "delay"],
+    ["Валовая аренда", fmt(v.yieldP) + "%", v.yieldP >= 5 ? "good" : "crit", "rent"],
+    ["Ориентир чека", fmt(v.ticket / 1000, 1) + " млн ₽", "warn", "ticket"],
+    ["Платёж рынок / льгота", fmt(v.payMarket, 0) + " / " + fmt(v.payFamily, 0) + " тыс. ₽", "warn", "payMarket"],
+    ["Рост котлован → ключи", v.growth + "% за " + v.cycle + " мес.", v.growth >= 14 ? "good" : v.growth <= 8 ? "crit" : "warn", "pit"],
+    ["Тот же рост в год", fmt(v.growthAnn) + "% при вкладе " + fmt(v.deposit) + "%", v.growthAnn >= v.deposit ? "good" : "crit", "pit"],
+    ["Дисконт котлована к готовому", v.pitDisc + "%", v.pitDisc >= 12 ? "good" : "warn", "pitDisc"],
+    ["Рост + 55% аренды в год", fmt(v.totalAnn) + "%", v.beatDeposit >= 0 ? "good" : "crit", "totalAnn"]
   ];
   const word = { good:"норма", warn:"наблюдать", crit:"аномалия" };
   document.getElementById("sheet").innerHTML = rows.map(r =>
-    `<div class="row"><span class="k">${r[0]}</span><span class="v">${r[1]}</span><span class="st ${r[2]}">${word[r[2]]}</span></div>`).join("");
+    `<div class="row"><span class="k">${r[0]}${ti(r[3])}</span><span class="v">${r[1]}</span><span class="st ${r[2]}">${word[r[2]]}</span></div>`).join("");
 
   /* deviations */
   document.getElementById("notes").innerHTML = deviations(v).map(i =>
@@ -865,20 +1022,20 @@ function renderHtml(v) {
   document.getElementById("pSelf").innerHTML = `
     <span class="who">Покупатель</span><h3>Для себя</h3>
     <div class="pstats">
-      <div><div class="v">${fmt(v.ticket / 1000, 1)}<small>млн ₽</small></div><div class="c">типичный чек</div></div>
-      <div><div class="v">${fmt(v.payMarket, 0)}<small>тыс. ₽</small></div><div class="c">платёж по рыночной ставке</div></div>
-      <div><div class="v">${fmt(v.payFamily, 0)}<small>тыс. ₽</small></div><div class="c">платёж по льготе</div></div>
-      <div><div class="v">${v.fam}<small>%</small></div><div class="c">сделок с семейной ипотекой</div></div>
+      <div><div class="v">${fmt(v.ticket / 1000, 1)}<small>млн ₽</small></div><div class="c">типичный чек${ti("ticket")}</div></div>
+      <div><div class="v">${fmt(v.payMarket, 0)}<small>тыс. ₽</small></div><div class="c">платёж по рыночной ставке${ti("payMarket")}</div></div>
+      <div><div class="v">${fmt(v.payFamily, 0)}<small>тыс. ₽</small></div><div class="c">платёж по льготе${ti("payFamily")}</div></div>
+      <div><div class="v">${v.fam}<small>%</small></div><div class="c">сделок с семейной ипотекой${ti("family")}</div></div>
     </div>
     <p>${esc(B.self.b)}</p>
     <div class="verdict"><b>Вывод</b><span>${esc(B.self.v)}</span></div>`;
   document.getElementById("pInv").innerHTML = `
     <span class="who">Инвестор</span><h3>Аренда и рост к ключам</h3>
     <div class="pstats">
-      <div><div class="v">${fmt(v.yieldP)}<small>%</small></div><div class="c">аренда после ввода</div></div>
-      <div><div class="v">+${v.growth}<small>%</small></div><div class="c">рост прайса за ${v.cycle} мес.</div></div>
-      <div><div class="v">${fmt(v.irrPit)}<small>%</small></div><div class="c">в год с дисконтом котлована</div></div>
-      <div><div class="v">${fmt(v.deposit)}<small>%</small></div><div class="c">ставка вклада рядом</div></div>
+      <div><div class="v">${fmt(v.yieldP)}<small>%</small></div><div class="c">аренда после ввода${ti("rent")}</div></div>
+      <div><div class="v">+${v.growth}<small>%</small></div><div class="c">рост прайса за ${v.cycle} мес.${ti("pit")}</div></div>
+      <div><div class="v">${fmt(v.irrPit)}<small>%</small></div><div class="c">в год с дисконтом котлована${ti("irr")}</div></div>
+      <div><div class="v">${fmt(v.deposit)}<small>%</small></div><div class="c">ставка вклада рядом${ti("deposit")}</div></div>
     </div>
     <p>${esc(B.inv.b)}</p>
     <div class="verdict"><b>Вывод</b><span>${esc(B.inv.v)}</span></div>`;
@@ -888,12 +1045,12 @@ function renderHtml(v) {
   /* forecast table */
   const f = n => sgn(n, 0) + "%";
   const sc = [
-    ["База", "var(--sc1)", v.q4Base, v.h1Base, "Вклады около 13%, часть денег перекладывают, ипотека без разморозки."],
-    ["Стена вкладов", "var(--sc2)", v.q4Bull, v.h1Bull, `Закрываются 12–24-месячные депозиты 2024–25 годов, в срез идёт ${v.depositUnlock}% высвобожденных денег.`],
-    ["Вклады липкие", "var(--sc3)", v.q4Bear, v.h1Bear, "Пролонгация под 12–13%, ЦБ держит 14%, семейная ипотека не расширяется."]
+    ["База", "var(--sc1)", v.q4Base, v.h1Base, "base", "Вклады около 13%, часть денег перекладывают, ипотека без разморозки."],
+    ["Стена вкладов", "var(--sc2)", v.q4Bull, v.h1Bull, "wall", `Закрываются 12–24-месячные депозиты 2024–25 годов, в срез идёт ${v.depositUnlock}% высвобожденных денег.`],
+    ["Вклады липкие", "var(--sc3)", v.q4Bear, v.h1Bear, "sticky", "Пролонгация под 12–13%, ЦБ держит 14%, семейная ипотека не расширяется."]
   ];
   document.getElementById("fcTable").innerHTML = sc.map(r => `
-    <tr><td><div class="sn"><i style="border-color:${r[1]}"></i>${r[0]}</div><div class="cond">${r[4]}</div></td>
+    <tr><td><div class="sn"><i style="border-color:${r[1]}"></i>${r[0]}${ti(r[4])}</div><div class="cond">${r[5]}</div></td>
     <td>${f(r[2])}</td><td>${f(r[3])}</td></tr>`).join("");
   document.getElementById("fcLegend").innerHTML =
     `<span><i style="background:var(--ink)"></i>факт</span>` +
@@ -1167,6 +1324,53 @@ function hexA(hex, a) {
 function refresh() { syncControls(); const v = compute(); renderHtml(v); renderCharts(v); }
 buildControls();
 refresh();
+
+/* glossary section */
+(() => {
+  const groups = {};
+  Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
+  const order = ["Фильтры","Предложение","Спрос","Баланс","Деньги и ставки","Инвестор","Прогноз"];
+  const cols = [[], [], []];
+  order.forEach((g, i) => cols[[0,0,1,1,2,2,2][i]].push(g));
+  document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.map(g => `<h3>${g}</h3>` +
+    groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
+})();
+
+/* info tooltips: hover on desktop, tap on touch, focus via keyboard */
+(() => {
+  const box = document.getElementById("tipbox");
+  let cur = null, pinned = false;
+  document.querySelectorAll(".ti").forEach(b => { const e = GLOSS[b.dataset.tip]; if (e && !b.hasAttribute("aria-label")) b.setAttribute("aria-label", "Что такое: " + e.t); });
+  function show(btn) {
+    const e = GLOSS[btn.dataset.tip]; if (!e) return;
+    if (cur && cur !== btn) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); }
+    cur = btn;
+    box.innerHTML = `<b>${esc(e.t)}</b><span class="l">Что это</span><p>${esc(e.d)}</p><span class="l">Как читать</span><p>${esc(e.h)}</p>`;
+    btn.setAttribute("aria-expanded", "true"); btn.setAttribute("aria-describedby", "tipbox");
+    box.classList.add("on");
+    const r = btn.getBoundingClientRect(), bw = box.offsetWidth, bh = box.offsetHeight, m = 12;
+    let x = r.left + r.width / 2 - bw / 2; x = Math.max(m, Math.min(x, window.innerWidth - bw - m));
+    let y = r.bottom + 8; if (y + bh > window.innerHeight - m) y = Math.max(m, r.top - bh - 8);
+    box.style.left = x + "px"; box.style.top = y + "px";
+  }
+  function hide() {
+    box.classList.remove("on"); pinned = false;
+    if (cur) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); cur = null; }
+  }
+  document.addEventListener("pointerover", e => { const b = e.target.closest(".ti"); if (b && e.pointerType === "mouse" && !pinned) show(b); });
+  document.addEventListener("pointerout", e => { const b = e.target.closest(".ti"); if (b && e.pointerType === "mouse" && !pinned && !box.contains(e.relatedTarget)) hide(); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".ti");
+    if (b) { e.preventDefault(); if (pinned && cur === b) hide(); else { show(b); pinned = true; } return; }
+    if (!box.contains(e.target)) hide();
+  });
+  let quiet = false;
+  document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti"); if (b && !quiet) show(b); });
+  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti") && !pinned) hide(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && cur) { const b = cur; hide(); quiet = true; b.focus(); quiet = false; } });
+  window.addEventListener("scroll", () => { if (cur) hide(); }, { passive: true });
+  window.addEventListener("resize", () => { if (cur) hide(); });
+})();
 (() => {
   const links = [...document.querySelectorAll(".nav a")];
   const targets = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
