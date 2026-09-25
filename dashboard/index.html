@@ -299,6 +299,15 @@ section.block { margin-top: 34px; }
 .pk .c { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
 .assume { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
 
+.ftable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.ftable th { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; padding: 0 0 8px 10px; white-space: nowrap; }
+.ftable th:first-child { text-align: left; padding-left: 0; }
+.ftable td { border-top: 1px solid var(--line); padding: 11px 0 11px 10px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.ftable td:first-child { text-align: left; padding-left: 0; white-space: normal; font-weight: 600; color: var(--ink-2); }
+.ftable td.rate { color: var(--accent-2); font-weight: 800; }
+.ftable td.up { color: var(--crit); } .ftable td.dn { color: var(--good); }
+.ftable tr.was td { color: var(--muted); font-weight: 600; }
+
 /* info tips */
 .ti {
   display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; padding: 0; margin-left: 6px; vertical-align: 1px;
@@ -506,6 +515,16 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
           <div class="pk" id="parkStats"></div>
           <ul class="assume" id="parkAssume"></ul>
         </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Семейная ипотека с 1 октября 2026<button class="ti" type="button" data-tip="diffRate">i</button></h3><span class="u">ставка / лимит</span></div>
+          <div class="tscroll"><table class="ftable" id="famRates"></table></div>
+          <div class="cap">Источник: Минфин России, РБК, в подборке «Всё о стройке». Москва, Санкт-Петербург, Московская и Ленинградская области идут по столичной шкале.</div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Платёж семьи в срезе: сентябрь и октябрь</h3><span class="u">тыс. ₽ в месяц, 30 лет</span></div>
+          <div class="tscroll"><table class="ftable" id="famPay"></table></div>
+          <ul class="assume" id="famAssume"></ul>
+        </div>
       </div>
     </section>
 
@@ -517,6 +536,19 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
           <p>Ставка, ипотечные каналы, продажи к готовности, сроки, аренда и экономика входа на котловане.</p>
         </div>
         <div class="legend" style="margin:0;align-items:center"><span style="font-size:12px;color:var(--muted)">Отметки<button class="ti" type="button" data-tip="status">i</button></span><span class="st good">норма</span><span class="st warn">наблюдать</span><span class="st crit">аномалия</span></div>
+      </div>
+      <div class="g" style="margin-bottom:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Распроданность: Москва и регионы<button class="ti" type="button" data-tip="sold">i</button></h3><span class="u">ЕИСЖС на 11.09.2026</span></div>
+          <div class="box h300"><canvas id="chReg" role="img" aria-label="Распроданность строящегося жилья по регионам"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>продано</span><span><i class="sq" style="background:var(--sc3)"></i>не продано</span><span><i class="sq hatch"></i>продажи не открыты</span></div>
+          <div class="cap">Источник: ЕИСЖС, данные на 11 сентября 2026 года, в подборке «Всё о стройке». Регионы не фильтруются.</div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Что отличает Москву<button class="ti" type="button" data-tip="notOpened">i</button></h3></div>
+          <div class="pk" id="regStats"></div>
+          <div class="lag"><div class="out" id="regOut"></div></div>
+        </div>
       </div>
       <div class="panel"><div class="sheet" id="sheet"></div></div>
     </section>
@@ -708,8 +740,8 @@ const GLOSS = {
     d:"Доля ДДУ, оплаченных с ипотечным кредитом, льготным или рыночным.",
     h:"Чем выше доля, тем сильнее срез зависит от ставки и банковских программ. Выше 60% значит, что срез живёт на кредите." },
   family: { g:"Деньги и ставки", t:"Семейная ипотека",
-    d:"Льготная программа для семей с детьми под 6%. В 2026 году она узкая: лимиты банков, жёсткие требования и одна льгота на семью.",
-    h:"Доля показывает, сколько сделок среза закрывает льгота. Ниже 20% значит, что большинство покупателей её не получает и упирается в рыночную ставку." },
+    d:"Льготная программа для семей с детьми. До 30.09.2026 ставка 6% для всех. С 01.10.2026 ставка зависит от числа детей и региона: в Москве 12% при одном ребёнке до 7 лет, 10% при двух, 8% при трёх, 6% при четырёх, 4% при пяти и более. Одна льгота на семью.",
+    h:"Доля показывает, сколько сделок среза закрывает льгота. Ниже 20% значит, что большинство покупателей её не получает. С октября льгота для семей с одним ребёнком почти сравнивается с рыночной ставкой." },
   keyrate: { g:"Деньги и ставки", t:"Ключевая ставка ЦБ",
     d:"Базовая ставка Банка России: 14% после паузы на заседании 11.09.2026. Пик был 21% в октябре 2024 года.",
     h:"От неё отсчитываются ставки по рыночной ипотеке (обычно ключевая плюс 2–3 п.п.) и по вкладам." },
@@ -864,8 +896,11 @@ const GLOSS = {
     d:"С 01.02.2026 на семью можно оформить только одну семейную ипотеку. Оба супруга становятся созаёмщиками.",
     h:"Закрывает схемы с двумя льготными кредитами на семью. Сужает льготный канал для массового сегмента." },
   diffRate: { g:"Нормативка", t:"Дифференцированная ставка",
-    d:"Обсуждаемая схема семейной ипотеки: ставка зависит от числа детей. Предлагались 10–12% при одном ребёнке, 6% при двух и 4% для многодетных.",
-    h:"Пока не принята. Если примут, массовый срез потеряет часть покупателей с одним ребёнком." },
+    d:"Схема семейной ипотеки с 01.10.2026: ставка зависит от числа детей и региона. В столичных субъектах шкала 12 / 10 / 8 / 6 / 4%, в остальных регионах на 2 п.п. ниже. Лимит кредита в Москве 12, 15 или 18 млн ₽.",
+    h:"Для семьи с одним ребёнком льгота дорожает вдвое. Многодетным более высокий лимит может снизить платёж, если лот дороже 15 млн ₽." },
+  notOpened: { g:"Баланс", t:"Продажи не открыты",
+    d:"Площадь в строящихся домах, по которой застройщик ещё не открыл продажи. По данным ЕИСЖС.",
+    h:"Это резерв предложения. Большая доля значит, что застройщики придерживают квартиры под рост цены или ждут спроса. В Москве резерв 10%, в регионах до 44%." },
   sticky: { g:"Прогноз", t:"Липкие вклады",
     d:"Сценарий, в котором истекающие деньги остаются на депозитах: их продлевают под 12–13%.",
     h:"Липкость показывает долю денег, которая не уйдёт с вкладов. Чем она выше, тем слабее волна спроса." },
@@ -900,9 +935,43 @@ const PIPE_SRC = [
   ["Novostroy-M: ввод 2025", "https://www.novostroy-m.ru/novosti/v_moskve_v_2025"],
   ["Движение.ру: 40 новостроек в 2025", "https://dvizhenie.ru/media/5388/na-rynok-moskvy-vyveli-vsego-40-novostroek-v-2025-godu-eto-minimum-za-10-let"],
   ["РБК: семейная ипотека с 1 февраля", "https://realty.rbc.ru/news/694e6c6a9a79474245a85d0c"],
+  ["Всё о стройке: семейная ипотека с 1 октября 2026 (Минфин, РБК)", null],
+  ["Всё о стройке: распроданность по регионам (ЕИСЖС, 11.09.2026)", null],
   ["ЕРЗ: порядок платы за ВРИ", "https://erzrf.ru/news/v-moskve-aktualizirovan-poryadok-vzimaniya-platy-za-arendu-i-za-izmeneniye-vida-razreshennogo-ispolzovaniya-zemelnogo-uchastka"],
   ["945-ПП в редакции с 05.08.2026", "https://www.glavbukh.ru/npd/edoc/80_537986033"]
 ];
+/* ЕИСЖС на 11.09.2026 (подборка «Всё о стройке»): объём стройки, млн м², и доли, % */
+const REGIONS = [
+  { n:"Москва", v:15.7, sold:47, unsold:43, closed:10 },
+  { n:"Свердловская обл.", v:5.9, sold:29, unsold:52, closed:19 },
+  { n:"Новосибирская обл.", v:3.7, sold:26, unsold:46, closed:28 },
+  { n:"Тюменская обл.", v:3.5, sold:26, unsold:51, closed:23 },
+  { n:"Ростовская обл.", v:4.8, sold:25, unsold:50, closed:25 },
+  { n:"Краснодарский край", v:7.8, sold:19, unsold:37, closed:44 }
+];
+/* Семейная ипотека с 01.10.2026 (Минфин, РБК): ставка регионы / столичные субъекты, лимит кредита, млн ₽ */
+const FAMILY_2026 = [
+  { f:"Один ребёнок до 7 лет", r:10, m:12, lr:6, lm:12 },
+  { f:"Двое детей, младший до 7 лет", r:8, m:10, lr:8, lm:15 },
+  { f:"Трое детей", r:6, m:8, lr:10, lm:18 },
+  { f:"Четверо детей", r:4, m:6, lr:10, lm:18 },
+  { f:"Пятеро и более", r:2, m:4, lr:10, lm:18 }
+];
+const FAM_OLD = { rate:6, limit:12 }; /* до 30.09.2026 для Москвы */
+const annuity = (P, rate, n = 360) => { const i = rate / 1200; return P * i / (1 - Math.pow(1 + i, -n)); };
+
+function familyModel(v) {
+  const price = v.ticket / 1000;             /* млн ₽ */
+  const need = price * 0.8;                  /* кредит при взносе 20% */
+  const pay = (rate, limit) => {
+    const fam = Math.min(need, limit), gap = Math.max(0, need - limit);
+    return { fam, gap, total: (annuity(fam, rate) + annuity(gap, 16)) * 1000 };
+  };
+  const before = pay(FAM_OLD.rate, FAM_OLD.limit);
+  const rows = FAMILY_2026.slice(0, 3).map(x => { const a = pay(x.m, x.lm); return { ...x, after: a, d: (a.total / before.total - 1) * 100 }; });
+  return { price, need, before, rows };
+}
+
 /* Парковки: доли квартир по площади в классе и средняя площадь корзины */
 const FLAT_MIX = { mass:[.88,.10,.02], business:[.62,.28,.10], premium:[.25,.40,.35] };
 const FLAT_AREA = [45, 84, 140];
@@ -934,15 +1003,15 @@ function regEvents(v, pk) {
     { dt:"01.02.2026", act:"Семейная ипотека: одна на семью", st:["good","действует"],
       d:"Одна льготная ипотека на семью. Оба супруга обязательно выступают созаёмщиками.",
       fx:`В срезе семейная ипотека закрывает ${v.fam}% сделок. ` + (v.fam >= 20 ? "Правило сужает льготный канал заметно: часть семей теряет вторую льготу." : "Срез мало зависит от льготы, эффект слабый.") },
-    { dt:"обсуждается", act:"Семейная ипотека: ставка по числу детей", st:["info","не принято"],
-      d:"Обсуждаемая шкала: 10–12% при одном ребёнке, 6% при двух, 4% для многодетных.",
-      fx: massy ? "Для массового среза это главный риск: семьи с одним ребёнком потеряют доступный платёж." : "Для бизнеса и премиума эффект небольшой: доля льготы в сделках мала." },
     { dt:"05.08.2026", act:"2118-ПП: парковки в 945-ПП", st:["warn","переходный период"],
       d:"Норматив машино-мест зависит от площади квартиры: 0,8 до 70 м², 1,2 от 70 до 100 м², 1,6 свыше 100 м². Проекты с РНС, экспертизой или АГР до 05.08.2026 идут по старым нормам.",
       fx:`В срезе нужно ${fmt(pk.newAvg, 2)} машино-места на квартиру против ${fmt(pk.oldAvg, 2)} раньше. Нагрузка около ${fmt(pk.perM2, 0)} тыс. ₽ на м², это ${fmt(pk.share, 1)}% прайса.` },
     { dt:"11.09.2026", act:"ЦБ: ключевая ставка 14%, пауза", st:["good","действует"],
       d:"После снижения с 21% Банк России взял паузу. Рыночная ипотека остаётся около 16%.",
-      fx:`Рыночная ипотека участвует в ${v.mort}% сделок среза. ` + (v.mort >= 60 ? "Пауза держит срез в ожидании." : "Срез меньше зависит от ставки.") }
+      fx:`Рыночная ипотека участвует в ${v.mort}% сделок среза. ` + (v.mort >= 60 ? "Пауза держит срез в ожидании." : "Срез меньше зависит от ставки.") },
+    { dt:"01.10.2026", act:"Семейная ипотека: ставка по детям и региону", st:["warn","с 1 октября"],
+      d:"В Москве 12% при одном ребёнке до 7 лет, 10% при двух, 8% при трёх, 6% при четырёх, 4% при пяти и более. Лимит кредита 12, 15 и 18 млн ₽. До 30 сентября действует 6% для всех.",
+      fx: (() => { const f = familyModel(v); const r1 = f.rows[0]; return `Для семьи с одним ребёнком платёж по типичному лоту среза вырастет на ${fmt(r1.d, 0)}%: с ${fmt(f.before.total, 0)} до ${fmt(r1.after.total, 0)} тыс. ₽ в месяц. ` + (massy ? "Для массового среза это главный удар по спросу в IV квартале." : "Срез меньше зависит от льготы, но покупатели с детьми считают заново."); })() }
   ];
 }
 
@@ -1342,7 +1411,7 @@ function renderHtml(v) {
   document.getElementById("lagOut").innerHTML = `РНС на МКД в I полугодии 2026 года на 44,5% ниже, чем годом раньше. Эти дома должны были выйти в продажу в 2026–27 годах и в ввод в 2028–29 годах. В срезе когорта ввода 2029 года уже всего ${fmt(v.years[3].m2, 2)} млн м², а 2030+ ${fmt(v.years[4].m2, 2)} млн м²: к концу десятилетия предложение сузится.`;
   document.getElementById("pTable").innerHTML = `<thead><tr><th>Этап</th><th>2025</th><th>2026</th><th>г/г</th><th>Источник</th></tr></thead><tbody>` +
     PIPE_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="d ${r[4]}">${r[3]}</td><td class="src">${r[5]}</td></tr>`).join("") + "</tbody>";
-  document.getElementById("pSrc").innerHTML = PIPE_SRC.map(x => `<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join("");
+  document.getElementById("pSrc").innerHTML = PIPE_SRC.map(x => x[1] ? `<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>` : `<span style="color:var(--muted)">${x[0]}</span>`).join("");
 
   /* regulation */
   const pk = parkingModel(v);
@@ -1361,12 +1430,40 @@ function renderHtml(v) {
     "Рыночные оценки роста цен из-за норматива доходят до 18%."
   ].map(t => `<li>${esc(t)}</li>`).join("");
 
+  /* regions */
+  const msk = REGIONS[0], rest = REGIONS.slice(1);
+  const avg = k => rest.reduce((a, r) => a + r[k] * r.v, 0) / rest.reduce((a, r) => a + r.v, 0);
+  document.getElementById("regStats").innerHTML = `
+    <div><div class="v">${msk.sold}<small>%</small></div><div class="c">продано в Москве</div></div>
+    <div><div class="v">${fmt(avg("sold"), 0)}<small>%</small></div><div class="c">продано в пяти регионах, средневзвешенно</div></div>
+    <div><div class="v">${msk.closed}<small>%</small></div><div class="c">продажи не открыты в Москве</div></div>
+    <div><div class="v">${fmt(avg("closed"), 0)}<small>%</small></div><div class="c">продажи не открыты в регионах</div></div>`;
+  document.getElementById("regOut").innerHTML = `Москва продана лучше регионов, но почти всё уже выведено в продажу: резерв неоткрытых продаж 10% против 19–44% в регионах. Нового предложения без новых РНС почти не будет. ` +
+    (v.s.zone === "all" && v.s.klass === "all" && v.s.dev === "all"
+      ? `Модель дашборда для всей Москвы совпадает с ЕИСЖС: ${fmt(v.m2, 1)} млн м² в стройке, распроданность ${v.sold}%.`
+      : `В выбранном срезе модель даёт распроданность ${v.sold}% при городских 47% по ЕИСЖС.`);
+
+  /* family mortgage */
+  document.getElementById("famRates").innerHTML = `<thead><tr><th>Семья</th><th>Регионы</th><th>Москва</th><th>Лимит, млн ₽</th></tr></thead><tbody>` +
+    `<tr class="was"><td>До 30.09.2026, все семьи</td><td>6%</td><td>6%</td><td>6 / 12</td></tr>` +
+    FAMILY_2026.map(x => `<tr><td>${x.f}</td><td>${x.r}%</td><td class="rate">${x.m}%</td><td>${x.lr} / ${x.lm}</td></tr>`).join("") + "</tbody>";
+  const fm = familyModel(v);
+  document.getElementById("famPay").innerHTML = `<thead><tr><th>Семья</th><th>Ставка</th><th>Льготная часть, млн</th><th>Платёж</th><th>К сентябрю</th></tr></thead><tbody>` +
+    `<tr class="was"><td>До 30.09.2026</td><td>${FAM_OLD.rate}%</td><td>${fmt(fm.before.fam, 1)}</td><td>${fmt(fm.before.total, 0)}</td><td>база</td></tr>` +
+    fm.rows.map(x => `<tr><td>${x.f}</td><td class="rate">${x.m}%</td><td>${fmt(x.after.fam, 1)}</td><td>${fmt(x.after.total, 0)}</td><td class="${x.d > 0.5 ? "up" : x.d < -0.5 ? "dn" : ""}">${sgn(x.d, 0)}%</td></tr>`).join("") + "</tbody>";
+  document.getElementById("famAssume").innerHTML = [
+    `Типичный лот среза ${fmt(fm.price, 1)} млн ₽, первый взнос 20%, нужен кредит ${fmt(fm.need, 1)} млн ₽ на 30 лет.`,
+    fm.need > FAM_OLD.limit ? `Сумма сверх лимита льготы берётся рыночной ипотекой под 16%. Поэтому семьям с тремя детьми более высокий лимит 18 млн ₽ может даже снизить платёж.` : `Кредит укладывается в лимит, рыночная часть не нужна.`,
+    "Четверо детей: 6% и лимит 18 млн ₽; пятеро и более: 4%. В регионах шкала на 2 п.п. ниже, лимиты 6–10 млн ₽.",
+    "В сентябре возможен всплеск заявок до смены условий, в октябре провал спроса у семей с одним ребёнком."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+
   /* forecast table */
   const f = n => sgn(n, 0) + "%";
   const sc = [
-    ["База", "var(--sc1)", v.q4Base, v.h1Base, "base", "Вклады около 13%, часть денег перекладывают, ипотека без разморозки."],
+    ["База", "var(--sc1)", v.q4Base, v.h1Base, "base", "Вклады около 13%, часть денег перекладывают. С 1 октября семейная ипотека дорожает для семей с одним-двумя детьми."],
     ["Стена вкладов", "var(--sc2)", v.q4Bull, v.h1Bull, "wall", `Закрываются 12–24-месячные депозиты 2024–25 годов, в срез идёт ${v.depositUnlock}% высвобожденных денег.`],
-    ["Вклады липкие", "var(--sc3)", v.q4Bear, v.h1Bear, "sticky", "Пролонгация под 12–13%, ЦБ держит 14%, семейная ипотека не расширяется."]
+    ["Вклады липкие", "var(--sc3)", v.q4Bear, v.h1Bear, "sticky", "Пролонгация под 12–13%, ЦБ держит 14%, семейная ипотека в Москве с 1 октября стоит 10–12% для большинства семей."]
   ];
   document.getElementById("fcTable").innerHTML = sc.map(r => `
     <tr><td><div class="sn"><i style="border-color:${r[1]}"></i>${r[0]}${ti(r[4])}</div><div class="cond">${r[5]}</div></td>
@@ -1469,6 +1566,7 @@ const valueLabels = {
     chart.data.datasets.forEach((ds, di) => {
       chart.getDatasetMeta(di).data.forEach((bar, i) => {
         const val = ds.data[i]; if (val == null) return;
+        if (opts.inside) { const txt = opts.fmt(val); if (!txt) return; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = di === 0 ? "#1a1008" : t.ink; ctx.fillText(txt, (bar.x + bar.base) / 2, bar.y); ctx.fillStyle = t.ink; return; }
         if (opts.vertical) { ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(opts.fmt(val), bar.x, bar.y - 5); }
         else { const neg = val < 0; ctx.textBaseline = "middle"; ctx.textAlign = neg ? "right" : "left"; ctx.fillText(opts.fmt(val), bar.x + (neg ? -6 : 6), bar.y); }
       });
@@ -1629,6 +1727,33 @@ function renderCharts(v) {
     plugins: [valueLabels]
   });
 
+  /* regions: 100% stacked */
+  const regSeg = (label, key, color) => ({ label, data: REGIONS.map(r => r[key]), backgroundColor: color,
+    borderColor: t.panel, borderWidth: { right: 2 }, borderSkipped: false, maxBarThickness: 26, categoryPercentage: .72 });
+  upsert("chReg", {
+    type: "bar",
+    data: { labels: REGIONS.map(r => [r.n, fmt(r.v, 1) + " млн м²"]), datasets: [
+      regSeg("Продано", "sold", c => barGrad(c.chart, true)),
+      regSeg("Не продано", "unsold", t.sc3),
+      regSeg("Продажи не открыты", "closed", () => hatch())
+    ]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: {
+        x: axis(t, { stacked: true, min: 0, max: 100, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }),
+        y: axis(t, { stacked: true, grid: { display: false }, ticks: { color: c => c.index === 0 ? t.accent2 : t.ink2, font: c => ({ family: FONT, size: 12, weight: c.index === 0 ? "800" : "500" }) } })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => x >= 12 ? x + "%" : "", inside: true },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false, callbacks: {
+          title: c => REGIONS[c[0].dataIndex].n + ", " + fmt(REGIONS[c[0].dataIndex].v, 1) + " млн м²",
+          label: c => ` ${c.dataset.label}: ${c.parsed.x}%`
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
   /* parking old vs new */
   const pkm = parkingModel(v);
   upsert("chPark", {
@@ -1730,6 +1855,7 @@ const TERMS = [
   ["gzk", "ГЗК"],
   ["agr", "АГР"],
   ["expertiza", "госэкспертиз[а-яё]*|экспертиз[а-яё]*"],
+  ["notOpened", "(?:продаж[а-яё]*\\s+не\\s+открыт[а-яё]*|неоткрыт[а-яё]*\\s+продаж[а-яё]*)"],
   ["rngp", "РНГП"],
   ["vri", "ВРИ"],
   ["pzz", "ПЗЗ"],
