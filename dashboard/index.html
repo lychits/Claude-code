@@ -258,6 +258,47 @@ section.block { margin-top: 34px; }
 .stable .sn i { width: 18px; height: 0; border-top: 2px dashed; flex: none; }
 .stable .cond { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
 
+/* pipeline & regulation */
+.chip-city { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--ink-2);
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+.chip-city::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sc3); }
+.lag { display: grid; gap: 0; margin-top: 16px; }
+.lag .stp { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 12px; }
+.lag .dot { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-weight: 800; font-size: 12px;
+  background: var(--card-2); border: 1px solid var(--line); color: var(--accent-2); }
+.lag .stp.now .dot { background: linear-gradient(145deg, #ff9a3c, #ff7a1a); color: var(--on-accent); border-color: transparent; }
+.lag b { display: block; font-size: 14px; font-weight: 800; margin-top: 6px; }
+.lag p { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.lag .gap { margin-left: 16px; border-left: 2px dashed var(--line); padding: 8px 0 8px 28px; font-size: 11.5px; font-weight: 700; color: var(--accent-2); }
+.lag .out { margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: linear-gradient(90deg, rgba(255,122,26,.14), rgba(255,122,26,.03)); border: 1px solid rgba(255,122,26,.25); font-weight: 600; color: var(--ink); line-height: 1.5; font-size: 13px; }
+.ptable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.ptable th { text-align: left; font-size: 11px; color: var(--muted); font-weight: 700; padding: 0 12px 8px 0; }
+.ptable td { border-top: 1px solid var(--line); padding: 12px 12px 12px 0; vertical-align: top; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ptable td:first-child { color: var(--ink); font-weight: 800; white-space: nowrap; }
+.ptable td.d { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ptable td.d.neg { color: var(--crit); } .ptable td.d.pos { color: var(--good); }
+.ptable .src { color: var(--muted); font-size: 12px; }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 12px; }
+.srcs a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.srcs a:hover { color: var(--accent-2); }
+.events { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+@media (max-width: 1400px) { .events { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .events { grid-template-columns: 1fr; } }
+.ev { background: var(--card-2); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.ev .when { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ev .dt { font-size: 12px; font-weight: 800; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+.ev .act { font-size: 14px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
+.ev p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ev .fx { margin-top: auto; padding-top: 9px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--muted); line-height: 1.5; }
+.ev .fx b { color: var(--ink); font-weight: 700; }
+.st.info { color: #aab3ff; background: rgba(107,122,232,.14); } .st.info::before { background: var(--sc3); }
+.pk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.pk > div { background: var(--card-2); border-radius: 14px; padding: 12px 13px; }
+.pk .v { font-size: 22px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.pk .v small { font-size: 12px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.pk .c { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.assume { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+
 /* info tips */
 .ti {
   display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; padding: 0; margin-left: 6px; vertical-align: 1px;
@@ -317,8 +358,10 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <a href="#top" class="active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Срез и KPI</a>
       <a href="#supply"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V8l6-4v17"/><path d="M11 21V10l8 3v8"/></svg>Предложение</a>
       <a href="#demand"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>Спрос и ставка</a>
+      <a href="#pipeline"><svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>Цикл стройки</a>
       <div class="sec">Анализ</div>
       <a href="#balance"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7h6z"/><path d="M19 7l-3 7h6z"/></svg>Баланс среза</a>
+      <a href="#regulation"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6"/><path d="M10 16h6"/></svg>Нормативка</a>
       <a href="#deviations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Отклонения</a>
       <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
       <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
@@ -401,6 +444,67 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
               <div class="box h160" style="margin-top:6px"><canvas id="chDemand" role="img" aria-label="Индекс спроса среза"></canvas></div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="pipeline">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Цикл девелопмента</div>
+          <h2>РНС, старты продаж и ввод: где сжимается воронка</h2>
+          <p>Разрешения на строительство, вывод проектов на рынок и ввод жилья по Москве в сравнении с тем же периодом прошлого года. Разрешения сегодня превращаются в старты через 3–9 месяцев и в ввод через 2,5–3 года.</p>
+        </div>
+        <span class="chip-city">вся Москва · фильтры не применяются</span>
+      </div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Этапы цикла: 2026 к 2025<button class="ti" type="button" data-tip="pipeline">i</button></h3><span class="u">изменение г/г, %</span></div>
+          <div class="box h300"><canvas id="chPipe" role="img" aria-label="Изменение этапов цикла девелопмента год к году"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>сокращение</span><span><i class="sq" style="background:var(--sc3)"></i>рост</span></div>
+          <div class="cap">Периоды у этапов разные, каждый сравнивается с тем же периодом 2025 года. ДДУ взяты из модели среза «вся Москва».</div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Лаг между этапами<button class="ti" type="button" data-tip="rns">i</button></h3></div>
+          <div class="lag">
+            <div class="stp now"><div class="dot">1</div><div><b>РНС</b><p>Мосгосстройнадзор выдаёт разрешение после ГЗК, АГР и госэкспертизы.</p></div></div>
+            <div class="gap">3–9 месяцев</div>
+            <div class="stp"><div class="dot">2</div><div><b>Старт продаж</b><p>Проект выходит на рынок, открываются эскроу-счета и проектное финансирование.</p></div></div>
+            <div class="gap">24–36 месяцев</div>
+            <div class="stp"><div class="dot">3</div><div><b>Ввод и ключи</b><p>Разрешение на ввод, раскрытие эскроу, передача квартир.</p></div></div>
+          </div>
+          <div class="lag"><div class="out" id="lagOut"></div></div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Факты по этапам и источники</h3><span class="u">по публикациям, сентябрь 2026</span></div>
+          <div class="tscroll" style="margin-top:12px"><table class="ptable" id="pTable"></table></div>
+          <div class="srcs" id="pSrc"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="regulation">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Нормативка</div>
+          <h2>Что меняют правила: парковки, льготная ипотека, ВРИ</h2>
+          <p>Нормативные изменения 2024–2026 годов, которые влияют на себестоимость, продукт и спрос. Внизу карточки оценка эффекта для выбранного среза.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Хронология изменений<button class="ti" type="button" data-tip="rngp">i</button></h3><span class="u">реакция среза пересчитывается от фильтров</span></div>
+        <div class="events" id="events"></div>
+      </div>
+      <div class="g" style="margin-top:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Парковки по 945-ПП: было и стало<button class="ti" type="button" data-tip="pp2118">i</button></h3><span class="u">машино-мест на квартиру</span></div>
+          <div class="box h300"><canvas id="chPark" role="img" aria-label="Норматив машино-мест до и после 2118-ПП"></canvas></div>
+          <div class="legend"><span><i class="sq hatch"></i>до 05.08.2026, методика калькулятора ТЭП</span><span><i class="sq" style="background:var(--accent)"></i>по 2118-ПП</span></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Нагрузка на проект в срезе<button class="ti" type="button" data-tip="mm">i</button></h3><span class="u">оценка модели</span></div>
+          <div class="pk" id="parkStats"></div>
+          <ul class="assume" id="parkAssume"></ul>
         </div>
       </div>
     </section>
@@ -711,6 +815,57 @@ const GLOSS = {
   cbr: { g:"Источники", t:"ЦБ",
     d:"Центральный банк, он же Банк России. Устанавливает ключевую ставку.",
     h:"Решения ЦБ задают стоимость ипотеки и доходность вкладов, а через них спрос на жильё." },
+  pipeline: { g:"Цикл стройки", t:"Цикл девелопмента",
+    d:"Путь проекта: участок и ВРИ, ГЗК, АГР, госэкспертиза, РНС, старт продаж, стройка, ввод. На графике каждый этап сравнивается с тем же периодом прошлого года.",
+    h:"Если сжимаются ранние этапы (РНС, запуски), через 2–3 года сократится ввод. Сейчас падают все коммерческие этапы, растёт только городская реновация." },
+  rns: { g:"Цикл стройки", t:"РНС",
+    d:"Разрешение на строительство. В Москве его выдаёт Мосгосстройнадзор после согласований и экспертизы. Без РНС нельзя начать стройку и продавать по ДДУ.",
+    h:"Опережающий индикатор. РНС сегодня означает старт продаж через 3–9 месяцев и ввод через 2,5–3 года." },
+  starts: { g:"Цикл стройки", t:"Старт продаж",
+    d:"Вывод проекта на рынок: застройщик открывает продажи по ДДУ, обычно сразу после получения РНС и проектного финансирования.",
+    h:"Показывает, сколько нового предложения придёт. Падение запусков при слабом спросе означает, что застройщики берегут кредитные лимиты и маржу." },
+  renovation: { g:"Цикл стройки", t:"Реновация",
+    d:"Городская программа сноса старого жилого фонда и переселения жителей. Дома строит Фонд реновации.",
+    h:"Квартиры реновации не продаются на рынке, поэтому рост её ввода не добавляет предложения для покупателей." },
+  gzk: { g:"Цикл стройки", t:"ГЗК",
+    d:"Градостроительно-земельная комиссия Москвы. Одобряет параметры будущего проекта: назначение, площади, этажность.",
+    h:"Решение ГЗК до 05.08.2026 позволяет проекту остаться на старых нормах парковок." },
+  agr: { g:"Цикл стройки", t:"АГР",
+    d:"Архитектурно-градостроительное решение: согласование облика и параметров здания в Москомархитектуре.",
+    h:"Один из документов, дающих право на переходный период по новым нормам парковок." },
+  expertiza: { g:"Цикл стройки", t:"Госэкспертиза",
+    d:"Проверка проектной документации на соответствие нормам перед получением РНС.",
+    h:"Положительное заключение до 05.08.2026 тоже сохраняет проекту старые нормы парковок." },
+  rngp: { g:"Нормативка", t:"РНГП",
+    d:"Региональные нормативы градостроительного проектирования: обязательные минимумы по парковкам, школам, садам, поликлиникам, озеленению. В Москве нормативы по транспорту и парковкам утверждены 945-ПП.",
+    h:"Каждое ужесточение РНГП увеличивает себестоимость метра или уменьшает продаваемую площадь на том же участке." },
+  pp945: { g:"Нормативка", t:"945-ПП",
+    d:"Постановление Правительства Москвы от 23.12.2015 № 945-ПП: нормативы градостроительного проектирования в области транспорта, включая парковки. Менялось в 2019, 2024, 2025 и 2026 годах.",
+    h:"Смотрите, по какой редакции проект получил РНС: от этого зависит, сколько машино-мест он обязан построить." },
+  pp2118: { g:"Нормативка", t:"2118-ПП",
+    d:"Постановление Правительства Москвы от 05.08.2026, изменившее 945-ПП. Машино-места считаются по площади квартиры: 0,8 до 70 м², 1,2 от 70 до 100 м², 1,6 свыше 100 м². По транспортному моделированию возможны понижающие и повышающие коэффициенты.",
+    h:"Для небольших квартир норма выросла почти вдвое. Проекты с РНС, экспертизой, ГЗК или АГР до 05.08.2026 ещё полтора-два года выходят по старым нормам." },
+  mm: { g:"Нормативка", t:"Машино-место",
+    d:"Место для автомобиля в паркинге. В Москве для новостроек в основном подземное, одно из самых дорогих мест в стройке.",
+    h:"Дополнительные места повышают себестоимость. Если их не удаётся продать, затраты ложатся на цену квартир." },
+  k1: { g:"Нормативка", t:"К1",
+    d:"Коэффициент транспортной доступности в прежней методике 945-ПП: 0,75 при метро до 500 м, 0,9 до 1000 м, 1,0 в остальных случаях.",
+    h:"Чем ближе метро, тем меньше мест требовалось раньше." },
+  vri: { g:"Нормативка", t:"ВРИ",
+    d:"Вид разрешённого использования земельного участка: промышленность, склады, жильё и так далее.",
+    h:"Чтобы строить жильё на бывшей промзоне, ВРИ надо сменить. Это отдельная статья затрат и времени." },
+  vriFee: { g:"Нормативка", t:"Плата за изменение ВРИ",
+    d:"Москва взимает плату при смене ВРИ на вид, разрешающий строительство. Размер зависит от прироста кадастровой стоимости участка. После 2652-ПП от 22.11.2024 её вносят до изменения ПЗЗ.",
+    h:"Деньги уходят раньше, чем появляется проектное финансирование. Это удлиняет путь редевелопмента промзон к РНС." },
+  pzz: { g:"Нормативка", t:"ПЗЗ",
+    d:"Правила землепользования и застройки: документ, где для каждого участка записаны ВРИ и предельные параметры.",
+    h:"Изменение ПЗЗ — последний шаг перед проектированием на новом ВРИ." },
+  familyRule: { g:"Нормативка", t:"Одна семья — одна льгота",
+    d:"С 01.02.2026 на семью можно оформить только одну семейную ипотеку. Оба супруга становятся созаёмщиками.",
+    h:"Закрывает схемы с двумя льготными кредитами на семью. Сужает льготный канал для массового сегмента." },
+  diffRate: { g:"Нормативка", t:"Дифференцированная ставка",
+    d:"Обсуждаемая схема семейной ипотеки: ставка зависит от числа детей. Предлагались 10–12% при одном ребёнке, 6% при двух и 4% для многодетных.",
+    h:"Пока не принята. Если примут, массовый срез потеряет часть покупателей с одним ребёнком." },
   sticky: { g:"Прогноз", t:"Липкие вклады",
     d:"Сценарий, в котором истекающие деньги остаются на депозитах: их продлевают под 12–13%.",
     h:"Липкость показывает долю денег, которая не уйдёт с вкладов. Чем она выше, тем слабее волна спроса." },
@@ -721,6 +876,75 @@ const GLOSS = {
     d:"Насколько индекс спроса среза изменится к концу 2026 года и к середине 2027 года относительно сентября 2026.",
     h:"Разброс между сценариями показывает, насколько срез чувствителен к судьбе вкладов." }
 };
+
+/* ================= PIPELINE & REGULATION DATA ================= */
+/* Цифры по публикациям (поиск, сентябрь 2026). ЕРЗ и ЕИСЖС из контейнера недоступны: сверить перед использованием. */
+const PIPE = [
+  { l:"РНС на МКД", p:"I пол. 2026", v:-44.5, src:"Мосгосстройнадзор через АБН" },
+  { l:"Запуск проектов, старая Москва", p:"I пол. 2026", v:-29, src:"Коммерсантъ" },
+  { l:"ДДУ", p:"I пол. 2026", v:-38, src:"модель среза" },
+  { l:"Ввод новостроек на продажу", p:"I пол. 2026", v:-33, src:"Коммерсантъ" },
+  { l:"Ввод реновации", p:"янв–авг 2026", v:21, src:"Мосгосстройнадзор" }
+];
+const PIPE_ROWS = [
+  ["РНС", "10,0 млн м² жилья; 213 разрешений на МКД, из них 116 по реновации", "I пол.: 1,5 млн м² МКД. Янв–июль: 71 жилой дом, 1,4 млн м² квартир", "−44,5%", "neg", "Мосгосстройнадзор, Интерфакс, АБН"],
+  ["Вывод на рынок", "Янв–сен: 2,88 млн м² (−31%). За год 40 новых ЖК, минимум за 10 лет", "Янв–авг: 52 проекта, 2,6 млн м². I пол. в старой Москве: 0,96 млн м²", "−29%", "neg", "Движение.ру, Коммерсантъ, власти Москвы"],
+  ["ДДУ", "база сравнения", "I пол.: около 38,9 тыс. договоров", "−38%", "neg", "модель дашборда на данных Росреестра"],
+  ["Ввод жилья", "7,4 млн м² (+12,9%), лидеры ПИК и Фонд реновации", "I пол.: новостройки на продажу 0,94 млн м². Янв–авг: реновация 1,1 млн м² жилых", "−33% / +21%", "neg", "Novostroy-M, Коммерсантъ, Мосгосстройнадзор"]
+];
+const PIPE_SRC = [
+  ["Коммерсантъ: ввод новостроек −⅓", "https://www.kommersant.ru/doc/8778596"],
+  ["Коммерсантъ: нормы парковок", "https://www.kommersant.ru/doc/8889753"],
+  ["АБН: РНС −44,5%", "https://abn.agency/2026/07/13/moskva-sokratila-vydachu-razreshenij-na-stroitelstvo-zhilya-na-445-v-pervom-polugodii/"],
+  ["Интерфакс: РНС 2025", "https://www.interfax-russia.ru/realty/news/mosgosstroynadzor-v-2025-godu-odobril-stroitelstvo-pochti-17-mln-kv-m-nedvizhimosti"],
+  ["Novostroy-M: ввод 2025", "https://www.novostroy-m.ru/novosti/v_moskve_v_2025"],
+  ["Движение.ру: 40 новостроек в 2025", "https://dvizhenie.ru/media/5388/na-rynok-moskvy-vyveli-vsego-40-novostroek-v-2025-godu-eto-minimum-za-10-let"],
+  ["РБК: семейная ипотека с 1 февраля", "https://realty.rbc.ru/news/694e6c6a9a79474245a85d0c"],
+  ["ЕРЗ: порядок платы за ВРИ", "https://erzrf.ru/news/v-moskve-aktualizirovan-poryadok-vzimaniya-platy-za-arendu-i-za-izmeneniye-vida-razreshennogo-ispolzovaniya-zemelnogo-uchastka"],
+  ["945-ПП в редакции с 05.08.2026", "https://www.glavbukh.ru/npd/edoc/80_537986033"]
+];
+/* Парковки: доли квартир по площади в классе и средняя площадь корзины */
+const FLAT_MIX = { mass:[.88,.10,.02], business:[.62,.28,.10], premium:[.25,.40,.35] };
+const FLAT_AREA = [45, 84, 140];
+const MM_NEW = [0.8, 1.2, 1.6];
+const MM_COST = 3.5; /* млн ₽ за подземное машино-место, допущение */
+
+function parkingModel(v) {
+  const s = v.s;
+  const w = s.klass === "all" ? v.classShare.map(x => x / 100) : ["mass","business","premium"].map(k => k === s.klass ? 1 : 0);
+  const mix = [0,1,2].map(i => w[0] * FLAT_MIX.mass[i] + w[1] * FLAT_MIX.business[i] + w[2] * FLAT_MIX.premium[i]);
+  const k1 = s.zone === "new" ? 1.0 : s.zone === "old" ? 0.9 : 0.92;
+  /* старая методика (калькулятор ТЭП): население × 0,257 × К1 + 10% гостевых */
+  const oldPer = FLAT_AREA.map(a => (a < 69.3 ? 2.1 : a / 33) * 0.257 * k1 * 1.1);
+  const oldAvg = mix.reduce((acc, m, i) => acc + m * oldPer[i], 0);
+  const newAvg = mix.reduce((acc, m, i) => acc + m * MM_NEW[i], 0);
+  const avgArea = mix.reduce((acc, m, i) => acc + m * FLAT_AREA[i], 0);
+  const extra = Math.max(0, newAvg - oldAvg);
+  const perM2 = extra * MM_COST * 1000 / avgArea; /* тыс. ₽ на м² квартир */
+  return { mix, k1, oldPer, oldAvg, newAvg, avgArea, extra, perM2, share: perM2 / v.price * 100 };
+}
+
+function regEvents(v, pk) {
+  const s = v.s;
+  const massy = s.klass === "mass" || (s.klass === "all" && v.classShare[0] >= 50);
+  return [
+    { dt:"22.11.2024", act:"2652-ПП: плата за изменение ВРИ", st:["good","действует"],
+      d:"Плату за изменение ВРИ участка теперь вносят до внесения изменений в ПЗЗ, а не после. Размер зависит от прироста кадастровой стоимости участка.",
+      fx: s.zone === "new" ? "В ТиНАО больше участков изначально под жильё, влияние умеренное." : "Бьёт по редевелопменту промзон старой Москвы: деньги за смену ВРИ уходят раньше проектного финансирования и удлиняют цикл до РНС." },
+    { dt:"01.02.2026", act:"Семейная ипотека: одна на семью", st:["good","действует"],
+      d:"Одна льготная ипотека на семью. Оба супруга обязательно выступают созаёмщиками.",
+      fx:`В срезе семейная ипотека закрывает ${v.fam}% сделок. ` + (v.fam >= 20 ? "Правило сужает льготный канал заметно: часть семей теряет вторую льготу." : "Срез мало зависит от льготы, эффект слабый.") },
+    { dt:"обсуждается", act:"Семейная ипотека: ставка по числу детей", st:["info","не принято"],
+      d:"Обсуждаемая шкала: 10–12% при одном ребёнке, 6% при двух, 4% для многодетных.",
+      fx: massy ? "Для массового среза это главный риск: семьи с одним ребёнком потеряют доступный платёж." : "Для бизнеса и премиума эффект небольшой: доля льготы в сделках мала." },
+    { dt:"05.08.2026", act:"2118-ПП: парковки в 945-ПП", st:["warn","переходный период"],
+      d:"Норматив машино-мест зависит от площади квартиры: 0,8 до 70 м², 1,2 от 70 до 100 м², 1,6 свыше 100 м². Проекты с РНС, экспертизой или АГР до 05.08.2026 идут по старым нормам.",
+      fx:`В срезе нужно ${fmt(pk.newAvg, 2)} машино-места на квартиру против ${fmt(pk.oldAvg, 2)} раньше. Нагрузка около ${fmt(pk.perM2, 0)} тыс. ₽ на м², это ${fmt(pk.share, 1)}% прайса.` },
+    { dt:"11.09.2026", act:"ЦБ: ключевая ставка 14%, пауза", st:["good","действует"],
+      d:"После снижения с 21% Банк России взял паузу. Рыночная ипотека остаётся около 16%.",
+      fx:`Рыночная ипотека участвует в ${v.mort}% сделок среза. ` + (v.mort >= 60 ? "Пауза держит срез в ожидании." : "Срез меньше зависит от ставки.") }
+  ];
+}
 
 /* ================= STATE ================= */
 const STORE_KEY = "msk-primary-slice";
@@ -1114,6 +1338,29 @@ function renderHtml(v) {
   document.getElementById("buyerMore").innerHTML = B.more.map(i =>
     `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
 
+  /* pipeline */
+  document.getElementById("lagOut").innerHTML = `РНС на МКД в I полугодии 2026 года на 44,5% ниже, чем годом раньше. Эти дома должны были выйти в продажу в 2026–27 годах и в ввод в 2028–29 годах. В срезе когорта ввода 2029 года уже всего ${fmt(v.years[3].m2, 2)} млн м², а 2030+ ${fmt(v.years[4].m2, 2)} млн м²: к концу десятилетия предложение сузится.`;
+  document.getElementById("pTable").innerHTML = `<thead><tr><th>Этап</th><th>2025</th><th>2026</th><th>г/г</th><th>Источник</th></tr></thead><tbody>` +
+    PIPE_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="d ${r[4]}">${r[3]}</td><td class="src">${r[5]}</td></tr>`).join("") + "</tbody>";
+  document.getElementById("pSrc").innerHTML = PIPE_SRC.map(x => `<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join("");
+
+  /* regulation */
+  const pk = parkingModel(v);
+  document.getElementById("events").innerHTML = regEvents(v, pk).map(e => `
+    <div class="ev"><div class="when"><span class="dt">${e.dt}</span>${stHtml(e.st)}</div>
+    <div class="act">${esc(e.act)}</div><p>${esc(e.d)}</p><div class="fx"><b>Для среза.</b> ${esc(e.fx)}</div></div>`).join("");
+  document.getElementById("parkStats").innerHTML = `
+    <div><div class="v">${fmt(pk.oldAvg * 100, 0)}→${fmt(pk.newAvg * 100, 0)}</div><div class="c">машино-мест на 100 квартир, было и стало</div></div>
+    <div><div class="v">+${fmt(pk.extra * 100, 0)}<small>мест</small></div><div class="c">дополнительно на каждые 100 квартир</div></div>
+    <div><div class="v">${fmt(pk.perM2, 0)}<small>тыс. ₽/м²</small></div><div class="c">нагрузка на метр квартир до продажи мест</div></div>
+    <div><div class="v">${fmt(pk.share, 1)}<small>%</small></div><div class="c">от прайса ${fmt(v.price, 0)} тыс. ₽/м²</div></div>`;
+  document.getElementById("parkAssume").innerHTML = [
+    `Структура квартир среза: до 70 м² ${fmt(pk.mix[0] * 100, 0)}%, 70–100 м² ${fmt(pk.mix[1] * 100, 0)}%, свыше 100 м² ${fmt(pk.mix[2] * 100, 0)}%. Средняя площадь ${fmt(pk.avgArea, 0)} м².`,
+    `Старая норма по методике калькулятора ТЭП: население × 0,257 × К1 ${fmt(pk.k1, 2)} плюс 10% гостевых мест.`,
+    `Подземное машино-место оценено в ${fmt(MM_COST, 1)} млн ₽. Продажа мест возвращает часть затрат, в массовом сегменте хуже.`,
+    "Рыночные оценки роста цен из-за норматива доходят до 18%."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+
   /* forecast table */
   const f = n => sgn(n, 0) + "%";
   const sc = [
@@ -1213,6 +1460,23 @@ const zone = {
     ctx.fillStyle = t.muted; ctx.font = `500 11px ${FONT}`; ctx.textBaseline = "top"; ctx.fillText("СЦЕНАРИЙ", x + 8, top + 8); ctx.restore();
   }
 };
+/* value labels at bar ends */
+const valueLabels = {
+  id: "valueLabels",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.fmt) return;
+    const t = T(), ctx = chart.ctx; ctx.save(); ctx.font = `700 11.5px ${FONT}`; ctx.fillStyle = t.ink;
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const val = ds.data[i]; if (val == null) return;
+        if (opts.vertical) { ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(opts.fmt(val), bar.x, bar.y - 5); }
+        else { const neg = val < 0; ctx.textBaseline = "middle"; ctx.textAlign = neg ? "right" : "left"; ctx.fillText(opts.fmt(val), bar.x + (neg ? -6 : 6), bar.y); }
+      });
+    });
+    ctx.restore();
+  }
+};
+
 /* vertical reference line (deposit rate) for horizontal bars */
 const refLine = {
   id: "refLine",
@@ -1337,6 +1601,55 @@ function renderCharts(v) {
   const scen = (name, arr, color) => ({ label: name, data: pad.concat(arr), borderColor: color, backgroundColor: color, borderWidth: 2, borderDash: [6, 4], tension: .25,
     pointRadius: pad.concat(arr).map((x, i) => i === labels.length - 1 ? 4 : 0), pointBackgroundColor: color, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 });
   const vals = [...v.demand, ...v.forecast.base, ...v.forecast.bull, ...v.forecast.bear];
+  /* pipeline yoy, diverging */
+  const pipeMax = Math.ceil(Math.max(...PIPE.map(x => Math.abs(x.v))) / 10) * 10 + 10;
+  upsert("chPipe", {
+    type: "bar",
+    data: { labels: PIPE.map(x => [x.l, x.p]), datasets: [{
+      label: "г/г", data: PIPE.map(x => x.v),
+      backgroundColor: c => { const x = PIPE[c.dataIndex]; return x && x.v >= 0 ? t.sc3 : barGrad(c.chart, true); },
+      borderRadius: 6, borderSkipped: false, maxBarThickness: 22, categoryPercentage: .72
+    }]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      layout: { padding: { right: 8 } },
+      scales: {
+        x: axis(t, { min: -pipeMax, max: pipeMax, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => (x > 0 ? "+" : "") + x + "%" },
+          grid: { color: c => c.tick.value === 0 ? t.muted : t.grid, drawTicks: false } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12 } } })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => sgn(x, 1) + "%" },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: {
+          title: c => PIPE[c[0].dataIndex].l,
+          label: c => { const x = PIPE[c.dataIndex]; return [` ${sgn(x.v, 1)}% к ${x.p.replace("2026", "2025")}`, ` источник: ${x.src}`]; }
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* parking old vs new */
+  const pkm = parkingModel(v);
+  upsert("chPark", {
+    type: "bar",
+    data: { labels: ["до 70 м²", "70–100 м²", "свыше 100 м²"], datasets: [
+      { label: "Было", data: pkm.oldPer.map(x => +x.toFixed(2)), backgroundColor: () => hatch(), borderRadius: 8, borderSkipped: "start", maxBarThickness: 40, categoryPercentage: .6, barPercentage: .9 },
+      { label: "По 2118-ПП", data: MM_NEW, backgroundColor: c => barGrad(c.chart, false), borderRadius: 8, borderSkipped: "start", maxBarThickness: 40, categoryPercentage: .6, barPercentage: .9 }
+    ]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }), y: axis(t, { beginAtZero: true, max: 2, ticks: { color: t.muted, font: { family: FONT, size: 12 }, stepSize: .5, callback: x => fmt(x, 1) } }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => fmt(x, 2), vertical: true },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false, callbacks: {
+          label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 2)} места на квартиру`,
+          footer: c => { const i = c[0].dataIndex; return `Доля таких квартир в срезе ${fmt(pkm.mix[i] * 100, 0)}%`; }
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
   upsert("chFc", {
     type: "line",
     data: { labels, datasets: [
@@ -1410,6 +1723,20 @@ const TERMS = [
   ["keyrate", "ключев[а-яё]*\\s+ставк[а-яё]*"],
   ["scoring", "скоринг[а-яё]*"],
   ["declaration", "проектн[а-яё]*\\s+деклараци[а-яё]*"],
+  ["pp2118", "2118-ПП"],
+  ["pp945", "945-ПП"],
+  ["vriFee", "плат[а-яё]*\\s+за\\s+изменение\\s+ВРИ"],
+  ["rns", "РНС"],
+  ["gzk", "ГЗК"],
+  ["agr", "АГР"],
+  ["expertiza", "госэкспертиз[а-яё]*|экспертиз[а-яё]*"],
+  ["rngp", "РНГП"],
+  ["vri", "ВРИ"],
+  ["pzz", "ПЗЗ"],
+  ["mm", "машино-мест[а-яё]*"],
+  ["renovation", "реновац[а-яё]*"],
+  ["starts", "старт[а-яё]*\\s+продаж|вывод[а-яё]*\\s+(?:проект[а-яё]*\\s+)?на\\s+рынок|запуск[а-яё]*"],
+  ["k1", "К1"],
   ["pitStage", "котлован[а-яё]*"],
   ["keys", "ключ(?:и|ам|ах|ей)|ввод[а-яё]*"],
   ["secondary", "вторичк[а-яё]*"],
@@ -1434,8 +1761,8 @@ const TERMS = [
   ["scenario", "сценари[а-яё]*"]
 ];
 const TERM_RE = new RegExp(`(?<![${L}])(?:${TERMS.map(t => `(${t[1]})`).join("|")})(?![${L}])`, "gi");
-const TERM_SEL = ".card h3, .card p, .persona p, .verdict span, .shead p, .cond, .cap, .ctable th, .foot p, .top p, .legend > span, .rate-card .d, .stable .sn";
-const SCOPE_SEL = ".card, .persona, .shead, .panel, .foot .fg > div, .top, tr, .rate-card";
+const TERM_SEL = ".card h3, .card p, .persona p, .verdict span, .shead p, .cond, .cap, .ctable th, .foot p, .top p, .legend > span, .rate-card .d, .stable .sn, .ev .act, .ev p, .ev .fx, .lag p, .lag .out, .ptable td, .assume li, .pk .c";
+const SCOPE_SEL = ".card, .persona, .shead, .ev, .stp, .lag, .assume, .pk > div, tr, .panel, .foot .fg > div, .top, .rate-card";
 
 function linkTerms(root = document) {
   root.querySelectorAll(TERM_SEL).forEach(el => {
@@ -1472,9 +1799,9 @@ refresh();
 (() => {
   const groups = {};
   Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
-  const order = ["Фильтры","Предложение","Спрос","Баланс","Деньги и ставки","Сделка","Инвестор","Прогноз","Источники"];
+  const order = ["Фильтры","Предложение","Спрос","Цикл стройки","Баланс","Деньги и ставки","Сделка","Нормативка","Инвестор","Прогноз","Источники"];
   const cols = [[], [], []];
-  order.forEach((g, i) => cols[[0,0,0,1,1,1,2,2,2][i]].push(g));
+  order.forEach((g, i) => cols[[0,0,0,0,1,1,1,2,2,2,2][i]].push(g));
   document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.map(g => `<h3>${g}</h3>` +
     groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
 })();
