@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Контур первички Москвы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Single dark theme by design: the Finstack look is a night console. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0c0f;
+  --side: #0f1115;
+  --card: #15171c;
+  --card-2: #1b1e25;
+  --panel: #15171c;
+  --panel-2: #20232b;
+  --line: #252830;
+  --grid: #23262d;
+  --ink: #f3f1ec;
+  --ink-2: #d6d2ca;
+  --muted: #948f87;
+  --faint: #6b6760;
+  --hover: rgba(255,255,255,.05);
+  --tip-bg: #20232b;
+  --accent: #ff7a1a;
+  --accent-2: #ffb070;
+  --accent-deep: #d4540a;
+  --on-accent: #1a1008;
+  --s1: #ff7a1a;
+  --dim: #3a3632;
+  --sc1: #e8680f;
+  --sc2: #1f9e78;
+  --sc3: #6b7ae8;
+  --o1: #9a4a14;
+  --o2: #ff7a1a;
+  --o3: #ffc9a0;
+  --good: #3dd68c;
+  --warn: #ffb020;
+  --crit: #ff5d6c;
+  --r: 20px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 500 14px/1.55 Manrope, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- shell ---------- */
+.app { display: grid; grid-template-columns: 244px minmax(0, 1fr); min-height: 100vh; }
+.side {
+  position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; overflow-y: auto;
+  background: var(--side); border-right: 1px solid var(--line);
+  padding: 22px 16px; display: flex; flex-direction: column; gap: 22px;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; text-decoration: none; color: var(--ink); }
+.logo {
+  width: 36px; height: 36px; border-radius: 11px; flex: none;
+  background: linear-gradient(145deg, #ffb070 0%, #ff7a1a 55%, #d4540a 100%);
+  display: grid; place-items: center; font-weight: 800; font-size: 17px; color: var(--on-accent);
+  box-shadow: 0 6px 18px rgba(255,122,26,.28);
+}
+.brand b { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.brand small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; }
+.nav { display: grid; gap: 2px; }
+.nav .sec { color: var(--faint); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin: 14px 12px 6px; }
+.nav a {
+  display: flex; align-items: center; gap: 11px; color: var(--muted); text-decoration: none;
+  padding: 10px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; transition: background .2s, color .2s;
+}
+.nav a svg { width: 17px; height: 17px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav a:hover { background: var(--hover); color: var(--ink); }
+.nav a.active { background: var(--card-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.nav a.active svg { stroke: var(--accent); }
+.rate-card {
+  margin-top: auto; border-radius: 16px; padding: 16px;
+  background: radial-gradient(120% 120% at 100% 0%, rgba(255,122,26,.22), transparent 60%), var(--card);
+  border: 1px solid var(--line);
+}
+.rate-card .l { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.rate-card .v { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin-top: 4px; }
+.rate-card .v small { font-size: 14px; color: var(--muted); font-weight: 600; }
+.rate-card .d { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+
+.main {
+  min-width: 0; padding-inline: clamp(16px, 2.4vw, 32px); padding-block: 22px 40px;
+  background: radial-gradient(900px 420px at 95% -8%, rgba(255,122,26,.11), transparent 55%), var(--bg);
+}
+@media (max-width: 1080px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; height: auto; flex-direction: row; align-items: center; padding: 10px 16px; gap: 14px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .brand small, .nav .sec, .rate-card { display: none; }
+  .nav { display: flex; gap: 4px; }
+  .nav a { white-space: nowrap; padding: 8px 10px; }
+}
+
+/* ---------- header & filters ---------- */
+.top { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px 24px; flex-wrap: wrap; }
+.crumb { font-size: 12px; color: var(--muted); font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.crumb i { width: 4px; height: 4px; border-radius: 50%; background: var(--faint); }
+.top h1 { font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -.035em; margin-top: 6px; line-height: 1.15; }
+.top h1 span { color: var(--accent); }
+.top p { margin: 6px 0 0; color: var(--muted); max-width: 70ch; font-weight: 500; }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  border-radius: 999px; padding: 8px 13px; font-size: 12px; font-weight: 700;
+  background: rgba(255,122,26,.12); color: var(--accent-2); border: 1px solid rgba(255,122,26,.3);
+}
+.badge.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255,122,26,.18); }
+.badge.plain { background: var(--card); color: var(--ink-2); border-color: var(--line); }
+
+.filters {
+  margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+}
+.fgroup { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.flabel { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 3px; background: var(--bg); border-radius: 999px; padding: 4px; border: 1px solid var(--line); }
+.seg button {
+  border: 0; background: transparent; cursor: pointer; border-radius: 999px;
+  padding: 7px 13px; font-size: 13px; font-weight: 700; color: var(--muted); transition: background .2s, color .2s;
+}
+.seg button:hover { color: var(--ink); background: var(--hover); }
+.seg button[aria-pressed="true"] { background: linear-gradient(145deg, #ff9a3c, #ff7a1a); color: var(--on-accent); }
+.freset { margin-left: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--card-2); color: var(--ink); cursor: pointer; border-radius: 12px; padding: 9px 14px; font-size: 13px; font-weight: 700; }
+.btn:hover { border-color: var(--accent); }
+.ctx { margin-top: 10px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.ctx b { color: var(--accent-2); font-weight: 700; }
+
+/* ---------- KPI cards ---------- */
+.kpis { margin-top: 16px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; }
+.kpi {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 15px 15px 14px;
+  display: flex; flex-direction: column; gap: 6px; min-width: 0;
+}
+.kpi .kh { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.kpi .c { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.kpi .v { font-size: clamp(22px, 1.8vw, 27px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; white-space: nowrap; }
+.kpi .v small { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0; margin-left: 3px; }
+.kpi .s { font-size: 11.5px; color: var(--muted); line-height: 1.4; font-weight: 500; }
+.kpi .st { margin-top: auto; }
+.kpi.hi {
+  background: radial-gradient(130% 130% at 0% 0%, #ffc28a 0%, #ff8a2e 42%, #e2600e 100%);
+  border-color: transparent; color: var(--on-accent); box-shadow: 0 14px 36px -14px rgba(255,122,26,.55);
+}
+.kpi.hi .c, .kpi.hi .s, .kpi.hi .v small { color: rgba(26,16,8,.72); }
+@media (max-width: 1640px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.st { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: var(--ink-2); white-space: nowrap;
+  background: var(--card-2); border-radius: 999px; padding: 3px 9px 3px 8px; width: max-content; max-width: 100%; }
+.st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex: none; }
+.st.good { color: var(--good); background: rgba(61,214,140,.1); } .st.good::before { background: var(--good); }
+.st.warn { color: var(--warn); background: rgba(255,176,32,.1); } .st.warn::before { background: var(--warn); transform: rotate(45deg); border-radius: 1px; }
+.st.crit { color: var(--crit); background: rgba(255,93,108,.1); } .st.crit::before { background: var(--crit); border-radius: 1px; }
+
+/* ---------- sections ---------- */
+section.block { margin-top: 34px; }
+.shead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px 24px; flex-wrap: wrap; margin-bottom: 14px; }
+.eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.shead h2 { font-size: 20px; font-weight: 800; letter-spacing: -.025em; margin-top: 4px; }
+.shead p { margin: 4px 0 0; color: var(--muted); max-width: 76ch; font-weight: 500; font-size: 13.5px; }
+.tag { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--accent-2);
+  border: 1px dashed rgba(255,122,26,.45); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+
+.g { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.c5 { grid-column: span 5; } .c6 { grid-column: span 6; } .c7 { grid-column: span 7; } .c12 { grid-column: span 12; }
+@media (max-width: 1080px) { .g > * { grid-column: span 12; } }
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 18px 16px; min-width: 0; }
+.ph { display: flex; justify-content: space-between; align-items: center; gap: 8px 14px; flex-wrap: wrap; }
+.ph h3 { font-size: 14.5px; font-weight: 700; letter-spacing: -.01em; }
+.ph .u { font-size: 11.5px; color: var(--muted); font-weight: 700; background: var(--card-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.cap { font-size: 12px; color: var(--muted); margin-top: 10px; font-weight: 500; }
+.box { position: relative; margin-top: 14px; }
+.h160 { height: 160px; } .h240 { height: 240px; } .h300 { height: 300px; } .h340 { height: 340px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.dash { height: 0; border-top: 2px dashed; background: none; }
+.legend i.sq { width: 11px; height: 11px; border-radius: 3px; }
+.legend i.hatch { background: repeating-linear-gradient(135deg, #5a534c 0 2px, #26241f 2px 5px); }
+
+/* class structure */
+.stack { display: flex; gap: 3px; height: 40px; margin-top: 18px; }
+.stack div { min-width: 0; border-radius: 8px; transition: flex-basis .4s; }
+.ctable { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+.ctable th { text-align: right; font-weight: 700; color: var(--muted); font-size: 11px; padding: 0 0 8px; }
+.ctable th:first-child, .ctable td:first-child { text-align: left; }
+.ctable td { padding: 11px 0; border-top: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ctable td:first-child { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+.ctable td:first-child i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.ctable .off td { color: var(--faint); }
+.tscroll { overflow-x: auto; }
+
+/* macro */
+.macro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr); gap: 22px; align-items: start; margin-top: 14px; }
+.macro-facts { display: grid; gap: 10px; }
+.fact { background: var(--card-2); border-radius: 14px; padding: 12px 14px; }
+.fact .v { font-size: 24px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+.fact .v small { font-size: 12px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.fact .c { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+.mini-t { font-size: 11.5px; color: var(--muted); margin: 0; font-weight: 700; }
+@media (max-width: 1080px) { .macro { grid-template-columns: 1fr; } .macro-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .macro-facts { grid-template-columns: 1fr; } }
+
+/* balance sheet */
+.sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto 104px; align-items: center; gap: 14px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.row .k { color: var(--ink-2); font-weight: 600; }
+.row .v { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.row .st { justify-self: start; }
+@media (max-width: 900px) { .sheet { grid-template-columns: 1fr; } }
+@media (max-width: 460px) { .row { grid-template-columns: minmax(0, 1fr) auto; } .row .st { grid-column: 1 / -1; } }
+
+/* cards */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.card .kind { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.card h3 { font-size: 15.5px; font-weight: 800; letter-spacing: -.015em; line-height: 1.3; }
+.card p { margin: 0; color: var(--ink-2); font-weight: 500; line-height: 1.6; max-width: 76ch; }
+
+/* personas */
+.persona { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.persona .who { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.persona h3 { font-size: 20px; font-weight: 800; letter-spacing: -.025em; margin-top: -6px; }
+.pstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.pstats > div { background: var(--card-2); border-radius: 14px; padding: 11px 12px; min-width: 0; }
+.pstats .v { font-size: 19px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.pstats .v small { font-size: 11px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.pstats .c { font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+@media (max-width: 560px) { .pstats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.persona p { margin: 0; color: var(--ink-2); line-height: 1.6; font-weight: 500; }
+.verdict { margin-top: auto; padding: 13px 15px; border-radius: 14px; display: grid; gap: 3px;
+  background: linear-gradient(90deg, rgba(255,122,26,.14), rgba(255,122,26,.03)); border: 1px solid rgba(255,122,26,.25); }
+.verdict b { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.verdict span { font-weight: 700; color: var(--ink); line-height: 1.5; }
+
+/* forecast table */
+.stable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.stable th { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; padding: 0 0 8px 10px; }
+.stable th:first-child { text-align: left; padding-left: 0; }
+.stable td { border-top: 1px solid var(--line); padding: 13px 0 13px 10px; vertical-align: top; text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; white-space: nowrap; }
+.stable td:first-child { text-align: left; padding-left: 0; white-space: normal; font-weight: 500; }
+.stable .sn { display: flex; align-items: center; gap: 9px; font-weight: 800; color: var(--ink); }
+.stable .sn i { width: 18px; height: 0; border-top: 2px dashed; flex: none; }
+.stable .cond { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+/* pipeline & regulation */
+.chip-city { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--ink-2);
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+.chip-city::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sc3); }
+.lag { display: grid; gap: 0; margin-top: 16px; }
+.lag .stp { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 12px; }
+.lag .dot { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-weight: 800; font-size: 12px;
+  background: var(--card-2); border: 1px solid var(--line); color: var(--accent-2); }
+.lag .stp.now .dot { background: linear-gradient(145deg, #ff9a3c, #ff7a1a); color: var(--on-accent); border-color: transparent; }
+.lag b { display: block; font-size: 14px; font-weight: 800; margin-top: 6px; }
+.lag p { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.lag .gap { margin-left: 16px; border-left: 2px dashed var(--line); padding: 8px 0 8px 28px; font-size: 11.5px; font-weight: 700; color: var(--accent-2); }
+.lag .out { margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: linear-gradient(90deg, rgba(255,122,26,.14), rgba(255,122,26,.03)); border: 1px solid rgba(255,122,26,.25); font-weight: 600; color: var(--ink); line-height: 1.5; font-size: 13px; }
+.ptable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.ptable th { text-align: left; font-size: 11px; color: var(--muted); font-weight: 700; padding: 0 12px 8px 0; }
+.ptable td { border-top: 1px solid var(--line); padding: 12px 12px 12px 0; vertical-align: top; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ptable td:first-child { color: var(--ink); font-weight: 800; white-space: nowrap; }
+.ptable td.d { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ptable td.d.neg { color: var(--crit); } .ptable td.d.pos { color: var(--good); }
+.ptable .src { color: var(--muted); font-size: 12px; }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 12px; }
+.srcs a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.srcs a:hover { color: var(--accent-2); }
+.events { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+@media (max-width: 1400px) { .events { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .events { grid-template-columns: 1fr; } }
+.ev { background: var(--card-2); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.ev .when { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ev .dt { font-size: 12px; font-weight: 800; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+.ev .act { font-size: 14px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
+.ev p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ev .fx { margin-top: auto; padding-top: 9px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--muted); line-height: 1.5; }
+.ev .fx b { color: var(--ink); font-weight: 700; }
+.st.info { color: #aab3ff; background: rgba(107,122,232,.14); } .st.info::before { background: var(--sc3); }
+.pk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.pk > div { background: var(--card-2); border-radius: 14px; padding: 12px 13px; }
+.pk .v { font-size: 22px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.pk .v small { font-size: 12px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.pk .c { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.assume { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+.ftable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.ftable th { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; padding: 0 0 8px 10px; white-space: nowrap; }
+.ftable th:first-child { text-align: left; padding-left: 0; }
+.ftable td { border-top: 1px solid var(--line); padding: 11px 0 11px 10px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.ftable td:first-child { text-align: left; padding-left: 0; white-space: normal; font-weight: 600; color: var(--ink-2); }
+.ftable td.rate { color: var(--accent-2); font-weight: 800; }
+.ftable td.up { color: var(--crit); } .ftable td.dn { color: var(--good); }
+.ftable tr.was td { color: var(--muted); font-weight: 600; }
+
+/* info tips */
+.ti {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; padding: 0; margin-left: 6px; vertical-align: 1px;
+  border-radius: 50%; border: 1px solid var(--line); background: var(--card-2); color: var(--muted);
+  font: 800 10px/1 Manrope, system-ui, sans-serif; font-style: italic; cursor: help; transition: color .15s, border-color .15s, background .15s;
+}
+.ti:hover, .ti[aria-expanded="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.kpi.hi .ti { background: rgba(26,16,8,.12); border-color: rgba(26,16,8,.25); color: var(--on-accent); }
+.kpi.hi .ti:hover, .kpi.hi .ti[aria-expanded="true"] { background: var(--on-accent); color: var(--accent-2); }
+.ph h3, .kh, .flabel { display: inline-flex; align-items: center; }
+.tipbox {
+  position: fixed; z-index: 100; max-width: min(340px, calc(100vw - 24px)); pointer-events: none;
+  background: var(--tip-bg); border: 1px solid #343843; border-radius: 14px; padding: 13px 15px;
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,.7); font-size: 12.5px; line-height: 1.5; color: var(--ink-2);
+  opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s;
+}
+.tipbox.on { opacity: 1; transform: none; pointer-events: auto; }
+.tipbox b { display: block; color: var(--accent-2); font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+.tipbox .l { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 800; margin-top: 8px; }
+.tipbox p { margin: 2px 0 0; }
+@media (prefers-reduced-motion: reduce) { .tipbox { transition: none; } }
+
+.term {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: help; text-align: inherit;
+  letter-spacing: inherit; text-transform: inherit;
+  text-decoration: underline dotted rgba(255,176,112,.75); text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  border-radius: 3px; transition: background .15s, color .15s;
+}
+.term:hover, .term[aria-expanded="true"] { color: var(--accent-2); background: rgba(255,122,26,.12); }
+.tag .ti { margin-left: 4px; }
+
+/* glossary */
+.gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1200px) { .gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .gloss { grid-template-columns: 1fr; } }
+.gcol { display: grid; gap: 12px; align-content: start; }
+.gcol h3 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; margin: 4px 2px 0; }
+.gitem { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.gitem b { display: block; font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+.gitem p { margin: 6px 0 0; color: var(--ink-2); font-size: 12.5px; line-height: 1.55; font-weight: 500; }
+.gitem p.h { color: var(--muted); }
+.gitem p.h::before { content: "Как читать. "; color: var(--ink-2); font-weight: 700; }
+
+footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 22px; font-size: 12px; color: var(--muted); }
+.foot .fg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 28px; }
+.foot h4 { margin: 0 0 6px; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 800; }
+.foot p { margin: 0; line-height: 1.55; font-weight: 500; }
+@media (max-width: 900px) { .foot .fg { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <a class="brand" href="#top"><div class="logo">F</div><div><b>Finstack</b><small>Housing intelligence</small></div></a>
+    <nav class="nav" aria-label="Разделы">
+      <div class="sec">Обзор</div>
+      <a href="#top" class="active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Срез и KPI</a>
+      <a href="#supply"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V8l6-4v17"/><path d="M11 21V10l8 3v8"/></svg>Предложение</a>
+      <a href="#demand"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>Спрос и ставка</a>
+      <a href="#pipeline"><svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>Цикл стройки</a>
+      <div class="sec">Анализ</div>
+      <a href="#balance"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7h6z"/><path d="M19 7l-3 7h6z"/></svg>Баланс среза</a>
+      <a href="#regulation"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6"/><path d="M10 16h6"/></svg>Нормативка</a>
+      <a href="#deviations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Отклонения</a>
+      <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
+      <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
+      <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
+    </nav>
+    <div class="rate-card">
+      <div class="l">Ключевая ставка<button class="ti" type="button" data-tip="keyrate">i</button></div>
+      <div class="v">14<small>%</small></div>
+      <div class="d">Пауза ЦБ 11.09.2026. Новые вклады около 12,8%.</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top" id="top">
+      <div>
+        <div class="crumb">Контур<i></i>Москва<i></i>первичный рынок</div>
+        <h1>Intelligence <span>·</span> первичка Москвы</h1>
+        <p>Разведка рынка по данным ДОМ.РФ / ЕИСЖС, Росреестра и ЦБ. Логика покупателя и инвестора при ключевой ставке 14% и узкой семейной ипотеке.</p>
+      </div>
+      <div class="badges">
+        <span class="badge live">срез · сен 2026</span>
+        <a class="badge plain" id="chip" href="#top" style="text-decoration:none"></a>
+      </div>
+    </header>
+
+    <div class="filters" role="group" aria-label="Фильтры среза">
+      <div class="fgroup"><span class="flabel" id="lbl-zone">Макрозона</span><button class="ti" type="button" data-tip="zone" style="margin-left:-6px">i</button><div class="seg" data-key="zone" role="group" aria-labelledby="lbl-zone"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-klass">Класс</span><button class="ti" type="button" data-tip="klass" style="margin-left:-6px">i</button><div class="seg" data-key="klass" role="group" aria-labelledby="lbl-klass"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-dev">Застройщик</span><button class="ti" type="button" data-tip="dev" style="margin-left:-6px">i</button><div class="seg" data-key="dev" role="group" aria-labelledby="lbl-dev"></div></div>
+      <div class="freset"><button class="btn" id="reset" type="button">Сбросить</button></div>
+    </div>
+    <div class="ctx" id="ctx"></div>
+
+    <div class="kpis" id="kpis" aria-live="polite"></div>
+
+    <section class="block" id="supply">
+      <div class="shead"><div>
+        <div class="eyebrow">Предложение</div>
+        <h2>Кто строит и что именно</h2>
+        <p>Текущее строительство в срезе: объём по группам, распределение по классам и когорты ввода. Выбранная группа подсвечена, остальные заштрихованы.</p>
+      </div></div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Портфель стройки по группам<button class="ti" type="button" data-tip="portfolio">i</button></h3><span class="u">млн м²</span></div>
+          <div class="box h300"><canvas id="chDev" role="img" aria-label="Портфель по группам застройщиков"></canvas></div>
+          <div class="cap" id="devCap"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Структура по классам<button class="ti" type="button" data-tip="classes">i</button></h3><span class="u">доля площади</span></div>
+          <div class="stack" id="stack" aria-hidden="true"></div>
+          <div class="tscroll"><table class="ctable" id="ctable"></table></div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Когорты ввода<button class="ti" type="button" data-tip="cohort">i</button></h3><span class="u">млн м² по году сдачи</span></div>
+          <div class="box h240"><canvas id="chYear" role="img" aria-label="Когорты ввода по годам"></canvas></div>
+          <div class="cap">Год ввода по проектной декларации. Корпуса с уточнённым сроком учтены по последней дате.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="demand">
+      <div class="shead"><div>
+        <div class="eyebrow">Спрос</div>
+        <h2>Где подписывают ДДУ и как на это влияет ставка</h2>
+        <p>Регистрации ДДУ за I полугодие 2026 по округам и индекс спроса среза на фоне ключевой ставки. Ставка и спрос показаны на отдельных шкалах с общей осью времени.</p>
+      </div></div>
+      <div class="g">
+        <div class="panel c5">
+          <div class="ph"><h3>ДДУ I пол. 2026 по округам<button class="ti" type="button" data-tip="ddu">i</button></h3><span class="u">тыс. договоров</span></div>
+          <div class="box h340"><canvas id="chOkrug" role="img" aria-label="ДДУ по округам"></canvas></div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Ставка против спроса<button class="ti" type="button" data-tip="rateVsDemand">i</button></h3><span class="u">окт. 2024 – сен. 2026</span></div>
+          <div class="macro">
+            <div class="macro-facts" id="macroFacts"></div>
+            <div>
+              <p class="mini-t">Ключевая ставка ЦБ, %</p>
+              <div class="box h160" style="margin-top:6px"><canvas id="chRate" role="img" aria-label="Ключевая ставка"></canvas></div>
+              <p class="mini-t" style="margin-top:12px">Спрос среза, индекс (окт. 2024 = 100)</p>
+              <div class="box h160" style="margin-top:6px"><canvas id="chDemand" role="img" aria-label="Индекс спроса среза"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="pipeline">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Цикл девелопмента</div>
+          <h2>РНС, старты продаж и ввод: где сжимается воронка</h2>
+          <p>Разрешения на строительство, вывод проектов на рынок и ввод жилья по Москве в сравнении с тем же периодом прошлого года. Разрешения сегодня превращаются в старты через 3–9 месяцев и в ввод через 2,5–3 года.</p>
+        </div>
+        <span class="chip-city">вся Москва · фильтры не применяются</span>
+      </div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Этапы цикла: 2026 к 2025<button class="ti" type="button" data-tip="pipeline">i</button></h3><span class="u">изменение г/г, %</span></div>
+          <div class="box h300"><canvas id="chPipe" role="img" aria-label="Изменение этапов цикла девелопмента год к году"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>сокращение</span><span><i class="sq" style="background:var(--sc3)"></i>рост</span></div>
+          <div class="cap">Периоды у этапов разные, каждый сравнивается с тем же периодом 2025 года. ДДУ взяты из модели среза «вся Москва».</div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Лаг между этапами<button class="ti" type="button" data-tip="rns">i</button></h3></div>
+          <div class="lag">
+            <div class="stp now"><div class="dot">1</div><div><b>РНС</b><p>Мосгосстройнадзор выдаёт разрешение после ГЗК, АГР и госэкспертизы.</p></div></div>
+            <div class="gap">3–9 месяцев</div>
+            <div class="stp"><div class="dot">2</div><div><b>Старт продаж</b><p>Проект выходит на рынок, открываются эскроу-счета и проектное финансирование.</p></div></div>
+            <div class="gap">24–36 месяцев</div>
+            <div class="stp"><div class="dot">3</div><div><b>Ввод и ключи</b><p>Разрешение на ввод, раскрытие эскроу, передача квартир.</p></div></div>
+          </div>
+          <div class="lag"><div class="out" id="lagOut"></div></div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Факты по этапам и источники</h3><span class="u">по публикациям, сентябрь 2026</span></div>
+          <div class="tscroll" style="margin-top:12px"><table class="ptable" id="pTable"></table></div>
+          <div class="srcs" id="pSrc"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="regulation">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Нормативка</div>
+          <h2>Что меняют правила: парковки, льготная ипотека, ВРИ</h2>
+          <p>Нормативные изменения 2024–2026 годов, которые влияют на себестоимость, продукт и спрос. Внизу карточки оценка эффекта для выбранного среза.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3>Хронология изменений<button class="ti" type="button" data-tip="rngp">i</button></h3><span class="u">реакция среза пересчитывается от фильтров</span></div>
+        <div class="events" id="events"></div>
+      </div>
+      <div class="g" style="margin-top:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Парковки по 945-ПП: было и стало<button class="ti" type="button" data-tip="pp2118">i</button></h3><span class="u">машино-мест на квартиру</span></div>
+          <div class="box h300"><canvas id="chPark" role="img" aria-label="Норматив машино-мест до и после 2118-ПП"></canvas></div>
+          <div class="legend"><span><i class="sq hatch"></i>до 05.08.2026, методика калькулятора ТЭП</span><span><i class="sq" style="background:var(--accent)"></i>по 2118-ПП</span></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Нагрузка на проект в срезе<button class="ti" type="button" data-tip="mm">i</button></h3><span class="u">оценка модели</span></div>
+          <div class="pk" id="parkStats"></div>
+          <ul class="assume" id="parkAssume"></ul>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Семейная ипотека с 1 октября 2026<button class="ti" type="button" data-tip="diffRate">i</button></h3><span class="u">ставка / лимит</span></div>
+          <div class="tscroll"><table class="ftable" id="famRates"></table></div>
+          <div class="cap">Источник: Минфин России, РБК, в подборке «Всё о стройке». Москва, Санкт-Петербург, Московская и Ленинградская области идут по столичной шкале.</div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Платёж семьи в срезе: сентябрь и октябрь</h3><span class="u">тыс. ₽ в месяц, 30 лет</span></div>
+          <div class="tscroll"><table class="ftable" id="famPay"></table></div>
+          <ul class="assume" id="famAssume"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="balance">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Баланс среза</div>
+          <h2>Двенадцать индикаторов одного среза</h2>
+          <p>Ставка, ипотечные каналы, продажи к готовности, сроки, аренда и экономика входа на котловане.</p>
+        </div>
+        <div class="legend" style="margin:0;align-items:center"><span style="font-size:12px;color:var(--muted)">Отметки<button class="ti" type="button" data-tip="status">i</button></span><span class="st good">норма</span><span class="st warn">наблюдать</span><span class="st crit">аномалия</span></div>
+      </div>
+      <div class="g" style="margin-bottom:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Распроданность: Москва и регионы<button class="ti" type="button" data-tip="sold">i</button></h3><span class="u">ЕИСЖС на 11.09.2026</span></div>
+          <div class="box h300"><canvas id="chReg" role="img" aria-label="Распроданность строящегося жилья по регионам"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>продано</span><span><i class="sq" style="background:var(--sc3)"></i>не продано</span><span><i class="sq hatch"></i>продажи не открыты</span></div>
+          <div class="cap">Источник: ЕИСЖС, данные на 11 сентября 2026 года, в подборке «Всё о стройке». Регионы не фильтруются.</div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Что отличает Москву<button class="ti" type="button" data-tip="notOpened">i</button></h3></div>
+          <div class="pk" id="regStats"></div>
+          <div class="lag"><div class="out" id="regOut"></div></div>
+        </div>
+      </div>
+      <div class="panel"><div class="sheet" id="sheet"></div></div>
+    </section>
+
+    <section class="block" id="deviations">
+      <div class="shead"><div>
+        <div class="eyebrow">Разбор отклонений</div>
+        <h2>Что в срезе ведёт себя не как город</h2>
+        <p>Четыре главных отклонения выбранного среза от городской картины и их причина.</p>
+      </div></div>
+      <div class="cards" id="notes"></div>
+    </section>
+
+    <section class="block" id="buyers">
+      <div class="shead"><div>
+        <div class="eyebrow">Взгляд покупателя</div>
+        <h2>Для себя и для дохода</h2>
+        <p>Чек и платёж для покупателя «для себя». Аренда и рост цены от котлована до ключей для инвестора.</p>
+      </div></div>
+      <div class="g">
+        <article class="persona c6" id="pSelf"></article>
+        <article class="persona c6" id="pInv"></article>
+        <div class="panel c12">
+          <div class="ph"><h3>Доходность инвестора против вклада<button class="ti" type="button" data-tip="invChart">i</button></h3><span class="u">% годовых</span></div>
+          <div class="box h240"><canvas id="chInv" role="img" aria-label="Доходность инвестора против вклада"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>выше ставки вклада</span><span><i class="sq hatch"></i>ниже ставки вклада</span></div>
+        </div>
+      </div>
+      <div class="cards" id="buyerMore" style="margin-top:12px"></div>
+    </section>
+
+    <section class="block" id="forecast">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Прогноз до середины 2027</div>
+          <h2>Три сценария для спроса среза</h2>
+          <p>База, «стена вкладов» и липкие вклады. Переток вкладов в жильё остаётся сценарием: при новых депозитах около 13% деньги чаще пролонгируют, чем тратят.</p>
+        </div>
+        <span class="tag">Сценарий, не факт<button class="ti" type="button" data-tip="scenario">i</button></span>
+      </div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Индекс спроса среза<button class="ti" type="button" data-tip="demandIndex">i</button></h3><span class="u">окт. 2024 = 100</span></div>
+          <div class="box h340"><canvas id="chFc" role="img" aria-label="Прогноз спроса по сценариям"></canvas></div>
+          <div class="legend" id="fcLegend"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Изменение спроса к сен. 2026<button class="ti" type="button" data-tip="scenarios">i</button></h3></div>
+          <table class="stable">
+            <thead><tr><th>Сценарий</th><th>IV кв. 26</th><th>I пол. 27</th></tr></thead>
+            <tbody id="fcTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cards" id="fcNotes" style="margin-top:12px"></div>
+    </section>
+
+    <section class="block" id="glossary">
+      <div class="shead"><div>
+        <div class="eyebrow">Словарь</div>
+        <h2>Что означают термины и как их читать</h2>
+        <p>Те же пояснения открываются по значку «i» рядом с показателем. Наведите курсор, нажмите или перейдите к значку клавишей Tab.</p>
+      </div></div>
+      <div class="gloss" id="gloss"></div>
+    </section>
+
+    <footer class="foot">
+      <div class="fg">
+        <div><h4>Источники</h4><p>ЕИСЖС / ДОМ.РФ, ЕРЗ, Росреестр по Москве, Метриум, Банк России (ключевая ставка 14% на 11.09.2026).</p></div>
+        <div><h4>Метод</h4><p>Фильтры масштабируют городской срез правилами зоны, класса и группы. Это прототип аналитического контура, а не покорпусный API.</p></div>
+        <div><h4>Допущения</h4><p>Семейная ипотека в модели работает как узкий льготный канал. «Стена вкладов» остаётся сценарием: переток в жильё ограничен, пока новые депозиты держат около 13%.</p></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="tipbox" id="tipbox" role="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ================= DATA ================= */
+const DEVS = [
+  { name:"ПИК",      m2:1.90, houses:56, units:41.5, delay:3.7,  zoneW:{all:1,old:.62,new:.38}, klassW:{all:1,mass:.78,business:.20,premium:.02} },
+  { name:"MR Group", m2:1.10, houses:23, units:18.4, delay:4.2,  zoneW:{all:1,old:.92,new:.08}, klassW:{all:1,mass:.08,business:.62,premium:.30} },
+  { name:"Самолет",  m2:1.00, houses:50, units:21.9, delay:67.0, zoneW:{all:1,old:.28,new:.72}, klassW:{all:1,mass:.82,business:.16,premium:.02} },
+  { name:"Донстрой", m2:0.80, houses:21, units:9.7,  delay:0.0,  zoneW:{all:1,old:.97,new:.03}, klassW:{all:1,mass:.04,business:.28,premium:.68} },
+  { name:"ФСК",      m2:0.72, houses:21, units:14.6, delay:11.4, zoneW:{all:1,old:.80,new:.20}, klassW:{all:1,mass:.22,business:.66,premium:.12} },
+  { name:"Level",    m2:0.60, houses:13, units:11.2, delay:8.0,  zoneW:{all:1,old:.90,new:.10}, klassW:{all:1,mass:.10,business:.70,premium:.20} },
+  { name:"А101",     m2:0.58, houses:18, units:13.1, delay:85.0, zoneW:{all:1,old:.05,new:.95}, klassW:{all:1,mass:.86,business:.14,premium:.00} },
+  { name:"Абсолют",  m2:0.44, houses:16, units:7.8,  delay:12.0, zoneW:{all:1,old:.88,new:.12}, klassW:{all:1,mass:.18,business:.70,premium:.12} },
+  { name:"Страна",   m2:0.41, houses:5,  units:7.0,  delay:75.0, zoneW:{all:1,old:.70,new:.30}, klassW:{all:1,mass:.15,business:.72,premium:.13} },
+  { name:"Брусника", m2:0.35, houses:4,  units:4.8,  delay:5.0,  zoneW:{all:1,old:.55,new:.45}, klassW:{all:1,mass:.70,business:.28,premium:.02} },
+  { name:"Прочие",   m2:7.80, houses:293,units:140,  delay:18.0, zoneW:{all:1,old:.80,new:.20}, klassW:{all:1,mass:.36,business:.44,premium:.20} }
+];
+const OKR = [
+  { name:"ТиНАО", ddu:9.1, zone:"new", klass:"mass" },
+  { name:"ЗАО",   ddu:4.8, zone:"old", klass:"business" },
+  { name:"САО",   ddu:4.7, zone:"old", klass:"business" },
+  { name:"ЮАО",   ddu:4.5, zone:"old", klass:"mass" },
+  { name:"СЗАО",  ddu:4.2, zone:"old", klass:"business" },
+  { name:"СВАО",  ddu:3.2, zone:"old", klass:"mass" },
+  { name:"ВАО",   ddu:2.8, zone:"old", klass:"mass" },
+  { name:"ЮВАО",  ddu:2.6, zone:"old", klass:"mass" },
+  { name:"ЮЗАО",  ddu:1.3, zone:"old", klass:"premium" },
+  { name:"ЦАО",   ddu:1.0, zone:"old", klass:"premium" },
+  { name:"ЗелАО", ddu:0.5, zone:"old", klass:"mass" }
+];
+const YEARS = [
+  { y:"2026", mass:.42, business:.33, premium:.25 },
+  { y:"2027", mass:.38, business:.40, premium:.22 },
+  { y:"2028", mass:.35, business:.43, premium:.22 },
+  { y:"2029", mass:.30, business:.45, premium:.25 },
+  { y:"2030+",mass:.28, business:.44, premium:.28 }
+];
+const YEAR_M2 = { "2026":5.41,"2027":4.31,"2028":3.60,"2029":1.90,"2030+":0.48 };
+const PRICE = { all:{all:470,old:560,new:332}, mass:{all:360,old:422,new:310}, business:{all:560,old:586,new:359}, premium:{all:1200,old:1400,new:451} };
+const SOLD  = { all:{all:47,old:52,new:38}, mass:{all:41,old:36,new:44}, business:{all:49,old:51,new:40}, premium:{all:44,old:46,new:28} };
+const READY = { all:{all:51,old:54,new:44}, mass:{all:48,old:50,new:46}, business:{all:52,old:55,new:40}, premium:{all:50,old:52,new:35} };
+const YOY   = { all:{all:-38,old:-41,new:-24}, mass:{all:-46,old:-48,new:-29}, business:{all:-18,old:-17,new:-22}, premium:{all:-12,old:-11,new:-20} };
+const MORTGAGE_SHARE = { all:{all:58,old:52,new:71}, mass:{all:74,old:68,new:79}, business:{all:41,old:39,new:48}, premium:{all:18,old:17,new:22} };
+const FAMILY_SHARE   = { all:{all:19,old:14,new:31}, mass:{all:28,old:22,new:36}, business:{all:9,old:8,new:14}, premium:{all:2,old:2,new:3} };
+const RENT_YIELD     = { all:{all:4.4,old:3.9,new:5.6}, mass:{all:5.1,old:4.6,new:5.9}, business:{all:3.8,old:3.6,new:4.7}, premium:{all:2.6,old:2.4,new:3.4} };
+/* Ожидаемый рост прайса котлован → ключи за типичный цикл, % за цикл */
+const GROWTH_PIT   = { all:{all:14,old:13,new:16}, mass:{all:9,old:7,new:12}, business:{all:16,old:17,new:13}, premium:{all:12,old:13,new:8} };
+const PIT_DISCOUNT = { all:{all:11,old:10,new:14}, mass:{all:13,old:11,new:16}, business:{all:10,old:10,new:12}, premium:{all:7,old:7,new:9} };
+const CYCLE_MO     = { all:{all:30,old:32,new:28}, mass:{all:28,old:30,new:26}, business:{all:32,old:34,new:28}, premium:{all:34,old:36,new:30} };
+const RATE_LABELS = ["окт.24","апр.25","июл.25","окт.25","дек.25","мар.26","июн.26","июл.26","сен.26"];
+const RATE = [21,21,18,16.5,16,15,14.25,14,14];
+
+const OPTS = {
+  zone:  [["all","Вся Москва"],["old","Старая Москва"],["new","ТиНАО"]],
+  klass: [["all","Все"],["mass","Массовый"],["business","Бизнес"],["premium","Премиум"]],
+  dev:   [["all","Все группы"],["ПИК","ПИК"],["MR Group","MR Group"],["Самолет","Самолет"],["Донстрой","Донстрой"],["ФСК","ФСК"]]
+};
+const KLASS_NAMES = { mass:"Массовый", business:"Бизнес", premium:"Премиум / элит" };
+
+/* ================= GLOSSARY ================= */
+/* t: термин, d: что это, h: как читать, g: группа для словаря */
+const GLOSS = {
+  zone: { g:"Фильтры", t:"Макрозона",
+    d:"Часть города. Старая Москва: территория в границах до расширения 2012 года. ТиНАО: Троицкий и Новомосковский округа, так называемая Новая Москва.",
+    h:"В ТиНАО метр дешевле примерно на треть, и туда уходит массовый ипотечный спрос. В старой Москве строят в основном бизнес и премиум." },
+  klass: { g:"Фильтры", t:"Класс жилья",
+    d:"Массовый: стандарт и комфорт. Бизнес: лучше локация, отделка и благоустройство. Премиум и элит: центр, уникальные проекты. Класс задаёт цена, место и качество проекта.",
+    h:"Чем выше класс, тем меньше покупатель зависит от ипотеки и ставки ЦБ и тем больше от своих накоплений." },
+  dev: { g:"Фильтры", t:"Группа застройщика",
+    d:"Все юрлица одного девелопера, объединённые в группу по данным ЕРЗ и ДОМ.РФ.",
+    h:"При выборе группы показатели считаются по её доле в срезе. У каждой группы своя дисциплина сроков и свой покупатель." },
+  portfolio: { g:"Предложение", t:"Портфель среза",
+    d:"Площадь жилья в текущем строительстве, млн м². Источник: ЕИСЖС (единая информационная система жилищного строительства ДОМ.РФ).",
+    h:"Это будущее предложение. Если портфель велик, а ДДУ мало, копится непроданный объём и растёт вероятность скидок." },
+  classes: { g:"Предложение", t:"Структура по классам",
+    d:"Как площадь в стройке делится между массовым, бизнес- и премиум-классом, плюс прайс и распроданность по каждому.",
+    h:"Смотрите, где сосредоточен объём и где он хуже продаётся. Старая Москва смещена в бизнес и выше." },
+  cohort: { g:"Предложение", t:"Когорта ввода",
+    d:"Площадь, которую застройщики должны сдать в данном году по проектной декларации.",
+    h:"Большая когорта ближайших лет означает много готового жилья на рынке. Это давит на цену ключей и на перепродажу инвесторов." },
+  delay: { g:"Предложение", t:"Переносы срока",
+    d:"Доля площади, по которой застройщик уже сдвинул срок ввода в проектной декларации.",
+    h:"До 8% считается нормой. Выше 40% значит, что дате ключей верить нельзя: закладывайте аренду на время ожидания и более длинный цикл для инвестиции." },
+  ddu: { g:"Спрос", t:"ДДУ",
+    d:"Договор долевого участия: так покупают квартиру в строящемся доме. Каждый ДДУ регистрирует Росреестр, поэтому это главный счётчик продаж новостроек.",
+    h:"Показано число договоров в тысячах за I полугодие 2026. Переуступки и вторичка сюда не входят." },
+  yoy: { g:"Спрос", t:"Спрос г/г",
+    d:"Изменение числа и площади ДДУ к тому же периоду прошлого года, в процентах.",
+    h:"Ниже −30%: обвал, из рынка выпал ипотечный покупатель. От −30% до −15%: охлаждение. Выше −15%: срез устойчивее города, где спад около −38%." },
+  demandIndex: { g:"Спрос", t:"Индекс спроса",
+    d:"Число ДДУ в срезе, приведённое к октябрю 2024 года, который принят за 100.",
+    h:"Значение 60 означает, что продаж на 40% меньше, чем в октябре 2024. Индекс удобен, чтобы сравнивать срезы разного размера." },
+  rateVsDemand: { g:"Спрос", t:"Ставка против спроса",
+    d:"Два графика с общей осью времени: ключевая ставка ЦБ и индекс спроса среза.",
+    h:"Ставка снизилась с 21% до 14%, а спрос продолжил падать. Значит, дело не только в ставке: сузилась семейная ипотека, а рыночная всё ещё около 16%." },
+  sold: { g:"Баланс", t:"Распроданность",
+    d:"Доля площади в строящихся корпусах, которая уже продана по ДДУ.",
+    h:"Сама по себе мало говорит. Её сравнивают со строительной готовностью: см. «Продажи / готовность»." },
+  ready: { g:"Баланс", t:"Строительная готовность",
+    d:"Техническая готовность корпусов в процентах по данным ЕИСЖС.",
+    h:"Чем выше готовность, тем больше квартир уже должно быть продано, чтобы стройка шла ровно." },
+  bal: { g:"Баланс", t:"Продажи / готовность",
+    d:"Распроданность, делённая на строительную готовность, ×100. Метрика ДОМ.РФ для оценки баланса рынка.",
+    h:"Норма 70–80%: продажи идут вровень со стройкой. Ниже 70% означает навес: строят быстрее, чем продают, эскроу-счета наполняются медленно, вероятны скидки. Выше 88% означает дефицит: лотов мало, цена под давлением вверх." },
+  status: { g:"Баланс", t:"Норма, наблюдать, аномалия",
+    d:"Отметка сравнивает значение показателя с типичным для здорового рынка.",
+    h:"Норма: в пределах коридора. Наблюдать: на границе или зависит от контекста. Аномалия: заметное отклонение, которое объясняет поведение среза." },
+  price: { g:"Деньги и ставки", t:"Цена, тыс. ₽/м²",
+    d:"Средневзвешенная цена предложения за квадратный метр по прайс-листам, без индивидуальных скидок.",
+    h:"Реальная цена сделки при рассрочке или торге может быть ниже на 3–10%." },
+  mortgage: { g:"Деньги и ставки", t:"Доля ипотеки",
+    d:"Доля ДДУ, оплаченных с ипотечным кредитом, льготным или рыночным.",
+    h:"Чем выше доля, тем сильнее срез зависит от ставки и банковских программ. Выше 60% значит, что срез живёт на кредите." },
+  family: { g:"Деньги и ставки", t:"Семейная ипотека",
+    d:"Льготная программа для семей с детьми. До 30.09.2026 ставка 6% для всех. С 01.10.2026 ставка зависит от числа детей и региона: в Москве 12% при одном ребёнке до 7 лет, 10% при двух, 8% при трёх, 6% при четырёх, 4% при пяти и более. Одна льгота на семью.",
+    h:"Доля показывает, сколько сделок среза закрывает льгота. Ниже 20% значит, что большинство покупателей её не получает. С октября льгота для семей с одним ребёнком почти сравнивается с рыночной ставкой." },
+  keyrate: { g:"Деньги и ставки", t:"Ключевая ставка ЦБ",
+    d:"Базовая ставка Банка России: 14% после паузы на заседании 11.09.2026. Пик был 21% в октябре 2024 года.",
+    h:"От неё отсчитываются ставки по рыночной ипотеке (обычно ключевая плюс 2–3 п.п.) и по вкладам." },
+  pp: { g:"Деньги и ставки", t:"п.п. (процентный пункт)",
+    d:"Разница между двумя значениями в процентах.",
+    h:"Снижение ставки с 21% до 14% составляет 7 п.п., хотя в относительном выражении это −33%." },
+  ticket: { g:"Деньги и ставки", t:"Чек",
+    d:"Полная стоимость типичной квартиры в срезе: цена метра, умноженная на типичную площадь лота.",
+    h:"От чека зависят первый взнос и платёж. В премиуме чек в разы выше, но и покупатель другой." },
+  payMarket: { g:"Деньги и ставки", t:"Платёж по рыночной ставке",
+    d:"Ориентир ежемесячного платежа за типичный лот: кредит на 55–60% чека под 16% годовых на 20 лет, остальное первый взнос.",
+    h:"Это модельный ориентир, а не расчёт банка. Сравните с доходом семьи: банки обычно ограничивают платёж половиной дохода." },
+  payFamily: { g:"Деньги и ставки", t:"Платёж по льготе",
+    d:"Тот же лот и тот же кредит по семейной ипотеке под 6%.",
+    h:"Разница с рыночным платежом показывает, насколько сделка держится на льготе." },
+  deposit: { g:"Деньги и ставки", t:"Ставка вклада",
+    d:"Типичная ставка нового годового депозита в крупных банках, около 12,8%.",
+    h:"Безрисковая альтернатива деньгам покупателя. Инвестиция в квартиру имеет смысл, только если обгоняет вклад с запасом на риск." },
+  pit: { g:"Инвестор", t:"Котлован → ввод",
+    d:"Ожидаемый рост прайса от старта продаж на котловане до ввода дома за весь цикл стройки. Рядом тот же рост в пересчёте на год.",
+    h:"Годовое значение сравнивайте со вкладом. В 2020–21 годах путь давал 25–40% за цикл, сейчас модель закладывает заметно меньше." },
+  cycle: { g:"Инвестор", t:"Цикл",
+    d:"Месяцы от старта продаж до ввода дома с поправкой на переносы в срезе.",
+    h:"Чем длиннее цикл, тем ниже годовая доходность при том же росте цены." },
+  pitDisc: { g:"Инвестор", t:"Дисконт котлована",
+    d:"Насколько цена на старте продаж ниже цены сопоставимой готовой квартиры.",
+    h:"Это плата покупателю за риск и ожидание. Хорошим считается дисконт от 12%." },
+  irr: { g:"Инвестор", t:"Котлован с дисконтом стадии",
+    d:"Годовая доходность, если купить на старте и продать на вводе: дисконт стадии плюс рост прайса, приведённые к году.",
+    h:"Грубая оценка без налогов, комиссий, ремонта и риска не найти покупателя на выходе." },
+  rent: { g:"Инвестор", t:"Валовая аренда",
+    d:"Годовой арендный доход, делённый на цену квартиры. До налогов, простоя и расходов на содержание.",
+    h:"Чистая доходность обычно на 1–1,5 п.п. ниже. От 5% считается нормой для Москвы." },
+  totalAnn: { g:"Инвестор", t:"Рост + 55% аренды",
+    d:"Грубая полная доходность: годовой рост цены плюс чуть больше половины арендной доходности.",
+    h:"Аренда учитывается частично, потому что начинается только после ключей. Если значение ниже вклада, модель «купить и сдавать» проигрывает депозиту." },
+  invChart: { g:"Инвестор", t:"Доходность инвестора против вклада",
+    d:"Четыре способа посчитать доходность квартиры в срезе рядом со ставкой вклада, отмеченной вертикальной линией.",
+    h:"Оранжевые столбцы обгоняют вклад, заштрихованные не обгоняют. Если все заштрихованы, деньги рациональнее держать на депозите." },
+  wall: { g:"Прогноз", t:"Стена вкладов",
+    d:"Гипотеза о волне свободных денег. В октябре 2024 – весной 2025 года ключевая ставка была 21%, и банки давали по вкладам больше 20%. Люди массово открывали депозиты на 18–24 месяца. Эти вклады истекают в IV квартале 2026 и I полугодии 2027 года, а новый вклад даёт уже около 12,8%. Часть владельцев может решить, что продлевать депозит невыгодно, и купить квартиру.",
+    h:"Это сценарий, а не факт. Он сработает, только если ставки новых вкладов опустятся заметно ниже 12% и застройщики дадут рассрочку или скидку. Сильнее всего волна касается покупателей без ипотеки: премиума и части бизнес-класса." },
+  scenario: { g:"Прогноз", t:"Сценарий",
+    d:"Условный расчёт «что будет, если». Он задаёт допущения и показывает их следствие.",
+    h:"Сценарий не прогнозирует, какой вариант случится. Сравнивайте разброс между сценариями и следите, какие условия начинают выполняться." },
+  prolong: { g:"Прогноз", t:"Пролонгация",
+    d:"Продление вклада на новый срок после его окончания, часто по новой ставке.",
+    h:"Чем больше денег пролонгируют, тем меньше их доходит до рынка жилья." },
+  pitStage: { g:"Сделка", t:"Котлован",
+    d:"Самая ранняя стадия стройки, когда только начались работы и стартовали продажи.",
+    h:"Цены здесь самые низкие, а риск самый высокий: срок ввода может сдвинуться, а выход к ключам зависит от спроса через 2–3 года." },
+  keys: { g:"Сделка", t:"Ввод и ключи",
+    d:"Ввод: получение разрешения на ввод дома в эксплуатацию. Ключи: передача квартир дольщикам после ввода.",
+    h:"С ключами начинается аренда и появляется возможность продать готовую квартиру. До этого деньги заморожены." },
+  escrow: { g:"Сделка", t:"Эскроу-счёт",
+    d:"Счёт в банке, где лежат деньги дольщика до ввода дома. Застройщик строит на проектный кредит, и его ставка тем ниже, чем больше денег на эскроу.",
+    h:"Медленные продажи делают кредит застройщика дороже. Тогда он охотнее даёт скидки и рассрочку." },
+  installment: { g:"Сделка", t:"Рассрочка застройщика",
+    d:"Оплата квартиры частями напрямую застройщику, без банка, обычно на 12–24 месяца. Часто цена в рассрочку выше, чем при полной оплате.",
+    h:"Главный обходной путь при дорогой ипотеке. Рост доли рассрочек говорит о слабом спросе." },
+  tradein: { g:"Сделка", t:"Trade-in",
+    d:"Застройщик или партнёр засчитывает старую квартиру покупателя в оплату новой.",
+    h:"Популярен у тех, кто улучшает жильё. Спрос через trade-in меньше зависит от ставки, но медленнее: нужно продать старую квартиру." },
+  cash: { g:"Сделка", t:"Кэш",
+    d:"Покупка без кредита, на свои накопления или деньги от продажи другой квартиры.",
+    h:"Доля кэша растёт, когда ипотека дорогая. Именно кэш-покупатель выигрывает от волны истекающих вкладов." },
+  firstPayment: { g:"Сделка", t:"Первый взнос",
+    d:"Часть стоимости квартиры, которую покупатель платит сам при ипотеке.",
+    h:"Чем выше взнос, тем ниже платёж и тем проще пройти одобрение банка." },
+  marketMortgage: { g:"Деньги и ставки", t:"Рыночная ипотека",
+    d:"Ипотека без господдержки. При ключевой ставке 14% она стоит около 16% годовых.",
+    h:"При такой ставке платёж по типичному лоту не проходит одобрение у большинства семей. Поэтому массовый сегмент зависит от льгот." },
+  scoring: { g:"Деньги и ставки", t:"Скоринг",
+    d:"Оценка банком платёжеспособности заёмщика: доход, долги, кредитная история.",
+    h:"Если платёж слишком велик относительно дохода, банк отказывает. При высокой ставке отказов больше." },
+  overhang: { g:"Баланс", t:"Навес предложения",
+    d:"Непроданный объём жилья, который накопился, потому что стройка идёт быстрее продаж.",
+    h:"Навес давит на цену: застройщики торгуются, дают скидки и рассрочку. Признак: продажи к готовности ниже 70%." },
+  exposure: { g:"Баланс", t:"Экспозиция",
+    d:"Квартиры, выставленные на продажу прямо сейчас.",
+    h:"Даже при высокой распроданности в экспозиции могут остаться только крупные и дорогие лоты." },
+  lot: { g:"Баланс", t:"Лот",
+    d:"Отдельная квартира или помещение в продаже.",
+    h:"Площадь типичного лота определяет чек. В массовом сегменте лоты уменьшаются, чтобы чек оставался доступным." },
+  secondary: { g:"Сделка", t:"Вторичка",
+    d:"Готовое жильё, у которого уже был собственник.",
+    h:"Главная альтернатива новостройке. Особенно в премиуме: покупатель сравнивает новый проект с готовыми квартирами рядом." },
+  declaration: { g:"Источники", t:"Проектная декларация",
+    d:"Официальный документ застройщика о проекте: сроки, площади, этапы. Публикуется в ЕИСЖС.",
+    h:"Изменение срока ввода в декларации и считается переносом." },
+  eisjs: { g:"Источники", t:"ЕИСЖС и ДОМ.РФ",
+    d:"ЕИСЖС: единая информационная система жилищного строительства, её ведёт госкомпания ДОМ.РФ. Там данные по каждому строящемуся дому.",
+    h:"Источник портфеля, готовности, распроданности и сроков ввода. ДОМ.РФ также задаёт ориентир баланса продаж 70–80%." },
+  rosreestr: { g:"Источники", t:"Росреестр",
+    d:"Государственный регистратор прав на недвижимость. Регистрирует каждый ДДУ.",
+    h:"Число регистраций ДДУ считается самым надёжным счётчиком продаж новостроек." },
+  erz: { g:"Источники", t:"ЕРЗ",
+    d:"Единый реестр застройщиков: портфели, рейтинги и сроки девелоперов.",
+    h:"Используется для сопоставления групп застройщиков и их дисциплины сроков." },
+  metrium: { g:"Источники", t:"Метриум",
+    d:"Консалтинговая компания, которая публикует аналитику цен и спроса на первичном рынке Москвы.",
+    h:"Источник цен по классам и структуры спроса." },
+  cbr: { g:"Источники", t:"ЦБ",
+    d:"Центральный банк, он же Банк России. Устанавливает ключевую ставку.",
+    h:"Решения ЦБ задают стоимость ипотеки и доходность вкладов, а через них спрос на жильё." },
+  pipeline: { g:"Цикл стройки", t:"Цикл девелопмента",
+    d:"Путь проекта: участок и ВРИ, ГЗК, АГР, госэкспертиза, РНС, старт продаж, стройка, ввод. На графике каждый этап сравнивается с тем же периодом прошлого года.",
+    h:"Если сжимаются ранние этапы (РНС, запуски), через 2–3 года сократится ввод. Сейчас падают все коммерческие этапы, растёт только городская реновация." },
+  rns: { g:"Цикл стройки", t:"РНС",
+    d:"Разрешение на строительство. В Москве его выдаёт Мосгосстройнадзор после согласований и экспертизы. Без РНС нельзя начать стройку и продавать по ДДУ.",
+    h:"Опережающий индикатор. РНС сегодня означает старт продаж через 3–9 месяцев и ввод через 2,5–3 года." },
+  starts: { g:"Цикл стройки", t:"Старт продаж",
+    d:"Вывод проекта на рынок: застройщик открывает продажи по ДДУ, обычно сразу после получения РНС и проектного финансирования.",
+    h:"Показывает, сколько нового предложения придёт. Падение запусков при слабом спросе означает, что застройщики берегут кредитные лимиты и маржу." },
+  renovation: { g:"Цикл стройки", t:"Реновация",
+    d:"Городская программа сноса старого жилого фонда и переселения жителей. Дома строит Фонд реновации.",
+    h:"Квартиры реновации не продаются на рынке, поэтому рост её ввода не добавляет предложения для покупателей." },
+  gzk: { g:"Цикл стройки", t:"ГЗК",
+    d:"Градостроительно-земельная комиссия Москвы. Одобряет параметры будущего проекта: назначение, площади, этажность.",
+    h:"Решение ГЗК до 05.08.2026 позволяет проекту остаться на старых нормах парковок." },
+  agr: { g:"Цикл стройки", t:"АГР",
+    d:"Архитектурно-градостроительное решение: согласование облика и параметров здания в Москомархитектуре.",
+    h:"Один из документов, дающих право на переходный период по новым нормам парковок." },
+  expertiza: { g:"Цикл стройки", t:"Госэкспертиза",
+    d:"Проверка проектной документации на соответствие нормам перед получением РНС.",
+    h:"Положительное заключение до 05.08.2026 тоже сохраняет проекту старые нормы парковок." },
+  rngp: { g:"Нормативка", t:"РНГП",
+    d:"Региональные нормативы градостроительного проектирования: обязательные минимумы по парковкам, школам, садам, поликлиникам, озеленению. В Москве нормативы по транспорту и парковкам утверждены 945-ПП.",
+    h:"Каждое ужесточение РНГП увеличивает себестоимость метра или уменьшает продаваемую площадь на том же участке." },
+  pp945: { g:"Нормативка", t:"945-ПП",
+    d:"Постановление Правительства Москвы от 23.12.2015 № 945-ПП: нормативы градостроительного проектирования в области транспорта, включая парковки. Менялось в 2019, 2024, 2025 и 2026 годах.",
+    h:"Смотрите, по какой редакции проект получил РНС: от этого зависит, сколько машино-мест он обязан построить." },
+  pp2118: { g:"Нормативка", t:"2118-ПП",
+    d:"Постановление Правительства Москвы от 05.08.2026, изменившее 945-ПП. Машино-места считаются по площади квартиры: 0,8 до 70 м², 1,2 от 70 до 100 м², 1,6 свыше 100 м². По транспортному моделированию возможны понижающие и повышающие коэффициенты.",
+    h:"Для небольших квартир норма выросла почти вдвое. Проекты с РНС, экспертизой, ГЗК или АГР до 05.08.2026 ещё полтора-два года выходят по старым нормам." },
+  mm: { g:"Нормативка", t:"Машино-место",
+    d:"Место для автомобиля в паркинге. В Москве для новостроек в основном подземное, одно из самых дорогих мест в стройке.",
+    h:"Дополнительные места повышают себестоимость. Если их не удаётся продать, затраты ложатся на цену квартир." },
+  k1: { g:"Нормативка", t:"К1",
+    d:"Коэффициент транспортной доступности в прежней методике 945-ПП: 0,75 при метро до 500 м, 0,9 до 1000 м, 1,0 в остальных случаях.",
+    h:"Чем ближе метро, тем меньше мест требовалось раньше." },
+  vri: { g:"Нормативка", t:"ВРИ",
+    d:"Вид разрешённого использования земельного участка: промышленность, склады, жильё и так далее.",
+    h:"Чтобы строить жильё на бывшей промзоне, ВРИ надо сменить. Это отдельная статья затрат и времени." },
+  vriFee: { g:"Нормативка", t:"Плата за изменение ВРИ",
+    d:"Москва взимает плату при смене ВРИ на вид, разрешающий строительство. Размер зависит от прироста кадастровой стоимости участка. После 2652-ПП от 22.11.2024 её вносят до изменения ПЗЗ.",
+    h:"Деньги уходят раньше, чем появляется проектное финансирование. Это удлиняет путь редевелопмента промзон к РНС." },
+  pzz: { g:"Нормативка", t:"ПЗЗ",
+    d:"Правила землепользования и застройки: документ, где для каждого участка записаны ВРИ и предельные параметры.",
+    h:"Изменение ПЗЗ — последний шаг перед проектированием на новом ВРИ." },
+  familyRule: { g:"Нормативка", t:"Одна семья — одна льгота",
+    d:"С 01.02.2026 на семью можно оформить только одну семейную ипотеку. Оба супруга становятся созаёмщиками.",
+    h:"Закрывает схемы с двумя льготными кредитами на семью. Сужает льготный канал для массового сегмента." },
+  diffRate: { g:"Нормативка", t:"Дифференцированная ставка",
+    d:"Схема семейной ипотеки с 01.10.2026: ставка зависит от числа детей и региона. В столичных субъектах шкала 12 / 10 / 8 / 6 / 4%, в остальных регионах на 2 п.п. ниже. Лимит кредита в Москве 12, 15 или 18 млн ₽.",
+    h:"Для семьи с одним ребёнком льгота дорожает вдвое. Многодетным более высокий лимит может снизить платёж, если лот дороже 15 млн ₽." },
+  notOpened: { g:"Баланс", t:"Продажи не открыты",
+    d:"Площадь в строящихся домах, по которой застройщик ещё не открыл продажи. По данным ЕИСЖС.",
+    h:"Это резерв предложения. Большая доля значит, что застройщики придерживают квартиры под рост цены или ждут спроса. В Москве резерв 10%, в регионах до 44%." },
+  sticky: { g:"Прогноз", t:"Липкие вклады",
+    d:"Сценарий, в котором истекающие деньги остаются на депозитах: их продлевают под 12–13%.",
+    h:"Липкость показывает долю денег, которая не уйдёт с вкладов. Чем она выше, тем слабее волна спроса." },
+  base: { g:"Прогноз", t:"Базовый сценарий",
+    d:"Вклады около 13%, часть денег перекладывается в жильё, ипотека без расширения льгот.",
+    h:"Самый вероятный путь при нынешних условиях: небольшой рост спроса от низкой базы." },
+  scenarios: { g:"Прогноз", t:"Изменение спроса по сценариям",
+    d:"Насколько индекс спроса среза изменится к концу 2026 года и к середине 2027 года относительно сентября 2026.",
+    h:"Разброс между сценариями показывает, насколько срез чувствителен к судьбе вкладов." }
+};
+
+/* ================= PIPELINE & REGULATION DATA ================= */
+/* Цифры по публикациям (поиск, сентябрь 2026). ЕРЗ и ЕИСЖС из контейнера недоступны: сверить перед использованием. */
+const PIPE = [
+  { l:"РНС на МКД", p:"I пол. 2026", v:-44.5, src:"Мосгосстройнадзор через АБН" },
+  { l:"Запуск проектов, старая Москва", p:"I пол. 2026", v:-29, src:"Коммерсантъ" },
+  { l:"ДДУ", p:"I пол. 2026", v:-38, src:"модель среза" },
+  { l:"Ввод новостроек на продажу", p:"I пол. 2026", v:-33, src:"Коммерсантъ" },
+  { l:"Ввод реновации", p:"янв–авг 2026", v:21, src:"Мосгосстройнадзор" }
+];
+const PIPE_ROWS = [
+  ["РНС", "10,0 млн м² жилья; 213 разрешений на МКД, из них 116 по реновации", "I пол.: 1,5 млн м² МКД. Янв–июль: 71 жилой дом, 1,4 млн м² квартир", "−44,5%", "neg", "Мосгосстройнадзор, Интерфакс, АБН"],
+  ["Вывод на рынок", "Янв–сен: 2,88 млн м² (−31%). За год 40 новых ЖК, минимум за 10 лет", "Янв–авг: 52 проекта, 2,6 млн м². I пол. в старой Москве: 0,96 млн м²", "−29%", "neg", "Движение.ру, Коммерсантъ, власти Москвы"],
+  ["ДДУ", "база сравнения", "I пол.: около 38,9 тыс. договоров", "−38%", "neg", "модель дашборда на данных Росреестра"],
+  ["Ввод жилья", "7,4 млн м² (+12,9%), лидеры ПИК и Фонд реновации", "I пол.: новостройки на продажу 0,94 млн м². Янв–авг: реновация 1,1 млн м² жилых", "−33% / +21%", "neg", "Novostroy-M, Коммерсантъ, Мосгосстройнадзор"]
+];
+const PIPE_SRC = [
+  ["Коммерсантъ: ввод новостроек −⅓", "https://www.kommersant.ru/doc/8778596"],
+  ["Коммерсантъ: нормы парковок", "https://www.kommersant.ru/doc/8889753"],
+  ["АБН: РНС −44,5%", "https://abn.agency/2026/07/13/moskva-sokratila-vydachu-razreshenij-na-stroitelstvo-zhilya-na-445-v-pervom-polugodii/"],
+  ["Интерфакс: РНС 2025", "https://www.interfax-russia.ru/realty/news/mosgosstroynadzor-v-2025-godu-odobril-stroitelstvo-pochti-17-mln-kv-m-nedvizhimosti"],
+  ["Novostroy-M: ввод 2025", "https://www.novostroy-m.ru/novosti/v_moskve_v_2025"],
+  ["Движение.ру: 40 новостроек в 2025", "https://dvizhenie.ru/media/5388/na-rynok-moskvy-vyveli-vsego-40-novostroek-v-2025-godu-eto-minimum-za-10-let"],
+  ["РБК: семейная ипотека с 1 февраля", "https://realty.rbc.ru/news/694e6c6a9a79474245a85d0c"],
+  ["Всё о стройке: семейная ипотека с 1 октября 2026 (Минфин, РБК)", null],
+  ["Всё о стройке: распроданность по регионам (ЕИСЖС, 11.09.2026)", null],
+  ["ЕРЗ: порядок платы за ВРИ", "https://erzrf.ru/news/v-moskve-aktualizirovan-poryadok-vzimaniya-platy-za-arendu-i-za-izmeneniye-vida-razreshennogo-ispolzovaniya-zemelnogo-uchastka"],
+  ["945-ПП в редакции с 05.08.2026", "https://www.glavbukh.ru/npd/edoc/80_537986033"]
+];
+/* ЕИСЖС на 11.09.2026 (подборка «Всё о стройке»): объём стройки, млн м², и доли, % */
+const REGIONS = [
+  { n:"Москва", v:15.7, sold:47, unsold:43, closed:10 },
+  { n:"Свердловская обл.", v:5.9, sold:29, unsold:52, closed:19 },
+  { n:"Новосибирская обл.", v:3.7, sold:26, unsold:46, closed:28 },
+  { n:"Тюменская обл.", v:3.5, sold:26, unsold:51, closed:23 },
+  { n:"Ростовская обл.", v:4.8, sold:25, unsold:50, closed:25 },
+  { n:"Краснодарский край", v:7.8, sold:19, unsold:37, closed:44 }
+];
+/* Семейная ипотека с 01.10.2026 (Минфин, РБК): ставка регионы / столичные субъекты, лимит кредита, млн ₽ */
+const FAMILY_2026 = [
+  { f:"Один ребёнок до 7 лет", r:10, m:12, lr:6, lm:12 },
+  { f:"Двое детей, младший до 7 лет", r:8, m:10, lr:8, lm:15 },
+  { f:"Трое детей", r:6, m:8, lr:10, lm:18 },
+  { f:"Четверо детей", r:4, m:6, lr:10, lm:18 },
+  { f:"Пятеро и более", r:2, m:4, lr:10, lm:18 }
+];
+const FAM_OLD = { rate:6, limit:12 }; /* до 30.09.2026 для Москвы */
+const annuity = (P, rate, n = 360) => { const i = rate / 1200; return P * i / (1 - Math.pow(1 + i, -n)); };
+
+function familyModel(v) {
+  const price = v.ticket / 1000;             /* млн ₽ */
+  const need = price * 0.8;                  /* кредит при взносе 20% */
+  const pay = (rate, limit) => {
+    const fam = Math.min(need, limit), gap = Math.max(0, need - limit);
+    return { fam, gap, total: (annuity(fam, rate) + annuity(gap, 16)) * 1000 };
+  };
+  const before = pay(FAM_OLD.rate, FAM_OLD.limit);
+  const rows = FAMILY_2026.slice(0, 3).map(x => { const a = pay(x.m, x.lm); return { ...x, after: a, d: (a.total / before.total - 1) * 100 }; });
+  return { price, need, before, rows };
+}
+
+/* Парковки: доли квартир по площади в классе и средняя площадь корзины */
+const FLAT_MIX = { mass:[.88,.10,.02], business:[.62,.28,.10], premium:[.25,.40,.35] };
+const FLAT_AREA = [45, 84, 140];
+const MM_NEW = [0.8, 1.2, 1.6];
+const MM_COST = 3.5; /* млн ₽ за подземное машино-место, допущение */
+
+function parkingModel(v) {
+  const s = v.s;
+  const w = s.klass === "all" ? v.classShare.map(x => x / 100) : ["mass","business","premium"].map(k => k === s.klass ? 1 : 0);
+  const mix = [0,1,2].map(i => w[0] * FLAT_MIX.mass[i] + w[1] * FLAT_MIX.business[i] + w[2] * FLAT_MIX.premium[i]);
+  const k1 = s.zone === "new" ? 1.0 : s.zone === "old" ? 0.9 : 0.92;
+  /* старая методика (калькулятор ТЭП): население × 0,257 × К1 + 10% гостевых */
+  const oldPer = FLAT_AREA.map(a => (a < 69.3 ? 2.1 : a / 33) * 0.257 * k1 * 1.1);
+  const oldAvg = mix.reduce((acc, m, i) => acc + m * oldPer[i], 0);
+  const newAvg = mix.reduce((acc, m, i) => acc + m * MM_NEW[i], 0);
+  const avgArea = mix.reduce((acc, m, i) => acc + m * FLAT_AREA[i], 0);
+  const extra = Math.max(0, newAvg - oldAvg);
+  const perM2 = extra * MM_COST * 1000 / avgArea; /* тыс. ₽ на м² квартир */
+  return { mix, k1, oldPer, oldAvg, newAvg, avgArea, extra, perM2, share: perM2 / v.price * 100 };
+}
+
+function regEvents(v, pk) {
+  const s = v.s;
+  const massy = s.klass === "mass" || (s.klass === "all" && v.classShare[0] >= 50);
+  return [
+    { dt:"22.11.2024", act:"2652-ПП: плата за изменение ВРИ", st:["good","действует"],
+      d:"Плату за изменение ВРИ участка теперь вносят до внесения изменений в ПЗЗ, а не после. Размер зависит от прироста кадастровой стоимости участка.",
+      fx: s.zone === "new" ? "В ТиНАО больше участков изначально под жильё, влияние умеренное." : "Бьёт по редевелопменту промзон старой Москвы: деньги за смену ВРИ уходят раньше проектного финансирования и удлиняют цикл до РНС." },
+    { dt:"01.02.2026", act:"Семейная ипотека: одна на семью", st:["good","действует"],
+      d:"Одна льготная ипотека на семью. Оба супруга обязательно выступают созаёмщиками.",
+      fx:`В срезе семейная ипотека закрывает ${v.fam}% сделок. ` + (v.fam >= 20 ? "Правило сужает льготный канал заметно: часть семей теряет вторую льготу." : "Срез мало зависит от льготы, эффект слабый.") },
+    { dt:"05.08.2026", act:"2118-ПП: парковки в 945-ПП", st:["warn","переходный период"],
+      d:"Норматив машино-мест зависит от площади квартиры: 0,8 до 70 м², 1,2 от 70 до 100 м², 1,6 свыше 100 м². Проекты с РНС, экспертизой или АГР до 05.08.2026 идут по старым нормам.",
+      fx:`В срезе нужно ${fmt(pk.newAvg, 2)} машино-места на квартиру против ${fmt(pk.oldAvg, 2)} раньше. Нагрузка около ${fmt(pk.perM2, 0)} тыс. ₽ на м², это ${fmt(pk.share, 1)}% прайса.` },
+    { dt:"11.09.2026", act:"ЦБ: ключевая ставка 14%, пауза", st:["good","действует"],
+      d:"После снижения с 21% Банк России взял паузу. Рыночная ипотека остаётся около 16%.",
+      fx:`Рыночная ипотека участвует в ${v.mort}% сделок среза. ` + (v.mort >= 60 ? "Пауза держит срез в ожидании." : "Срез меньше зависит от ставки.") },
+    { dt:"01.10.2026", act:"Семейная ипотека: ставка по детям и региону", st:["warn","с 1 октября"],
+      d:"В Москве 12% при одном ребёнке до 7 лет, 10% при двух, 8% при трёх, 6% при четырёх, 4% при пяти и более. Лимит кредита 12, 15 и 18 млн ₽. До 30 сентября действует 6% для всех.",
+      fx: (() => { const f = familyModel(v); const r1 = f.rows[0]; return `Для семьи с одним ребёнком платёж по типичному лоту среза вырастет на ${fmt(r1.d, 0)}%: с ${fmt(f.before.total, 0)} до ${fmt(r1.after.total, 0)} тыс. ₽ в месяц. ` + (massy ? "Для массового среза это главный удар по спросу в IV квартале." : "Срез меньше зависит от льготы, но покупатели с детьми считают заново."); })() }
+  ];
+}
+
+/* ================= STATE ================= */
+const STORE_KEY = "msk-primary-slice";
+let state = { zone:"all", klass:"all", dev:"all" };
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+  if (saved) for (const k of Object.keys(state)) if (OPTS[k].some(o => o[0] === saved[k])) state[k] = saved[k];
+} catch (e) {}
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
+
+/* ================= FORMAT ================= */
+const fmt = (n, d = 1) => Number(n).toLocaleString("ru-RU", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+const sgn = (n, d = 1) => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n), d);
+const pct = (n, d = 1) => fmt(n, d) + "%";
+
+/* ================= MODEL ================= */
+function sliceDevs(s) {
+  return DEVS.map(d => {
+    const w = d.zoneW[s.zone] * d.klassW[s.klass];
+    return { ...d, m2s: +(d.m2 * w).toFixed(2), housess: Math.max(0, Math.round(d.houses * w)), unitss: +(d.units * w).toFixed(1), w };
+  }).filter(d => d.m2s >= 0.02);
+}
+
+function demandIndex(s) {
+  const base = [100,92,88,80,76,68,62,58,56];
+  let k = 1;
+  if (s.klass === "mass") k = 0.82;
+  if (s.klass === "business") k = 1.08;
+  if (s.klass === "premium") k = 1.15;
+  if (s.zone === "new") k *= 1.12;
+  if (s.zone === "old" && s.klass === "mass") k *= 0.88;
+  if (s.dev === "Самолет") k *= 0.9;
+  if (s.dev === "Донстрой") k *= 1.05;
+  return base.map((v, i) => i === 0 ? 100 : Math.round(v * (i < 4 ? (k * 0.5 + 0.5) : k)));
+}
+
+function compute() {
+  const s = { ...state };
+  const allDevs = sliceDevs(s);
+  const devs = s.dev !== "all" ? allDevs.filter(d => d.name === s.dev) : allDevs;
+  const m2 = +devs.reduce((a, d) => a + d.m2s, 0).toFixed(2);
+  const houses = devs.reduce((a, d) => a + d.housess, 0);
+  const delay = devs.length ? +(devs.reduce((a, d) => a + d.delay * d.m2s, 0) / Math.max(m2, .01)).toFixed(1) : 0;
+  const price = PRICE[s.klass][s.zone];
+  const sold = SOLD[s.klass][s.zone] + (s.dev === "Донстрой" ? 6 : 0) + (s.dev === "Самолет" ? -7 : 0) + (s.dev === "ПИК" ? 3 : 0);
+  const ready = READY[s.klass][s.zone];
+  const bal = ready ? +(100 * sold / ready).toFixed(1) : 0;
+  const yoy = YOY[s.klass][s.zone] + (s.dev === "MR Group" ? 4 : 0) + (s.dev === "Самолет" ? -6 : 0);
+  const mort = MORTGAGE_SHARE[s.klass][s.zone];
+  const fam = FAMILY_SHARE[s.klass][s.zone];
+  const yieldP = RENT_YIELD[s.klass][s.zone];
+  const zoneDdu = s.zone === "new" ? 0.234 : s.zone === "old" ? 0.766 : 1;
+  const klassDdu = s.klass === "mass" ? 0.39 : s.klass === "business" ? 0.51 : s.klass === "premium" ? 0.10 : 1;
+  const devDdu = s.dev === "all" ? 1 : Math.max(.02, m2 / 15.7);
+  const ddu = +(38.9 * zoneDdu * klassDdu * (s.dev === "all" ? 1 : Math.min(1, devDdu * 1.3))).toFixed(1);
+  /* ticket: тыс. ₽; платежи: тыс. ₽ в месяц */
+  const ticket = Math.round(price * (s.klass === "premium" ? 95 : s.klass === "business" ? 68 : s.klass === "mass" ? 46 : 54) / 10) * 10;
+  const payMarket = Math.round(ticket * 0.0078);
+  const payFamily = Math.round(ticket * 0.0041);
+  const cycle = CYCLE_MO[s.klass][s.zone] + Math.round(delay / 8);
+  let growth = GROWTH_PIT[s.klass][s.zone];
+  if (s.dev === "Самолет") growth -= 5;
+  if (s.dev === "Донстрой") growth += 3;
+  if (s.dev === "ПИК") growth -= 1;
+  if (s.dev === "MR Group") growth += 2;
+  if (delay >= 40) growth -= 4;
+  if (yoy <= -35) growth -= 3;
+  growth = Math.max(2, Math.min(24, growth));
+  const pitDisc = PIT_DISCOUNT[s.klass][s.zone] + (s.dev === "Самолет" ? 3 : 0) + (bal < 70 ? 3 : 0);
+  const growthAnn = +((((1 + growth / 100) ** (12 / cycle)) - 1) * 100).toFixed(1);
+  const deposit = 12.8;
+  const totalAnn = +(growthAnn + yieldP * 0.55).toFixed(1);
+  const beatDeposit = totalAnn - deposit;
+  const irrPit = +((((1 + (pitDisc + growth) / 100) ** (12 / cycle)) - 1) * 100).toFixed(1);
+
+  const okrugs = OKR
+    .filter(o => s.zone === "all" || o.zone === s.zone)
+    .map(o => {
+      let k = 1;
+      if (s.klass === "mass") k = o.klass === "mass" ? 1.15 : o.klass === "business" ? 0.55 : 0.25;
+      if (s.klass === "business") k = o.klass === "business" ? 1.25 : o.klass === "mass" ? 0.55 : 0.7;
+      if (s.klass === "premium") k = o.klass === "premium" ? 1.8 : o.klass === "business" ? 0.7 : 0.2;
+      if (s.dev === "Самолет" && o.name !== "ТиНАО" && o.name !== "ЮАО") k *= 0.45;
+      if (s.dev === "ПИК" && (o.name === "ЦАО" || o.name === "ЮЗАО")) k *= 0.4;
+      if (s.dev === "Донстрой" && !["САО","ЗАО","ЦАО","СЗАО"].includes(o.name)) k *= 0.35;
+      if (s.dev === "MR Group" && ["ТиНАО","ЗелАО"].includes(o.name)) k *= 0.3;
+      if (s.dev === "ФСК" && o.name === "ЦАО") k *= 0.5;
+      return { ...o, ddu: +Math.max(0.1, o.ddu * k * (s.dev === "all" ? 1 : 0.22)).toFixed(1) };
+    })
+    .filter(o => o.ddu >= 0.15)
+    .sort((a, b) => b.ddu - a.ddu);
+
+  const classShare = (() => {
+    if (s.klass !== "all") return s.klass === "mass" ? [100,0,0] : s.klass === "business" ? [0,100,0] : [0,0,100];
+    if (s.dev !== "all") { const d = DEVS.find(x => x.name === s.dev); return [d.klassW.mass, d.klassW.business, d.klassW.premium].map(x => Math.round(x * 100)); }
+    if (s.zone === "new") return [72,24,4];
+    if (s.zone === "old") return [31,46,23];
+    return [39,42,19];
+  })();
+
+  const years = YEARS.map(row => {
+    const share = s.klass === "all" ? 1 : row[s.klass];
+    const z = s.zone === "new" ? 0.22 : s.zone === "old" ? 0.78 : 1;
+    const d = s.dev === "all" ? 1 : Math.max(.03, m2 / 15.7);
+    return { y: row.y, m2: +Math.max(0.02, YEAR_M2[row.y] * share * z * d * (s.klass === "all" ? 1 : 1.15)).toFixed(2) };
+  });
+
+  const depositNow = 12.8;
+  const depositUnlock = (() => {
+    let c = 10;
+    if (s.klass === "premium") c = 22;
+    if (s.klass === "business") c = 16;
+    if (s.klass === "mass") c = 7;
+    if (s.zone === "new") c += 2;
+    if (s.zone === "old" && s.klass === "mass") c -= 2;
+    if (s.dev === "Донстрой" || s.dev === "MR Group") c += 3;
+    if (s.dev === "Самолет") c -= 2;
+    return Math.max(4, Math.min(26, c));
+  })();
+  const rollShare = 100 - depositUnlock - (s.klass === "mass" ? 18 : 12);
+  const q4Base = s.klass === "mass" ? 4 : s.klass === "premium" ? 8 : 6;
+  const q4Bull = q4Base + Math.round(depositUnlock * 0.55);
+  const q4Bear = s.klass === "mass" ? -4 : 0;
+  const h1Base = q4Base + (depositNow <= 11 ? 8 : 3);
+  const h1Bull = q4Bull + 6;
+  const h1Bear = q4Bear - 2;
+  const idx = demandIndex(s);
+  const last = idx[idx.length - 1];
+  const forecast = {
+    labels: ["дек.26","мар.27","июн.27"],
+    base: [last, Math.round(last * (1 + q4Base / 100)), Math.round(last * (1 + q4Base / 100) * 1.02), Math.round(last * (1 + h1Base / 100))],
+    bull: [last, Math.round(last * (1 + q4Bull / 100)), Math.round(last * (1 + q4Bull / 100) * 1.04), Math.round(last * (1 + h1Bull / 100))],
+    bear: [last, Math.round(last * (1 + q4Bear / 100)), Math.round(last * (1 + q4Bear / 100) * 0.98), Math.round(last * (1 + h1Bear / 100))]
+  };
+
+  return { s, allDevs, devs, m2, houses, delay, price, sold, ready, bal, yoy, mort, fam, yieldP, ddu, ticket, payMarket, payFamily,
+    okrugs, classShare, years, demand: idx, cycle, growth, growthAnn, pitDisc, deposit, totalAnn, beatDeposit, irrPit,
+    depositNow, depositUnlock, rollShare, q4Base, q4Bull, q4Bear, h1Base, h1Bull, h1Bear, forecast };
+}
+
+function labelOf(s) {
+  const z = { all:"Вся Москва", old:"Старая Москва", new:"ТиНАО" }[s.zone];
+  const k = { all:"все классы", mass:"массовый", business:"бизнес", premium:"премиум / элит" }[s.klass];
+  const d = s.dev === "all" ? "все группы" : s.dev;
+  return `${z} · ${k} · ${d}`;
+}
+
+/* ================= TEXT ENGINES ================= */
+function deviations(v) {
+  const { s, delay, yoy, bal, sold, fam, price, growth, growthAnn, pitDisc, cycle, deposit } = v;
+  const out = [];
+  if (yoy <= -30) out.push({ k:"Спрос", t:"Спрос в срезе упал сильнее города",
+    b:`Падение ${sgn(yoy,0)}% г/г. Рынок не встал: выпал ипотечный покупатель. Рыночный платёж при 14–16% не проходит скоринг, семейная ипотека закрывает только ${fam}% сделок среза. Остаток спроса держат кэш, trade-in и рассрочка.` });
+  else if (yoy <= -15) out.push({ k:"Спрос", t:"Охлаждение без обвала",
+    b:`Спрос ${sgn(yoy,0)}% г/г. Сегмент держится за счёт сделок без рыночной ипотеки. Ставка 14% давит на бизнес и элит слабее, чем на комфорт, но объём не восстанавливается.` });
+  else out.push({ k:"Спрос", t:"Срез устойчивее города",
+    b:`Динамика ${sgn(yoy,0)}% г/г при городских −38%. Покупатель здесь меньше зависит от льготной ипотеки (семейная ${fam}% сделок). Драйвер спроса: накопления и рассрочка, а не ставка ЦБ.` });
+
+  if (s.zone === "new") out.push({ k:"География", t:"ТиНАО забирает массовый спрос старой Москвы",
+    b:`Цена среза около ${fmt(price,0)} тыс. ₽/м² против 420+ в массовом сегменте старой Москвы. При ставке 14% разница в платеже решает сделку. Отклонение географическое: это перетекание спроса, а не рост Новой Москвы как класса.` });
+  if (s.zone === "old" && s.klass === "mass") out.push({ k:"Предложение", t:"В старой Москве комфорт почти не запускают",
+    b:"Новых проектов комфорт-класса нет с августа 2025. Падение ДДУ −48% усиливается исчезающим предложением. Покупатель либо уходит в ТиНАО, либо переплачивает за готовое жильё." });
+  if (s.zone === "old" && s.klass !== "mass") out.push({ k:"Предложение", t:"Старая Москва пересобралась в бизнес и выше",
+    b:"61% текущего строительства города относится к бизнесу и выше. Это ответ на маржу и себестоимость, а не на спрос семейной ипотеки. Отсюда высокий баланс и мало доступных лотов." });
+
+  if (delay >= 40) out.push({ k:"Сроки", t:"Переносы стали главной аномалией среза",
+    b:`${fmt(delay)}% площади с уточнённым сроком ввода. Для покупателя «для себя» это риск даты ключей и аренды на переходный период. Для инвестора это удлинение срока владения и срыв модели перепродажи к вводу.` });
+  else if (delay <= 5 && s.dev !== "all") out.push({ k:"Сроки", t:"Дисциплина сроков лучше рынка",
+    b:`Доля переносов ${fmt(delay)}%. В срезе есть премия за предсказуемость ввода. Это аргумент купить здесь, а не дешевле у группы с переносами на 60% портфеля и выше.` });
+
+  if (bal >= 88) out.push({ k:"Баланс", t:"Формальный дефицит в срезе",
+    b:`Продажи к готовности ${fmt(bal)}% при коридоре ДОМ.РФ 70–80%. Это не значит, что нечего купить. Чаще распроданы комфорт и малый метраж, а в экспозиции остаются крупные лоты с высоким чеком.` });
+  if (bal < 70) out.push({ k:"Баланс", t:"Навес: стройка обогнала продажи",
+    b:`Баланс ${fmt(bal)}%, распроданность ${sold}%. Рынок среза ближе к торгу и рассрочке, чем к росту цены. Инвестору вход имеет смысл только со скидкой к текущему прайсу.` });
+
+  const G = {
+    "Самолет": ["Объём есть, срок плавает", "715 тыс. м² в Москве с опозданием, это 67% портфеля. Спрос на бренд держится ценой и ТиНАО, но фильтр «ключи вовремя» группа не проходит."],
+    "ПИК": ["Фабрика метров в сжатом массовом спросе", "Крупнейший портфель города при просевшем комфорте. Модель живёт за счёт объёма, эскроу и готовых корпусов. Риск здесь не банкротство, а дальнейшее сжатие площади лота."],
+    "Донстрой": ["Дорогой портфель без срыва сроков", "Переносов около нуля. Срез почти не зависит от семейной ипотеки. Покупатель сравнивает не ставку ЦБ, а локацию, вид и вторичку в тех же домах."],
+    "MR Group": ["Бизнес и премиум в старой Москве", "Низкая доля ТиНАО и комфорта. Спрос просел меньше массового. Чувствительность к семейной ипотеке слабая, к рассрочке и trade-in высокая."],
+    "ФСК": ["Середина рынка", "Смесь комфорта и бизнеса, переносы умеренные. Типичный покупатель улучшает жильё из вторички, и льготная ипотека ему уже не всегда доступна."]
+  };
+  if (G[s.dev]) out.push({ k:"Группа · " + s.dev, t:G[s.dev][0], b:G[s.dev][1] });
+
+  if (s.klass === "premium") out.push({ k:"Класс", t:"Элит не живёт по логике ставки",
+    b:`Семейная ипотека ${fam}% сделок, рыночная тоже редкость. Цена ${fmt(price,0)} тыс. ₽/м². Отклонения связаны с объёмом вывода лотов, курсом и кэшем, а не с решением ЦБ 11 сентября.` });
+  if (s.klass === "mass") out.push({ k:"Класс", t:"Массовый срез: чистый процентный шок",
+    b:`Доля ипотеки ${v.mort}%, семейной ${fam}%. Пока льготный контур узкий, объём сделок не вернётся даже при стабилизации цены. Это ключевая причинно-следственная связь среза.` });
+
+  if (growthAnn + 0.1 < deposit) out.push({ k:"Котлован", t:"Премия котлована больше не обгоняет вклад",
+    b:`Ожидаемый рост прайса к вводу ${growth}% за ${cycle} мес., это ${fmt(growthAnn)}% в год, при дисконте котлована ${pitDisc}%. Без учёта аренды это слабее депозита ${fmt(deposit)}%. Покупка на старте с выходом к ключам работает только при входе ниже прайса или у групп без переносов.` });
+  else out.push({ k:"Котлован", t:"Котлован ещё даёт ход по цене",
+    b:`Рост к ключам ${growth}% за цикл ${cycle} мес., ${fmt(growthAnn)}% в год. Это не 2021 год, но вход на ранней стадии ещё имеет смысл, если срок ввода не уедет.` });
+
+  const pad = [
+    { k:"Ипотека", t:"Льготный канал узкий, рыночный дорогой",
+      b:`Ипотека участвует в ${v.mort}% сделок среза, семейная в ${fam}%. При ставке 14% рыночный кредит обходится в 16% и выше, поэтому объём держится на льготе, взносе и рассрочке застройщика.` },
+    { k:"Сроки", t:"Переносы в пределах рынка",
+      b:`${fmt(delay)}% площади среза с уточнённым сроком ввода. Это не главный риск, но в модели цикл удлиняется до ${cycle} мес., и годовая доходность роста снижается.` }
+  ];
+  for (const c of pad) { if (out.length >= 4) break; if (!out.some(o => o.k === c.k)) out.splice(out.length - 1, 0, c); }
+  return out.slice(0, 4);
+}
+
+function buyers(v) {
+  const { s, price, ticket, payMarket, payFamily, fam, mort, yieldP, delay, bal, yoy, sold, growth, growthAnn, pitDisc, cycle, deposit, totalAnn, beatDeposit, irrPit } = v;
+  const zoneTxt = s.zone === "new" ? "ТиНАО" : s.zone === "old" ? "старой Москве" : "Москве";
+  const waitBias = yoy <= -30 && bal < 80;
+  const pitBeatsDeposit = irrPit >= deposit;
+
+  const self = { b:"", v:"" };
+  if (s.klass === "premium" || s.dev === "Донстрой") {
+    self.b = `Чек около ${fmt(ticket / 1000, 0)} млн ₽. Семейная ипотека почти не участвует (${fam}% сделок). Решают локация, срок ключей (переносы ${fmt(delay)}% площади) и сравнение с готовой вторичкой рядом. Ставка 14% раздражает, но не блокирует сделку: чаще платят свои средства, залог другой квартиры или рассрочка на 12–24 месяца.`;
+    self.v = delay <= 5 ? "Брать у группы с предсказуемым вводом, если квартира нужна к конкретной дате." : "Закладывать аренду на 6–12 месяцев сверх обещанной даты ключей.";
+  } else if (s.klass === "business") {
+    self.b = `Метр около ${fmt(price,0)} тыс. ₽, чек около ${fmt(ticket / 1000, 1)} млн. Рыночный платёж порядка ${fmt(payMarket,0)} тыс. ₽ в месяц, льготный ${fmt(payFamily,0)} тыс., но семейная ипотека доступна лишь ${fam}% покупателей среза. Основной ход: максимальный первый взнос и рассрочка застройщика, чтобы не брать кредит под 16% на 20 лет.`;
+    self.v = waitBias ? "Многие откладывают решение на 1–2 квартала и смотрят готовые корпуса: цена там уже не падает, зато нет риска срока." : "Сделка идёт, если квартира закрывает переезд. Инвестиционный аргумент вторичен.";
+  } else {
+    self.b = `Массовый срез в ${zoneTxt}: ${fmt(price,0)} тыс. ₽/м². Без семейной ипотеки платёж около ${fmt(payMarket,0)} тыс. ₽ в месяц на типичный лот, и для части семей это стоп. Льготный платёж около ${fmt(payFamily,0)} тыс., но льготу получают не все (${fam}% сделок). Отсюда уход в ТиНАО, меньший метраж и ожидание новых условий программ.`;
+    self.v = price < 380 || s.zone === "new"
+      ? "Если льгота есть, фиксировать ТиНАО или готовый комфорт. Если нет, не брать рыночную ипотеку на пределе платёжеспособности."
+      : "В старой Москве комфорт дорог и его мало. Остаётся класс выше за те же деньги в худшей локации либо Новая Москва.";
+  }
+
+  const inv = { b:"", v:"" };
+  inv.b = `Модель стоит на двух опорах. Аренда после ключей даёт около ${fmt(yieldP)}% годовых. Рост прайса от котлована до ввода в срезе около ${growth}% за ${cycle} мес., это ${fmt(growthAnn)}% в год. Дисконт котлована к готовому сегодня ${pitDisc}%. С учётом дисконта стадии покупка на старте даёт около ${fmt(irrPit)}% в год до ключей. Вклад рядом приносит ${fmt(deposit)}%.`;
+  if (s.klass === "premium" || s.dev === "Донстрой") {
+    inv.v = delay <= 5
+      ? "Аренда слабая, ставка не главное. Ставка делается на редкий лот и рост к ключам без срыва срока. Без кредитного плеча: 14% съедают и рост, и премию за вид."
+      : "Перенос выбивает главную опору модели, фиксацию роста к дате ввода. Остаётся аренда 2–3%, а это уже не инвестиция.";
+  } else if (s.zone === "new" || s.klass === "mass") {
+    inv.v = pitBeatsDeposit && delay < 25
+      ? "Котлован ещё может обогнать вклад при входе с дисконтом и сдаче корпуса в срок. Выход к ключам зависит от ипотечного спроса, того самого, что сейчас просел."
+      : `Рост ${fmt(growthAnn)}% в год не покрывает вклад, переносы ${fmt(delay)}%. Покупка на котловане в массовом срезе сейчас чаще замораживает деньги, чем зарабатывает.`;
+  } else {
+    inv.v = beatDeposit >= -2 && delay < 20
+      ? "В бизнесе рост к вводу ещё работает. Смотреть корпус на нулевом цикле со скидкой, а не готовое по полному прайсу."
+      : "Перепродажа к вводу не гарантирована: выходить придётся в тот же слабый спрос. Нужен запас по цене входа, а не средний прайс витрины.";
+  }
+
+  const pit = { k:"Котлован → ключи", t:"Сделка на всём цикле стройки", b:"" };
+  pit.b = `Цикл среза ${cycle} мес. с поправкой на переносы. В сильном рынке этот путь давал 25–40%, сейчас модель закладывает ${growth}%. Готовые массовые корпуса за полгода даже подорожали, а старт продаж в комфорте дешевеет: премия стадии сжалась. `;
+  if (delay >= 40) pit.b += `Срок уже плывёт (${fmt(delay)}% площади). Каждый квартал переноса снижает годовую доходность роста, поэтому считать её надо к сдвинутой дате, а не к обещанной.`;
+  else if (growthAnn < 5) pit.b += "Рост слишком тонкий. Вход оправдан, только если цена заметно ниже готового аналога и на выходе есть льготная ипотека.";
+  else pit.b += `Рабочая проверка: дисконт к готовому не меньше ${Math.max(12, pitDisc)}%, ввод без хронических переносов и выход без рыночной ипотеки 16%. Иначе покупатель на ключах тот же, которого нет сейчас.`;
+
+  const third = { k:"Порог входа", t:"Что решает сделку сейчас", b:"" };
+  third.b = `Ставка ЦБ 14%, пауза 11.09 после снижения с 21%. Семейная ипотека в срезе закрывает ${fam}% покупок, обычная ${mort}%. Прайс ${fmt(price,0)} тыс. ₽/м², распроданность ${sold}%. К концу года возможен приток с истекающих 18–24-месячных вкладов 2024–25 годов, если владелец не продлит депозит под ${fmt(v.depositNow)}%. `;
+  if (fam >= 18 && s.klass !== "premium") third.b += "Главный вопрос: доступна ли льгота. Без неё большинство покупателей «для себя» выбирает ждать или ТиНАО, а не рыночные 16%.";
+  else if (s.klass === "premium") third.b += "Главный вопрос: объект и срок, а не банковская программа. Сравнивают с готовой элитной вторичкой.";
+  else third.b += "Главный вопрос: размер первого взноса и рассрочка застройщика. Ипотечный калькулятор чаще запрещает сделку, чем разрешает.";
+
+  return { self, inv, more:[pit, third] };
+}
+
+function forecastNotes(v) {
+  const { s, depositNow, depositUnlock, rollShare, growthAnn, yieldP, fam, delay, q4Bull } = v;
+  const who = s.klass === "premium" ? "кэш и инвесторы премиума" : s.klass === "business" ? "покупатель бизнеса без полной ипотеки" : s.klass === "mass" ? "семейный ипотечный заёмщик" : "смешанный спрос";
+  return [
+    { k:"Механика", t:"Откуда берётся «стена вкладов»",
+      b:"Пик ключевой ставки 21% пришёлся на октябрь 2024 – весну 2025, лучшие вклады тогда давали больше 20%. Годовые депозиты конца 2024 истекли в конце 2025. Сейчас дозревают 18–24-месячные: IV квартал 2026 и I полугодие 2027. Это реальный приток ликвидности домохозяйств, а не прогноз снижения ставок." },
+    { k:"Ограничение", t:"Почему деньги не едут в новостройки автоматически",
+      b:`Новый вклад всё ещё даёт около ${fmt(depositNow)}% без риска и без ремонта. Опросы 2025 года показывали заметный переток в жильё лишь при ставках вкладов ниже 12%, сильный ниже 10%. Этот порог пока не пройден. В модели среза в жильё уходит ${depositUnlock}% высвобожденных денег, липкость вкладов около ${rollShare}%.` },
+    { k:"Бенефициар", t:"Кто в этом срезе ловит волну",
+      b:`Главный бенефициар: ${who}. Без ипотеки гипотеза сильнее, премиум и часть бизнеса могут купить с депозита напрямую. Массовый срез слабее: даже с деньгами на взнос нужен льготный кредит, а семейная ипотека здесь ${fam}% сделок.` },
+    { k:"Условия", t:"Что должно совпасть к концу года",
+      b:`Закрытие 18–24-месячных вкладов в IV квартале. Ставки новых депозитов не растут после паузы ЦБ. Застройщик даёт рассрочку или дисконт котлована. Ввод не плывёт, в срезе переносы ${fmt(delay)}%. Тогда спрос среза к декабрю вырастет на ${q4Bull}%. Если ЦБ ужесточит политику или вклады останутся выше 13%, волна уйдёт в пролонгацию, и рост ${fmt(growthAnn)}% в год с арендой ${fmt(yieldP)}% не догонит вклад.` }
+  ];
+}
+
+/* ================= CONTROLS ================= */
+function buildControls() {
+  document.querySelectorAll(".seg").forEach(seg => {
+    const key = seg.dataset.key;
+    seg.innerHTML = OPTS[key].map((o, i) => `<button type="button" id="f-${key}-${i}" data-v="${o[0]}">${o[1]}</button>`).join("");
+    seg.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      state[key] = b.dataset.v; save(); refresh();
+    });
+  });
+  document.getElementById("reset").addEventListener("click", () => { state = { zone:"all", klass:"all", dev:"all" }; save(); refresh(); });
+}
+function syncControls() {
+  document.querySelectorAll(".seg").forEach(seg => {
+    seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state[seg.dataset.key])));
+  });
+}
+
+/* ================= HTML RENDER ================= */
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const ti = k => GLOSS[k] ? `<button class="ti" type="button" data-tip="${k}" aria-label="Что такое: ${esc(GLOSS[k].t)}">i</button>` : "";
+const stHtml = st => st ? `<span class="st ${st[0]}">${st[1]}</span>` : "";
+
+function renderHtml(v) {
+  const lbl = labelOf(v.s);
+  document.getElementById("chip").textContent = lbl;
+  document.getElementById("ctx").innerHTML = `Активный срез: <b>${esc(lbl)}</b>`;
+
+  const kpis = [
+    { g:"portfolio", c:"Портфель среза", v:fmt(v.m2, 2), u:"млн м²", s:`${v.houses} корпусов в стройке` },
+    { g:"ddu", c:"ДДУ I пол. 2026", v:fmt(v.ddu), u:"тыс.", s:"договоров в контуре фильтра" },
+    { g:"yoy", c:"Спрос г/г", v:sgn(v.yoy, 0) + "%", s:"ДДУ, площадь",
+      st: v.yoy <= -30 ? ["crit","обвал"] : v.yoy <= -15 ? ["warn","охлаждение"] : ["good","устойчивее города"] },
+    { g:"sold", c:"Распроданность", v:v.sold + "%", s:`строительная готовность ${v.ready}%` },
+    { g:"bal", c:"Продажи / готовность", v:fmt(v.bal) + "%", s:"коридор ДОМ.РФ 70–80%",
+      st: v.bal >= 88 ? ["warn","дефицит экспозиции"] : v.bal >= 70 ? ["good","в коридоре"] : ["crit","навес"] },
+    { g:"price", c:"Цена и ипотека", v:fmt(v.price, 0), u:"тыс. ₽/м²", s:`ипотека ${v.mort}% сделок, семейная ${v.fam}%` },
+    { g:"pit", c:"Котлован → ввод", v:"+" + v.growth + "%", s:`за ${v.cycle} мес., ${fmt(v.growthAnn)}% в год`,
+      st: v.growthAnn >= v.deposit ? ["good","выше вклада"] : v.growthAnn >= v.deposit - 5 ? ["warn","ниже вклада"] : ["crit","сильно ниже вклада"] }
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map((k, i) => `
+    <div class="kpi${i === 0 ? " hi" : ""}">
+      <div class="kh"><span class="c">${k.c}</span>${ti(k.g)}</div>
+      <div class="v">${k.v}${k.u ? `<small>${k.u}</small>` : ""}</div>
+      <div class="s">${k.s}</div>
+      ${stHtml(k.st)}
+    </div>`).join("");
+
+  /* class structure */
+  const ramp = ["var(--o1)","var(--o2)","var(--o3)"];
+  const keys = ["mass","business","premium"];
+  document.getElementById("stack").innerHTML = v.classShare.map((p, i) => p > 0 ? `<div style="flex:${p} 1 0;background:${ramp[i]}" title="${KLASS_NAMES[keys[i]]}: ${p}%"></div>` : "").join("");
+  document.getElementById("ctable").innerHTML = `
+    <thead><tr><th>Класс</th><th>Доля</th><th>млн м²</th><th>Цена, тыс. ₽/м²</th><th>Распродано</th></tr></thead>
+    <tbody>${keys.map((k, i) => `
+      <tr class="${v.classShare[i] === 0 ? "off" : ""}">
+        <td><i style="background:${ramp[i]}"></i>${KLASS_NAMES[k]}</td>
+        <td>${v.classShare[i]}%</td>
+        <td>${fmt(v.m2 * v.classShare[i] / 100, 2)}</td>
+        <td>${fmt(PRICE[k][v.s.zone], 0)}</td>
+        <td>${SOLD[k][v.s.zone]}%</td>
+      </tr>`).join("")}</tbody>`;
+
+  const others = v.allDevs.find(d => d.name === "Прочие");
+  document.getElementById("devCap").textContent =
+    `Без группы «Прочие»: ${others ? fmt(others.m2s, 2) : 0} млн м² у остальных застройщиков среза.` +
+    (v.s.dev !== "all" ? ` Выбрана группа ${v.s.dev}, переносы срока ${fmt(v.delay)}% площади.` : "");
+
+  /* macro facts */
+  const first = v.demand[0], lastD = v.demand[v.demand.length - 1];
+  document.getElementById("macroFacts").innerHTML = `
+    <div class="fact"><div class="v">14<small>%</small></div><div class="c">ключевая ставка, пауза 11.09${ti("keyrate")}</div></div>
+    <div class="fact"><div class="v">−7<small>п.п.</small></div><div class="c">снижение от пика 21% в окт. 2024${ti("pp")}</div></div>
+    <div class="fact"><div class="v">${sgn(lastD - first, 0)}<small>%</small></div><div class="c">спрос среза за тот же период${ti("demandIndex")}</div></div>`;
+
+  /* balance sheet */
+  const rows = [
+    ["Ключевая ставка", "14,00%", "warn", "keyrate"],
+    ["Семейная ипотека в срезе", v.fam + "% сделок", v.fam >= 20 ? "good" : "warn", "family"],
+    ["Рыночная ипотека в срезе", v.mort + "% сделок", v.mort >= 60 ? "crit" : "warn", "mortgage"],
+    ["Продажи / готовность", fmt(v.bal) + "%", v.bal >= 88 ? "crit" : v.bal >= 70 ? "good" : "crit", "bal"],
+    ["Переносы срока", fmt(v.delay) + "% площади", v.delay >= 40 ? "crit" : v.delay <= 8 ? "good" : "warn", "delay"],
+    ["Валовая аренда", fmt(v.yieldP) + "%", v.yieldP >= 5 ? "good" : "crit", "rent"],
+    ["Ориентир чека", fmt(v.ticket / 1000, 1) + " млн ₽", "warn", "ticket"],
+    ["Платёж рынок / льгота", fmt(v.payMarket, 0) + " / " + fmt(v.payFamily, 0) + " тыс. ₽", "warn", "payMarket"],
+    ["Рост котлован → ключи", v.growth + "% за " + v.cycle + " мес.", v.growth >= 14 ? "good" : v.growth <= 8 ? "crit" : "warn", "pit"],
+    ["Тот же рост в год", fmt(v.growthAnn) + "% при вкладе " + fmt(v.deposit) + "%", v.growthAnn >= v.deposit ? "good" : "crit", "pit"],
+    ["Дисконт котлована к готовому", v.pitDisc + "%", v.pitDisc >= 12 ? "good" : "warn", "pitDisc"],
+    ["Рост + 55% аренды в год", fmt(v.totalAnn) + "%", v.beatDeposit >= 0 ? "good" : "crit", "totalAnn"]
+  ];
+  const word = { good:"норма", warn:"наблюдать", crit:"аномалия" };
+  document.getElementById("sheet").innerHTML = rows.map(r =>
+    `<div class="row"><span class="k">${r[0]}${ti(r[3])}</span><span class="v">${r[1]}</span><span class="st ${r[2]}">${word[r[2]]}</span></div>`).join("");
+
+  /* deviations */
+  document.getElementById("notes").innerHTML = deviations(v).map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+
+  /* buyers */
+  const B = buyers(v);
+  document.getElementById("pSelf").innerHTML = `
+    <span class="who">Покупатель</span><h3>Для себя</h3>
+    <div class="pstats">
+      <div><div class="v">${fmt(v.ticket / 1000, 1)}<small>млн ₽</small></div><div class="c">типичный чек${ti("ticket")}</div></div>
+      <div><div class="v">${fmt(v.payMarket, 0)}<small>тыс. ₽</small></div><div class="c">платёж по рыночной ставке${ti("payMarket")}</div></div>
+      <div><div class="v">${fmt(v.payFamily, 0)}<small>тыс. ₽</small></div><div class="c">платёж по льготе${ti("payFamily")}</div></div>
+      <div><div class="v">${v.fam}<small>%</small></div><div class="c">сделок с семейной ипотекой${ti("family")}</div></div>
+    </div>
+    <p>${esc(B.self.b)}</p>
+    <div class="verdict"><b>Вывод</b><span>${esc(B.self.v)}</span></div>`;
+  document.getElementById("pInv").innerHTML = `
+    <span class="who">Инвестор</span><h3>Аренда и рост к ключам</h3>
+    <div class="pstats">
+      <div><div class="v">${fmt(v.yieldP)}<small>%</small></div><div class="c">аренда после ввода${ti("rent")}</div></div>
+      <div><div class="v">+${v.growth}<small>%</small></div><div class="c">рост прайса за ${v.cycle} мес.${ti("pit")}</div></div>
+      <div><div class="v">${fmt(v.irrPit)}<small>%</small></div><div class="c">в год с дисконтом котлована${ti("irr")}</div></div>
+      <div><div class="v">${fmt(v.deposit)}<small>%</small></div><div class="c">ставка вклада рядом${ti("deposit")}</div></div>
+    </div>
+    <p>${esc(B.inv.b)}</p>
+    <div class="verdict"><b>Вывод</b><span>${esc(B.inv.v)}</span></div>`;
+  document.getElementById("buyerMore").innerHTML = B.more.map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+
+  /* pipeline */
+  document.getElementById("lagOut").innerHTML = `РНС на МКД в I полугодии 2026 года на 44,5% ниже, чем годом раньше. Эти дома должны были выйти в продажу в 2026–27 годах и в ввод в 2028–29 годах. В срезе когорта ввода 2029 года уже всего ${fmt(v.years[3].m2, 2)} млн м², а 2030+ ${fmt(v.years[4].m2, 2)} млн м²: к концу десятилетия предложение сузится.`;
+  document.getElementById("pTable").innerHTML = `<thead><tr><th>Этап</th><th>2025</th><th>2026</th><th>г/г</th><th>Источник</th></tr></thead><tbody>` +
+    PIPE_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="d ${r[4]}">${r[3]}</td><td class="src">${r[5]}</td></tr>`).join("") + "</tbody>";
+  document.getElementById("pSrc").innerHTML = PIPE_SRC.map(x => x[1] ? `<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>` : `<span style="color:var(--muted)">${x[0]}</span>`).join("");
+
+  /* regulation */
+  const pk = parkingModel(v);
+  document.getElementById("events").innerHTML = regEvents(v, pk).map(e => `
+    <div class="ev"><div class="when"><span class="dt">${e.dt}</span>${stHtml(e.st)}</div>
+    <div class="act">${esc(e.act)}</div><p>${esc(e.d)}</p><div class="fx"><b>Для среза.</b> ${esc(e.fx)}</div></div>`).join("");
+  document.getElementById("parkStats").innerHTML = `
+    <div><div class="v">${fmt(pk.oldAvg * 100, 0)}→${fmt(pk.newAvg * 100, 0)}</div><div class="c">машино-мест на 100 квартир, было и стало</div></div>
+    <div><div class="v">+${fmt(pk.extra * 100, 0)}<small>мест</small></div><div class="c">дополнительно на каждые 100 квартир</div></div>
+    <div><div class="v">${fmt(pk.perM2, 0)}<small>тыс. ₽/м²</small></div><div class="c">нагрузка на метр квартир до продажи мест</div></div>
+    <div><div class="v">${fmt(pk.share, 1)}<small>%</small></div><div class="c">от прайса ${fmt(v.price, 0)} тыс. ₽/м²</div></div>`;
+  document.getElementById("parkAssume").innerHTML = [
+    `Структура квартир среза: до 70 м² ${fmt(pk.mix[0] * 100, 0)}%, 70–100 м² ${fmt(pk.mix[1] * 100, 0)}%, свыше 100 м² ${fmt(pk.mix[2] * 100, 0)}%. Средняя площадь ${fmt(pk.avgArea, 0)} м².`,
+    `Старая норма по методике калькулятора ТЭП: население × 0,257 × К1 ${fmt(pk.k1, 2)} плюс 10% гостевых мест.`,
+    `Подземное машино-место оценено в ${fmt(MM_COST, 1)} млн ₽. Продажа мест возвращает часть затрат, в массовом сегменте хуже.`,
+    "Рыночные оценки роста цен из-за норматива доходят до 18%."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+
+  /* regions */
+  const msk = REGIONS[0], rest = REGIONS.slice(1);
+  const avg = k => rest.reduce((a, r) => a + r[k] * r.v, 0) / rest.reduce((a, r) => a + r.v, 0);
+  document.getElementById("regStats").innerHTML = `
+    <div><div class="v">${msk.sold}<small>%</small></div><div class="c">продано в Москве</div></div>
+    <div><div class="v">${fmt(avg("sold"), 0)}<small>%</small></div><div class="c">продано в пяти регионах, средневзвешенно</div></div>
+    <div><div class="v">${msk.closed}<small>%</small></div><div class="c">продажи не открыты в Москве</div></div>
+    <div><div class="v">${fmt(avg("closed"), 0)}<small>%</small></div><div class="c">продажи не открыты в регионах</div></div>`;
+  document.getElementById("regOut").innerHTML = `Москва продана лучше регионов, но почти всё уже выведено в продажу: резерв неоткрытых продаж 10% против 19–44% в регионах. Нового предложения без новых РНС почти не будет. ` +
+    (v.s.zone === "all" && v.s.klass === "all" && v.s.dev === "all"
+      ? `Модель дашборда для всей Москвы совпадает с ЕИСЖС: ${fmt(v.m2, 1)} млн м² в стройке, распроданность ${v.sold}%.`
+      : `В выбранном срезе модель даёт распроданность ${v.sold}% при городских 47% по ЕИСЖС.`);
+
+  /* family mortgage */
+  document.getElementById("famRates").innerHTML = `<thead><tr><th>Семья</th><th>Регионы</th><th>Москва</th><th>Лимит, млн ₽</th></tr></thead><tbody>` +
+    `<tr class="was"><td>До 30.09.2026, все семьи</td><td>6%</td><td>6%</td><td>6 / 12</td></tr>` +
+    FAMILY_2026.map(x => `<tr><td>${x.f}</td><td>${x.r}%</td><td class="rate">${x.m}%</td><td>${x.lr} / ${x.lm}</td></tr>`).join("") + "</tbody>";
+  const fm = familyModel(v);
+  document.getElementById("famPay").innerHTML = `<thead><tr><th>Семья</th><th>Ставка</th><th>Льготная часть, млн</th><th>Платёж</th><th>К сентябрю</th></tr></thead><tbody>` +
+    `<tr class="was"><td>До 30.09.2026</td><td>${FAM_OLD.rate}%</td><td>${fmt(fm.before.fam, 1)}</td><td>${fmt(fm.before.total, 0)}</td><td>база</td></tr>` +
+    fm.rows.map(x => `<tr><td>${x.f}</td><td class="rate">${x.m}%</td><td>${fmt(x.after.fam, 1)}</td><td>${fmt(x.after.total, 0)}</td><td class="${x.d > 0.5 ? "up" : x.d < -0.5 ? "dn" : ""}">${sgn(x.d, 0)}%</td></tr>`).join("") + "</tbody>";
+  document.getElementById("famAssume").innerHTML = [
+    `Типичный лот среза ${fmt(fm.price, 1)} млн ₽, первый взнос 20%, нужен кредит ${fmt(fm.need, 1)} млн ₽ на 30 лет.`,
+    fm.need > FAM_OLD.limit ? `Сумма сверх лимита льготы берётся рыночной ипотекой под 16%. Поэтому семьям с тремя детьми более высокий лимит 18 млн ₽ может даже снизить платёж.` : `Кредит укладывается в лимит, рыночная часть не нужна.`,
+    "Четверо детей: 6% и лимит 18 млн ₽; пятеро и более: 4%. В регионах шкала на 2 п.п. ниже, лимиты 6–10 млн ₽.",
+    "В сентябре возможен всплеск заявок до смены условий, в октябре провал спроса у семей с одним ребёнком."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+
+  /* forecast table */
+  const f = n => sgn(n, 0) + "%";
+  const sc = [
+    ["База", "var(--sc1)", v.q4Base, v.h1Base, "base", "Вклады около 13%, часть денег перекладывают. С 1 октября семейная ипотека дорожает для семей с одним-двумя детьми."],
+    ["Стена вкладов", "var(--sc2)", v.q4Bull, v.h1Bull, "wall", `Закрываются 12–24-месячные депозиты 2024–25 годов, в срез идёт ${v.depositUnlock}% высвобожденных денег.`],
+    ["Вклады липкие", "var(--sc3)", v.q4Bear, v.h1Bear, "sticky", "Пролонгация под 12–13%, ЦБ держит 14%, семейная ипотека в Москве с 1 октября стоит 10–12% для большинства семей."]
+  ];
+  document.getElementById("fcTable").innerHTML = sc.map(r => `
+    <tr><td><div class="sn"><i style="border-color:${r[1]}"></i>${r[0]}${ti(r[4])}</div><div class="cond">${r[5]}</div></td>
+    <td>${f(r[2])}</td><td>${f(r[3])}</td></tr>`).join("");
+  document.getElementById("fcLegend").innerHTML =
+    `<span><i style="background:var(--ink)"></i>факт</span>` +
+    sc.map(r => `<span><i class="dash" style="border-color:${r[1]}"></i>${r[0]}</span>`).join("");
+
+  document.getElementById("fcNotes").innerHTML = forecastNotes(v).map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+}
+
+/* ================= CHARTS ================= */
+const charts = {};
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function T() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = n => cs.getPropertyValue(n).trim();
+  return { ink:g("--ink"), ink2:g("--ink-2"), muted:g("--muted"), faint:g("--faint"), grid:g("--grid"), line:g("--line"),
+    panel:g("--panel"), panel2:g("--panel-2"), tip:g("--tip-bg"), s1:g("--s1"), dim:g("--dim"), accent:g("--accent"),
+    accent2:g("--accent-2"), deep:g("--accent-deep"), sc1:g("--sc1"), sc2:g("--sc2"), sc3:g("--sc3") };
+}
+const FONT = 'Onest, "Helvetica Neue", Arial, system-ui, sans-serif';
+
+function baseOpts(t, extra = {}) {
+  return Object.assign({
+    responsive: true, maintainAspectRatio: false,
+    animation: reduceMotion ? false : { duration: 350 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: t.tip, titleColor: t.ink, bodyColor: t.ink2, borderColor: t.line, borderWidth: 1,
+        padding: 10, cornerRadius: 6, boxWidth: 8, boxHeight: 8, boxPadding: 4, usePointStyle: true,
+        titleFont: { family: FONT, weight: "500", size: 13 }, bodyFont: { family: FONT, size: 12.5 }
+      }
+    }
+  }, extra);
+}
+function axis(t, o = {}) {
+  return Object.assign({
+    border: { display: false },
+    grid: { color: t.grid, drawTicks: false },
+    ticks: { color: t.muted, font: { family: FONT, size: 12 }, padding: 8 }
+  }, o);
+}
+function upsert(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+/* vertical crosshair on hover for line charts */
+const crosshair = {
+  id: "crosshair",
+  afterDatasetsDraw(chart) {
+    const a = chart.tooltip && chart.tooltip.getActiveElements();
+    if (!a || !a.length) return;
+    const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = T().faint; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+  }
+};
+/* direct labels at the end of each series, de-collided */
+const endLabels = {
+  id: "endLabels",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.on) return;
+    const t = T(), ctx = chart.ctx, items = [];
+    chart.data.datasets.forEach((ds, i) => {
+      if (ds.endLabel === false) return;
+      const meta = chart.getDatasetMeta(i); if (meta.hidden) return;
+      let j = ds.data.length - 1; while (j >= 0 && (ds.data[j] === null || ds.data[j] === undefined)) j--;
+      if (j < 0) return;
+      const p = meta.data[j];
+      const name = ds.endLabel != null ? ds.endLabel : ds.label;
+      items.push({ x: p.x, y: p.y, text: (name ? name + " " : "") + fmt(ds.data[j], 2) });
+    });
+    items.sort((a, b) => a.y - b.y);
+    for (let k = 1; k < items.length; k++) if (items[k].y - items[k - 1].y < 15) items[k].y = items[k - 1].y + 15;
+    ctx.save(); ctx.font = `500 12px ${FONT}`; ctx.textBaseline = "middle";
+    ctx.fillStyle = t.ink;
+    items.forEach(it => ctx.fillText(it.text, it.x + 10, it.y));
+    ctx.restore();
+  }
+};
+/* shaded scenario zone from a category index to the right edge */
+const zone = {
+  id: "zone",
+  beforeDatasetsDraw(chart, args, opts) {
+    if (!opts || opts.from == null) return;
+    const t = T(), { top, bottom, right } = chart.chartArea, x = chart.scales.x.getPixelForValue(opts.from), ctx = chart.ctx;
+    ctx.save(); ctx.fillStyle = t.panel2; ctx.globalAlpha = .7; ctx.fillRect(x, top, right - x, bottom - top); ctx.globalAlpha = 1;
+    ctx.fillStyle = t.muted; ctx.font = `500 11px ${FONT}`; ctx.textBaseline = "top"; ctx.fillText("СЦЕНАРИЙ", x + 8, top + 8); ctx.restore();
+  }
+};
+/* value labels at bar ends */
+const valueLabels = {
+  id: "valueLabels",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.fmt) return;
+    const t = T(), ctx = chart.ctx; ctx.save(); ctx.font = `700 11.5px ${FONT}`; ctx.fillStyle = t.ink;
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const val = ds.data[i]; if (val == null) return;
+        if (opts.inside) { const txt = opts.fmt(val); if (!txt) return; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = di === 0 ? "#1a1008" : t.ink; ctx.fillText(txt, (bar.x + bar.base) / 2, bar.y); ctx.fillStyle = t.ink; return; }
+        if (opts.vertical) { ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(opts.fmt(val), bar.x, bar.y - 5); }
+        else { const neg = val < 0; ctx.textBaseline = "middle"; ctx.textAlign = neg ? "right" : "left"; ctx.fillText(opts.fmt(val), bar.x + (neg ? -6 : 6), bar.y); }
+      });
+    });
+    ctx.restore();
+  }
+};
+
+/* vertical reference line (deposit rate) for horizontal bars */
+const refLine = {
+  id: "refLine",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || opts.value == null) return;
+    const t = T(), { top, bottom } = chart.chartArea, x = chart.scales.x.getPixelForValue(opts.value), ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = t.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, top - 4); ctx.lineTo(x, bottom); ctx.stroke();
+    ctx.fillStyle = t.ink; ctx.font = `500 12px ${FONT}`; ctx.textAlign = x > chart.chartArea.right - 110 ? "right" : "left"; ctx.textBaseline = "bottom";
+    ctx.fillText(opts.label, x + (ctx.textAlign === "right" ? -6 : 6), top + 10); ctx.restore();
+  }
+};
+
+function renderCharts(v) {
+  if (!window.Chart) return;
+  const t = T();
+  Chart.defaults.font.family = FONT;
+  Chart.defaults.color = t.muted;
+
+  /* portfolio by group: highlight selected group */
+  const shown = v.allDevs.filter(d => d.name !== "Прочие");
+  upsert("chDev", {
+    type: "bar",
+    data: { labels: shown.map(d => d.name), datasets: [{
+      label: "млн м²", data: shown.map(d => d.m2s),
+      backgroundColor: c => { const d = shown[c.dataIndex]; return !d || v.s.dev === "all" || d.name === v.s.dev ? barGrad(c.chart, false) : hatch(); },
+      borderRadius: 8, borderSkipped: "start", maxBarThickness: 36, categoryPercentage: .72
+    }]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false } }), y: axis(t, { beginAtZero: true, ticks: { color: t.muted, font: { family: FONT, size: 12 }, padding: 8, maxTicksLimit: 6, callback: x => fmt(x, 1) } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: {
+        label: c => { const d = shown[c.dataIndex]; return [` ${fmt(d.m2s, 2)} млн м²`, ` ${d.housess} корпусов`, ` переносы ${fmt(d.delay)}% площади`]; }
+      }})})
+    })
+  });
+
+  /* DDU by okrug */
+  upsert("chOkrug", {
+    type: "bar",
+    data: { labels: v.okrugs.map(o => o.name), datasets: [{
+      label: "тыс. ДДУ", data: v.okrugs.map(o => o.ddu), backgroundColor: c => barGrad(c.chart, true),
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 18, categoryPercentage: .78
+    }]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: { x: axis(t, { beginAtZero: true, ticks: { color: t.muted, font: { family: FONT, size: 12 }, padding: 8, maxTicksLimit: 6, callback: x => fmt(x, 1) } }), y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 }, padding: 6 } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: { label: c => ` ${fmt(c.parsed.x)} тыс. ДДУ` } }) })
+    })
+  });
+
+  /* cohorts */
+  upsert("chYear", {
+    type: "bar",
+    data: { labels: v.years.map(x => x.y), datasets: [{
+      label: "млн м²", data: v.years.map(x => x.m2), backgroundColor: c => barGrad(c.chart, false),
+      borderRadius: 10, borderSkipped: "start", maxBarThickness: 64, categoryPercentage: .6
+    }]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 }, padding: 6 } }), y: axis(t, { beginAtZero: true, ticks: { color: t.muted, font: { family: FONT, size: 12 }, padding: 8, maxTicksLimit: 6, callback: x => fmt(x, 2) } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: { label: c => ` ${fmt(c.parsed.y, 2)} млн м² к вводу` } }) })
+    })
+  });
+
+  /* macro: two small multiples, shared x */
+  const lineTip = Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false });
+  upsert("chRate", {
+    type: "line",
+    data: { labels: RATE_LABELS, datasets: [{ label: "Ставка", endLabel: "", data: RATE, borderColor: t.ink, borderWidth: 2, stepped: "before",
+      pointRadius: RATE.map((_, i) => i === RATE.length - 1 ? 4 : 0), pointBackgroundColor: t.ink, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 }]},
+    options: baseOpts(t, {
+      interaction: { mode: "index", intersect: false },
+      layout: { padding: { right: 44 } },
+      scales: { x: axis(t, { grid: { display: false }, ticks: { display: false } }), y: axis(t, { min: 12, max: 22, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, stepSize: 4, padding: 8 } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { endLabels: { on: true }, tooltip: Object.assign(lineTip, { callbacks: { label: c => ` ключевая ставка ${fmt(c.parsed.y, 2)}%` } }) })
+    }),
+    plugins: [crosshair, endLabels]
+  });
+  upsert("chDemand", {
+    type: "line",
+    data: { labels: RATE_LABELS, datasets: [{ label: "Спрос", endLabel: "", data: v.demand, borderColor: t.s1, borderWidth: 2, tension: .3, fill: "origin",
+      backgroundColor: ctx => { const a = ctx.chart.chartArea; if (!a) return "transparent"; const g = ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom); g.addColorStop(0, hexA(t.s1, .22)); g.addColorStop(1, hexA(t.s1, 0)); return g; },
+      pointRadius: v.demand.map((_, i) => i === v.demand.length - 1 ? 4 : 0), pointBackgroundColor: t.s1, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 }]},
+    options: baseOpts(t, {
+      interaction: { mode: "index", intersect: false },
+      layout: { padding: { right: 44 } },
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, maxRotation: 0, autoSkip: true, autoSkipPadding: 10 } }), y: axis(t, { min: 0, max: 130, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, stepSize: 50, padding: 8 } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { endLabels: { on: true }, tooltip: Object.assign(Object.assign({}, lineTip), { callbacks: { label: c => ` индекс спроса ${c.parsed.y}` } }) })
+    }),
+    plugins: [crosshair, endLabels]
+  });
+
+  /* investor vs deposit */
+  const inv = [
+    ["Аренда после ввода", v.yieldP],
+    ["Рост прайса к ключам, в год", v.growthAnn],
+    ["Рост + 55% аренды", v.totalAnn],
+    ["Котлован с дисконтом стадии", v.irrPit]
+  ];
+  const xmax = Math.ceil(Math.max(v.deposit, ...inv.map(r => r[1])) * 1.18 / 2) * 2;
+  upsert("chInv", {
+    type: "bar",
+    data: { labels: inv.map(r => r[0]), datasets: [{
+      label: "% годовых", data: inv.map(r => r[1]), backgroundColor: c => (inv[c.dataIndex] && inv[c.dataIndex][1] >= v.deposit) ? barGrad(c.chart, true) : hatch(),
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 22, categoryPercentage: .7
+    }]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      layout: { padding: { top: 14 } },
+      scales: { x: axis(t, { min: 0, max: xmax, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }), y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        refLine: { value: v.deposit, label: `вклад ${fmt(v.deposit)}%` },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: { label: c => ` ${fmt(c.parsed.x)}% в год, ${c.parsed.x >= v.deposit ? "выше" : "ниже"} вклада на ${fmt(Math.abs(c.parsed.x - v.deposit))} п.п.` } })
+      })
+    }),
+    plugins: [refLine]
+  });
+
+  /* forecast: history + 3 scenarios */
+  const n = RATE_LABELS.length;
+  const labels = RATE_LABELS.concat(v.forecast.labels);
+  const pad = Array(n - 1).fill(null);
+  const hist = v.demand.concat([null, null, null]);
+  const scen = (name, arr, color) => ({ label: name, data: pad.concat(arr), borderColor: color, backgroundColor: color, borderWidth: 2, borderDash: [6, 4], tension: .25,
+    pointRadius: pad.concat(arr).map((x, i) => i === labels.length - 1 ? 4 : 0), pointBackgroundColor: color, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 });
+  const vals = [...v.demand, ...v.forecast.base, ...v.forecast.bull, ...v.forecast.bear];
+  /* pipeline yoy, diverging */
+  const pipeMax = Math.ceil(Math.max(...PIPE.map(x => Math.abs(x.v))) / 10) * 10 + 10;
+  upsert("chPipe", {
+    type: "bar",
+    data: { labels: PIPE.map(x => [x.l, x.p]), datasets: [{
+      label: "г/г", data: PIPE.map(x => x.v),
+      backgroundColor: c => { const x = PIPE[c.dataIndex]; return x && x.v >= 0 ? t.sc3 : barGrad(c.chart, true); },
+      borderRadius: 6, borderSkipped: false, maxBarThickness: 22, categoryPercentage: .72
+    }]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      layout: { padding: { right: 8 } },
+      scales: {
+        x: axis(t, { min: -pipeMax, max: pipeMax, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => (x > 0 ? "+" : "") + x + "%" },
+          grid: { color: c => c.tick.value === 0 ? t.muted : t.grid, drawTicks: false } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12 } } })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => sgn(x, 1) + "%" },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: {
+          title: c => PIPE[c[0].dataIndex].l,
+          label: c => { const x = PIPE[c.dataIndex]; return [` ${sgn(x.v, 1)}% к ${x.p.replace("2026", "2025")}`, ` источник: ${x.src}`]; }
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* regions: 100% stacked */
+  const regSeg = (label, key, color) => ({ label, data: REGIONS.map(r => r[key]), backgroundColor: color,
+    borderColor: t.panel, borderWidth: { right: 2 }, borderSkipped: false, maxBarThickness: 26, categoryPercentage: .72 });
+  upsert("chReg", {
+    type: "bar",
+    data: { labels: REGIONS.map(r => [r.n, fmt(r.v, 1) + " млн м²"]), datasets: [
+      regSeg("Продано", "sold", c => barGrad(c.chart, true)),
+      regSeg("Не продано", "unsold", t.sc3),
+      regSeg("Продажи не открыты", "closed", () => hatch())
+    ]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: {
+        x: axis(t, { stacked: true, min: 0, max: 100, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }),
+        y: axis(t, { stacked: true, grid: { display: false }, ticks: { color: c => c.index === 0 ? t.accent2 : t.ink2, font: c => ({ family: FONT, size: 12, weight: c.index === 0 ? "800" : "500" }) } })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => x >= 12 ? x + "%" : "", inside: true },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false, callbacks: {
+          title: c => REGIONS[c[0].dataIndex].n + ", " + fmt(REGIONS[c[0].dataIndex].v, 1) + " млн м²",
+          label: c => ` ${c.dataset.label}: ${c.parsed.x}%`
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* parking old vs new */
+  const pkm = parkingModel(v);
+  upsert("chPark", {
+    type: "bar",
+    data: { labels: ["до 70 м²", "70–100 м²", "свыше 100 м²"], datasets: [
+      { label: "Было", data: pkm.oldPer.map(x => +x.toFixed(2)), backgroundColor: () => hatch(), borderRadius: 8, borderSkipped: "start", maxBarThickness: 40, categoryPercentage: .6, barPercentage: .9 },
+      { label: "По 2118-ПП", data: MM_NEW, backgroundColor: c => barGrad(c.chart, false), borderRadius: 8, borderSkipped: "start", maxBarThickness: 40, categoryPercentage: .6, barPercentage: .9 }
+    ]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }), y: axis(t, { beginAtZero: true, max: 2, ticks: { color: t.muted, font: { family: FONT, size: 12 }, stepSize: .5, callback: x => fmt(x, 1) } }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        valueLabels: { fmt: x => fmt(x, 2), vertical: true },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false, callbacks: {
+          label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 2)} места на квартиру`,
+          footer: c => { const i = c[0].dataIndex; return `Доля таких квартир в срезе ${fmt(pkm.mix[i] * 100, 0)}%`; }
+        } })
+      })
+    }),
+    plugins: [valueLabels]
+  });
+
+  upsert("chFc", {
+    type: "line",
+    data: { labels, datasets: [
+      { label: "Факт", endLabel: false, data: hist, borderColor: t.ink, backgroundColor: t.ink, borderWidth: 2, tension: .3,
+        pointRadius: hist.map((x, i) => i === n - 1 ? 4 : 0), pointBackgroundColor: t.ink, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 },
+      scen("База", v.forecast.base, t.sc1),
+      scen("Стена вкладов", v.forecast.bull, t.sc2),
+      scen("Липкие", v.forecast.bear, t.sc3)
+    ]},
+    options: baseOpts(t, {
+      interaction: { mode: "index", intersect: false },
+      layout: { padding: { right: 128 } },
+      scales: {
+        x: axis(t, { grid: { display: false }, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, maxRotation: 0, autoSkip: true, autoSkipPadding: 12 } }),
+        y: axis(t, { min: Math.max(0, Math.floor((Math.min(...vals) - 10) / 10) * 10), max: Math.ceil((Math.max(...vals) + 5) / 10) * 10 })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        zone: { from: n - 1 }, endLabels: { on: true },
+        tooltip: Object.assign(Object.assign({}, lineTip), {
+          filter: (item) => item.raw !== null && !(item.dataIndex === n - 1 && item.datasetIndex > 0),
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}` }
+        })
+      })
+    }),
+    plugins: [zone, crosshair, endLabels]
+  });
+}
+
+/* orange gradient fill for bars; horizontal = left→right */
+function barGrad(chart, horizontal) {
+  const a = chart.chartArea, t = T();
+  if (!a) return t.accent;
+  const c = chart.ctx;
+  const g = horizontal ? c.createLinearGradient(a.left, 0, a.right, 0) : c.createLinearGradient(0, a.bottom, 0, a.top);
+  g.addColorStop(0, t.deep); g.addColorStop(.55, t.accent); g.addColorStop(1, t.accent2);
+  return g;
+}
+/* diagonal hatch for de-emphasised bars */
+let _hatch = null;
+function hatch() {
+  if (_hatch) return _hatch;
+  const cv = document.createElement("canvas"); cv.width = cv.height = 8;
+  const c = cv.getContext("2d");
+  c.fillStyle = "#26241f"; c.fillRect(0, 0, 8, 8);
+  c.strokeStyle = "#5a534c"; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(-2, 10); c.lineTo(10, -2); c.moveTo(-2, 2); c.lineTo(2, -2); c.moveTo(6, 10); c.lineTo(10, 6); c.stroke();
+  _hatch = c.createPattern(cv, "repeat");
+  return _hatch;
+}
+
+function hexA(hex, a) {
+  const h = hex.replace("#", ""); const f = h.length === 3 ? h.split("").map(c => c + c).join("") : h;
+  const n = parseInt(f, 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/* ================= BOOT ================= */
+/* ---------- inline term links inside running text ---------- */
+const L = "а-яёА-ЯЁa-zA-Z";
+const TERMS = [
+  ["wall", "стен[аыуеой]{1,2}\\s+вкладов"],
+  ["sticky", "липки[а-яё]*\\s+вклад[а-яё]*|вклад[а-яё]*\\s+липки[а-яё]*|липкост[а-яё]*"],
+  ["pitDisc", "дисконт[а-яё]*\\s+(?:котлована|стадии)"],
+  ["escrow", "эскроу(?:-сч[её]т[а-яё]*)?"],
+  ["installment", "рассрочк[а-яё]*"],
+  ["tradein", "trade-in"],
+  ["prolong", "пролонг[а-яё]*"],
+  ["overhang", "навес[а-яё]*"],
+  ["exposure", "экспозици[а-яё]*"],
+  ["family", "семейн[а-яё]*\\s+ипотек[а-яё]*"],
+  ["marketMortgage", "рыночн[а-яё]*\\s+ипотек[а-яё]*"],
+  ["keyrate", "ключев[а-яё]*\\s+ставк[а-яё]*"],
+  ["scoring", "скоринг[а-яё]*"],
+  ["declaration", "проектн[а-яё]*\\s+деклараци[а-яё]*"],
+  ["pp2118", "2118-ПП"],
+  ["pp945", "945-ПП"],
+  ["vriFee", "плат[а-яё]*\\s+за\\s+изменение\\s+ВРИ"],
+  ["rns", "РНС"],
+  ["gzk", "ГЗК"],
+  ["agr", "АГР"],
+  ["expertiza", "госэкспертиз[а-яё]*|экспертиз[а-яё]*"],
+  ["notOpened", "(?:продаж[а-яё]*\\s+не\\s+открыт[а-яё]*|неоткрыт[а-яё]*\\s+продаж[а-яё]*)"],
+  ["rngp", "РНГП"],
+  ["vri", "ВРИ"],
+  ["pzz", "ПЗЗ"],
+  ["mm", "машино-мест[а-яё]*"],
+  ["renovation", "реновац[а-яё]*"],
+  ["starts", "старт[а-яё]*\\s+продаж|вывод[а-яё]*\\s+(?:проект[а-яё]*\\s+)?на\\s+рынок|запуск[а-яё]*"],
+  ["k1", "К1"],
+  ["pitStage", "котлован[а-яё]*"],
+  ["keys", "ключ(?:и|ам|ах|ей)|ввод[а-яё]*"],
+  ["secondary", "вторичк[а-яё]*"],
+  ["cash", "кэш[а-яё]*"],
+  ["firstPayment", "перв[а-яё]*\\s+взнос[а-яё]*"],
+  ["ddu", "ДДУ"],
+  ["sold", "распроданност[а-яё]*"],
+  ["ready", "строительн[а-яё]*\\s+готовност[а-яё]*"],
+  ["bal", "продаж[а-яё]*\\s+(?:к|/)\\s+готовност[а-яё]*|коридор[а-яё]*\\s+(?:ДОМ\\.РФ\\s+)?70–80%"],
+  ["delay", "перенос[а-яё]*"],
+  ["cohort", "когорт[а-яё]*"],
+  ["demandIndex", "индекс[а-яё]*\\s+спроса"],
+  ["rent", "валов[а-яё]*\\s+аренд[а-яё]*"],
+  ["lot", "лот(?:ы|а|ов|ам|ами|ах|у)?"],
+  ["pp", "п\\.п\\."],
+  ["zone", "ТиНАО|Нов[а-яё]+\\s+Москв[а-яё]*|стар[а-яё]+\\s+Москв[а-яё]*"],
+  ["eisjs", "ЕИСЖС|ДОМ\\.РФ"],
+  ["rosreestr", "Росреестр[а-яё]*"],
+  ["erz", "ЕРЗ"],
+  ["metrium", "Метриум[а-яё]*"],
+  ["cbr", "ЦБ|Банк[а-яё]*\\s+России"],
+  ["scenario", "сценари[а-яё]*"]
+];
+const TERM_RE = new RegExp(`(?<![${L}])(?:${TERMS.map(t => `(${t[1]})`).join("|")})(?![${L}])`, "gi");
+const TERM_SEL = ".card h3, .card p, .persona p, .verdict span, .shead p, .cond, .cap, .ctable th, .foot p, .top p, .legend > span, .rate-card .d, .stable .sn, .ev .act, .ev p, .ev .fx, .lag p, .lag .out, .ptable td, .assume li, .pk .c";
+const SCOPE_SEL = ".card, .persona, .shead, .ev, .stp, .lag, .assume, .pk > div, tr, .panel, .foot .fg > div, .top, .rate-card";
+
+function linkTerms(root = document) {
+  root.querySelectorAll(TERM_SEL).forEach(el => {
+    const scope = el.closest(SCOPE_SEL) || el;
+    const used = new Set([...scope.querySelectorAll(".term, .ti")].map(b => b.dataset.tip));
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => n.parentElement.closest(".term, .ti, button, .st") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue; TERM_RE.lastIndex = 0;
+      let m, last = 0, frag = null;
+      while ((m = TERM_RE.exec(text))) {
+        const gi = m.slice(1).findIndex(x => x !== undefined);
+        const key = TERMS[gi][0];
+        if (used.has(key) || !GLOSS[key]) continue;
+        used.add(key);
+        frag = frag || document.createDocumentFragment();
+        frag.append(text.slice(last, m.index));
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "term"; b.dataset.tip = key; b.textContent = m[0];
+        frag.append(b); last = m.index + m[0].length;
+      }
+      if (frag) { frag.append(text.slice(last)); node.replaceWith(frag); }
+    });
+  });
+}
+
+function refresh() { syncControls(); const v = compute(); renderHtml(v); renderCharts(v); linkTerms(); }
+buildControls();
+refresh();
+
+/* glossary section */
+(() => {
+  const groups = {};
+  Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
+  const order = ["Фильтры","Предложение","Спрос","Цикл стройки","Баланс","Деньги и ставки","Сделка","Нормативка","Инвестор","Прогноз","Источники"];
+  const cols = [[], [], []];
+  order.forEach((g, i) => cols[[0,0,0,0,1,1,1,2,2,2,2][i]].push(g));
+  document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.map(g => `<h3>${g}</h3>` +
+    groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
+})();
+
+/* info tooltips: hover on desktop, tap on touch, focus via keyboard */
+(() => {
+  const box = document.getElementById("tipbox");
+  let cur = null, pinned = false;
+  document.querySelectorAll(".ti").forEach(b => { const e = GLOSS[b.dataset.tip]; if (e && !b.hasAttribute("aria-label")) b.setAttribute("aria-label", "Что такое: " + e.t); });
+  function show(btn) {
+    const e = GLOSS[btn.dataset.tip]; if (!e) return;
+    if (cur && cur !== btn) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); }
+    cur = btn;
+    box.innerHTML = `<b>${esc(e.t)}</b><span class="l">Что это</span><p>${esc(e.d)}</p><span class="l">Как читать</span><p>${esc(e.h)}</p>`;
+    btn.setAttribute("aria-expanded", "true"); btn.setAttribute("aria-describedby", "tipbox");
+    box.classList.add("on");
+    const r = btn.getBoundingClientRect(), bw = box.offsetWidth, bh = box.offsetHeight, m = 12;
+    let x = r.left + r.width / 2 - bw / 2; x = Math.max(m, Math.min(x, window.innerWidth - bw - m));
+    let y = r.bottom + 8; if (y + bh > window.innerHeight - m) y = Math.max(m, r.top - bh - 8);
+    box.style.left = x + "px"; box.style.top = y + "px";
+  }
+  function hide() {
+    box.classList.remove("on"); pinned = false;
+    if (cur) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); cur = null; }
+  }
+  document.addEventListener("pointerover", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned) show(b); });
+  document.addEventListener("pointerout", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned && !box.contains(e.relatedTarget)) hide(); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".ti, .term");
+    if (b) { e.preventDefault(); if (pinned && cur === b) hide(); else { show(b); pinned = true; } return; }
+    if (!box.contains(e.target)) hide();
+  });
+  let quiet = false;
+  document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti, .term"); if (b && !quiet) show(b); });
+  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti, .term") && !pinned) hide(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && cur) { const b = cur; hide(); quiet = true; b.focus(); quiet = false; } });
+  window.addEventListener("scroll", () => { if (cur) hide(); }, { passive: true });
+  window.addEventListener("resize", () => { if (cur) hide(); });
+})();
+(() => {
+  const links = [...document.querySelectorAll(".nav a")];
+  const targets = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id)); });
+  }, { rootMargin: "-20% 0px -70% 0px" });
+  targets.forEach(t => io.observe(t));
+})();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderCharts(compute()));
+</script>
+</body>
+</html>
