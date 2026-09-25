@@ -280,6 +280,15 @@ section.block { margin-top: 34px; }
 .tipbox p { margin: 2px 0 0; }
 @media (prefers-reduced-motion: reduce) { .tipbox { transition: none; } }
 
+.term {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: help; text-align: inherit;
+  letter-spacing: inherit; text-transform: inherit;
+  text-decoration: underline dotted rgba(255,176,112,.75); text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  border-radius: 3px; transition: background .15s, color .15s;
+}
+.term:hover, .term[aria-expanded="true"] { color: var(--accent-2); background: rgba(255,122,26,.12); }
+.tag .ti { margin-left: 4px; }
+
 /* glossary */
 .gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1200px) { .gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -442,7 +451,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
           <h2>Три сценария для спроса среза</h2>
           <p>База, «стена вкладов» и липкие вклады. Переток вкладов в жильё остаётся сценарием: при новых депозитах около 13% деньги чаще пролонгируют, чем тратят.</p>
         </div>
-        <span class="tag">Сценарий, не факт</span>
+        <span class="tag">Сценарий, не факт<button class="ti" type="button" data-tip="scenario">i</button></span>
       </div>
       <div class="g">
         <div class="panel c7">
@@ -637,8 +646,71 @@ const GLOSS = {
     d:"Четыре способа посчитать доходность квартиры в срезе рядом со ставкой вклада, отмеченной вертикальной линией.",
     h:"Оранжевые столбцы обгоняют вклад, заштрихованные не обгоняют. Если все заштрихованы, деньги рациональнее держать на депозите." },
   wall: { g:"Прогноз", t:"Стена вкладов",
-    d:"Гипотеза: в IV квартале 2026 и I полугодии 2027 истекают 18–24-месячные вклады, открытые под 20% и выше на пике ставки. Часть этих денег может пойти в жильё.",
-    h:"Это сценарий, а не факт. Он сработает, только если новые вклады станут заметно ниже 12%." },
+    d:"Гипотеза о волне свободных денег. В октябре 2024 – весной 2025 года ключевая ставка была 21%, и банки давали по вкладам больше 20%. Люди массово открывали депозиты на 18–24 месяца. Эти вклады истекают в IV квартале 2026 и I полугодии 2027 года, а новый вклад даёт уже около 12,8%. Часть владельцев может решить, что продлевать депозит невыгодно, и купить квартиру.",
+    h:"Это сценарий, а не факт. Он сработает, только если ставки новых вкладов опустятся заметно ниже 12% и застройщики дадут рассрочку или скидку. Сильнее всего волна касается покупателей без ипотеки: премиума и части бизнес-класса." },
+  scenario: { g:"Прогноз", t:"Сценарий",
+    d:"Условный расчёт «что будет, если». Он задаёт допущения и показывает их следствие.",
+    h:"Сценарий не прогнозирует, какой вариант случится. Сравнивайте разброс между сценариями и следите, какие условия начинают выполняться." },
+  prolong: { g:"Прогноз", t:"Пролонгация",
+    d:"Продление вклада на новый срок после его окончания, часто по новой ставке.",
+    h:"Чем больше денег пролонгируют, тем меньше их доходит до рынка жилья." },
+  pitStage: { g:"Сделка", t:"Котлован",
+    d:"Самая ранняя стадия стройки, когда только начались работы и стартовали продажи.",
+    h:"Цены здесь самые низкие, а риск самый высокий: срок ввода может сдвинуться, а выход к ключам зависит от спроса через 2–3 года." },
+  keys: { g:"Сделка", t:"Ввод и ключи",
+    d:"Ввод: получение разрешения на ввод дома в эксплуатацию. Ключи: передача квартир дольщикам после ввода.",
+    h:"С ключами начинается аренда и появляется возможность продать готовую квартиру. До этого деньги заморожены." },
+  escrow: { g:"Сделка", t:"Эскроу-счёт",
+    d:"Счёт в банке, где лежат деньги дольщика до ввода дома. Застройщик строит на проектный кредит, и его ставка тем ниже, чем больше денег на эскроу.",
+    h:"Медленные продажи делают кредит застройщика дороже. Тогда он охотнее даёт скидки и рассрочку." },
+  installment: { g:"Сделка", t:"Рассрочка застройщика",
+    d:"Оплата квартиры частями напрямую застройщику, без банка, обычно на 12–24 месяца. Часто цена в рассрочку выше, чем при полной оплате.",
+    h:"Главный обходной путь при дорогой ипотеке. Рост доли рассрочек говорит о слабом спросе." },
+  tradein: { g:"Сделка", t:"Trade-in",
+    d:"Застройщик или партнёр засчитывает старую квартиру покупателя в оплату новой.",
+    h:"Популярен у тех, кто улучшает жильё. Спрос через trade-in меньше зависит от ставки, но медленнее: нужно продать старую квартиру." },
+  cash: { g:"Сделка", t:"Кэш",
+    d:"Покупка без кредита, на свои накопления или деньги от продажи другой квартиры.",
+    h:"Доля кэша растёт, когда ипотека дорогая. Именно кэш-покупатель выигрывает от волны истекающих вкладов." },
+  firstPayment: { g:"Сделка", t:"Первый взнос",
+    d:"Часть стоимости квартиры, которую покупатель платит сам при ипотеке.",
+    h:"Чем выше взнос, тем ниже платёж и тем проще пройти одобрение банка." },
+  marketMortgage: { g:"Деньги и ставки", t:"Рыночная ипотека",
+    d:"Ипотека без господдержки. При ключевой ставке 14% она стоит около 16% годовых.",
+    h:"При такой ставке платёж по типичному лоту не проходит одобрение у большинства семей. Поэтому массовый сегмент зависит от льгот." },
+  scoring: { g:"Деньги и ставки", t:"Скоринг",
+    d:"Оценка банком платёжеспособности заёмщика: доход, долги, кредитная история.",
+    h:"Если платёж слишком велик относительно дохода, банк отказывает. При высокой ставке отказов больше." },
+  overhang: { g:"Баланс", t:"Навес предложения",
+    d:"Непроданный объём жилья, который накопился, потому что стройка идёт быстрее продаж.",
+    h:"Навес давит на цену: застройщики торгуются, дают скидки и рассрочку. Признак: продажи к готовности ниже 70%." },
+  exposure: { g:"Баланс", t:"Экспозиция",
+    d:"Квартиры, выставленные на продажу прямо сейчас.",
+    h:"Даже при высокой распроданности в экспозиции могут остаться только крупные и дорогие лоты." },
+  lot: { g:"Баланс", t:"Лот",
+    d:"Отдельная квартира или помещение в продаже.",
+    h:"Площадь типичного лота определяет чек. В массовом сегменте лоты уменьшаются, чтобы чек оставался доступным." },
+  secondary: { g:"Сделка", t:"Вторичка",
+    d:"Готовое жильё, у которого уже был собственник.",
+    h:"Главная альтернатива новостройке. Особенно в премиуме: покупатель сравнивает новый проект с готовыми квартирами рядом." },
+  declaration: { g:"Источники", t:"Проектная декларация",
+    d:"Официальный документ застройщика о проекте: сроки, площади, этапы. Публикуется в ЕИСЖС.",
+    h:"Изменение срока ввода в декларации и считается переносом." },
+  eisjs: { g:"Источники", t:"ЕИСЖС и ДОМ.РФ",
+    d:"ЕИСЖС: единая информационная система жилищного строительства, её ведёт госкомпания ДОМ.РФ. Там данные по каждому строящемуся дому.",
+    h:"Источник портфеля, готовности, распроданности и сроков ввода. ДОМ.РФ также задаёт ориентир баланса продаж 70–80%." },
+  rosreestr: { g:"Источники", t:"Росреестр",
+    d:"Государственный регистратор прав на недвижимость. Регистрирует каждый ДДУ.",
+    h:"Число регистраций ДДУ считается самым надёжным счётчиком продаж новостроек." },
+  erz: { g:"Источники", t:"ЕРЗ",
+    d:"Единый реестр застройщиков: портфели, рейтинги и сроки девелоперов.",
+    h:"Используется для сопоставления групп застройщиков и их дисциплины сроков." },
+  metrium: { g:"Источники", t:"Метриум",
+    d:"Консалтинговая компания, которая публикует аналитику цен и спроса на первичном рынке Москвы.",
+    h:"Источник цен по классам и структуры спроса." },
+  cbr: { g:"Источники", t:"ЦБ",
+    d:"Центральный банк, он же Банк России. Устанавливает ключевую ставку.",
+    h:"Решения ЦБ задают стоимость ипотеки и доходность вкладов, а через них спрос на жильё." },
   sticky: { g:"Прогноз", t:"Липкие вклады",
     d:"Сценарий, в котором истекающие деньги остаются на депозитах: их продлевают под 12–13%.",
     h:"Липкость показывает долю денег, которая не уйдёт с вкладов. Чем она выше, тем слабее волна спроса." },
@@ -1321,7 +1393,78 @@ function hexA(hex, a) {
 }
 
 /* ================= BOOT ================= */
-function refresh() { syncControls(); const v = compute(); renderHtml(v); renderCharts(v); }
+/* ---------- inline term links inside running text ---------- */
+const L = "а-яёА-ЯЁa-zA-Z";
+const TERMS = [
+  ["wall", "стен[аыуеой]{1,2}\\s+вкладов"],
+  ["sticky", "липки[а-яё]*\\s+вклад[а-яё]*|вклад[а-яё]*\\s+липки[а-яё]*|липкост[а-яё]*"],
+  ["pitDisc", "дисконт[а-яё]*\\s+(?:котлована|стадии)"],
+  ["escrow", "эскроу(?:-сч[её]т[а-яё]*)?"],
+  ["installment", "рассрочк[а-яё]*"],
+  ["tradein", "trade-in"],
+  ["prolong", "пролонг[а-яё]*"],
+  ["overhang", "навес[а-яё]*"],
+  ["exposure", "экспозици[а-яё]*"],
+  ["family", "семейн[а-яё]*\\s+ипотек[а-яё]*"],
+  ["marketMortgage", "рыночн[а-яё]*\\s+ипотек[а-яё]*"],
+  ["keyrate", "ключев[а-яё]*\\s+ставк[а-яё]*"],
+  ["scoring", "скоринг[а-яё]*"],
+  ["declaration", "проектн[а-яё]*\\s+деклараци[а-яё]*"],
+  ["pitStage", "котлован[а-яё]*"],
+  ["keys", "ключ(?:и|ам|ах|ей)|ввод[а-яё]*"],
+  ["secondary", "вторичк[а-яё]*"],
+  ["cash", "кэш[а-яё]*"],
+  ["firstPayment", "перв[а-яё]*\\s+взнос[а-яё]*"],
+  ["ddu", "ДДУ"],
+  ["sold", "распроданност[а-яё]*"],
+  ["ready", "строительн[а-яё]*\\s+готовност[а-яё]*"],
+  ["bal", "продаж[а-яё]*\\s+(?:к|/)\\s+готовност[а-яё]*|коридор[а-яё]*\\s+(?:ДОМ\\.РФ\\s+)?70–80%"],
+  ["delay", "перенос[а-яё]*"],
+  ["cohort", "когорт[а-яё]*"],
+  ["demandIndex", "индекс[а-яё]*\\s+спроса"],
+  ["rent", "валов[а-яё]*\\s+аренд[а-яё]*"],
+  ["lot", "лот(?:ы|а|ов|ам|ами|ах|у)?"],
+  ["pp", "п\\.п\\."],
+  ["zone", "ТиНАО|Нов[а-яё]+\\s+Москв[а-яё]*|стар[а-яё]+\\s+Москв[а-яё]*"],
+  ["eisjs", "ЕИСЖС|ДОМ\\.РФ"],
+  ["rosreestr", "Росреестр[а-яё]*"],
+  ["erz", "ЕРЗ"],
+  ["metrium", "Метриум[а-яё]*"],
+  ["cbr", "ЦБ|Банк[а-яё]*\\s+России"],
+  ["scenario", "сценари[а-яё]*"]
+];
+const TERM_RE = new RegExp(`(?<![${L}])(?:${TERMS.map(t => `(${t[1]})`).join("|")})(?![${L}])`, "gi");
+const TERM_SEL = ".card h3, .card p, .persona p, .verdict span, .shead p, .cond, .cap, .ctable th, .foot p, .top p, .legend > span, .rate-card .d, .stable .sn";
+const SCOPE_SEL = ".card, .persona, .shead, .panel, .foot .fg > div, .top, tr, .rate-card";
+
+function linkTerms(root = document) {
+  root.querySelectorAll(TERM_SEL).forEach(el => {
+    const scope = el.closest(SCOPE_SEL) || el;
+    const used = new Set([...scope.querySelectorAll(".term, .ti")].map(b => b.dataset.tip));
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => n.parentElement.closest(".term, .ti, button, .st") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue; TERM_RE.lastIndex = 0;
+      let m, last = 0, frag = null;
+      while ((m = TERM_RE.exec(text))) {
+        const gi = m.slice(1).findIndex(x => x !== undefined);
+        const key = TERMS[gi][0];
+        if (used.has(key) || !GLOSS[key]) continue;
+        used.add(key);
+        frag = frag || document.createDocumentFragment();
+        frag.append(text.slice(last, m.index));
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "term"; b.dataset.tip = key; b.textContent = m[0];
+        frag.append(b); last = m.index + m[0].length;
+      }
+      if (frag) { frag.append(text.slice(last)); node.replaceWith(frag); }
+    });
+  });
+}
+
+function refresh() { syncControls(); const v = compute(); renderHtml(v); renderCharts(v); linkTerms(); }
 buildControls();
 refresh();
 
@@ -1329,9 +1472,9 @@ refresh();
 (() => {
   const groups = {};
   Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
-  const order = ["Фильтры","Предложение","Спрос","Баланс","Деньги и ставки","Инвестор","Прогноз"];
+  const order = ["Фильтры","Предложение","Спрос","Баланс","Деньги и ставки","Сделка","Инвестор","Прогноз","Источники"];
   const cols = [[], [], []];
-  order.forEach((g, i) => cols[[0,0,1,1,2,2,2][i]].push(g));
+  order.forEach((g, i) => cols[[0,0,0,1,1,1,2,2,2][i]].push(g));
   document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.map(g => `<h3>${g}</h3>` +
     groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
 })();
@@ -1357,16 +1500,16 @@ refresh();
     box.classList.remove("on"); pinned = false;
     if (cur) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); cur = null; }
   }
-  document.addEventListener("pointerover", e => { const b = e.target.closest(".ti"); if (b && e.pointerType === "mouse" && !pinned) show(b); });
-  document.addEventListener("pointerout", e => { const b = e.target.closest(".ti"); if (b && e.pointerType === "mouse" && !pinned && !box.contains(e.relatedTarget)) hide(); });
+  document.addEventListener("pointerover", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned) show(b); });
+  document.addEventListener("pointerout", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned && !box.contains(e.relatedTarget)) hide(); });
   document.addEventListener("click", e => {
-    const b = e.target.closest(".ti");
+    const b = e.target.closest(".ti, .term");
     if (b) { e.preventDefault(); if (pinned && cur === b) hide(); else { show(b); pinned = true; } return; }
     if (!box.contains(e.target)) hide();
   });
   let quiet = false;
-  document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti"); if (b && !quiet) show(b); });
-  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti") && !pinned) hide(); });
+  document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti, .term"); if (b && !quiet) show(b); });
+  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti, .term") && !pinned) hide(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && cur) { const b = cur; hide(); quiet = true; b.focus(); quiet = false; } });
   window.addEventListener("scroll", () => { if (cur) hide(); }, { passive: true });
   window.addEventListener("resize", () => { if (cur) hide(); });
