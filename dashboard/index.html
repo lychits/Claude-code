@@ -375,6 +375,8 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
       <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
       <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
+      <div class="sec">Контуры</div>
+      <a href="../light-industrial/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5 3V10l5 3V10l6 3v8"/></svg>Light industrial</a>
     </nav>
     <div class="rate-card">
       <div class="l">Ключевая ставка<button class="ti" type="button" data-tip="keyrate">i</button></div>
@@ -1486,7 +1488,7 @@ function T() {
     panel:g("--panel"), panel2:g("--panel-2"), tip:g("--tip-bg"), s1:g("--s1"), dim:g("--dim"), accent:g("--accent"),
     accent2:g("--accent-2"), deep:g("--accent-deep"), sc1:g("--sc1"), sc2:g("--sc2"), sc3:g("--sc3") };
 }
-const FONT = 'Onest, "Helvetica Neue", Arial, system-ui, sans-serif';
+const FONT = 'Manrope, "Segoe UI", system-ui, sans-serif';
 
 function baseOpts(t, extra = {}) {
   return Object.assign({
@@ -1968,7 +1970,7 @@ refresh();
   window.addEventListener("resize", () => { if (cur) hide(); });
 })();
 (() => {
-  const links = [...document.querySelectorAll(".nav a")];
+  const links = [...document.querySelectorAll('.nav a[href^="#"]')];
   const targets = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
   if (!("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver(es => {

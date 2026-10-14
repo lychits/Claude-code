@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Контур light industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Single dark theme by design: the Finstack look is a night console. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0c0f;
+  --side: #0f1115;
+  --card: #15171c;
+  --card-2: #1b1e25;
+  --panel: #15171c;
+  --panel-2: #20232b;
+  --line: #252830;
+  --grid: #23262d;
+  --ink: #f3f1ec;
+  --ink-2: #d6d2ca;
+  --muted: #948f87;
+  --faint: #6b6760;
+  --hover: rgba(255,255,255,.05);
+  --tip-bg: #20232b;
+  --accent: #ff7a1a;
+  --accent-2: #ffb070;
+  --accent-deep: #d4540a;
+  --on-accent: #1a1008;
+  --s1: #ff7a1a;
+  --dim: #3a3632;
+  --sc1: #e8680f;
+  --sc2: #1f9e78;
+  --sc3: #6b7ae8;
+  --o1: #9a4a14;
+  --o2: #ff7a1a;
+  --o3: #ffc9a0;
+  --good: #3dd68c;
+  --warn: #ffb020;
+  --crit: #ff5d6c;
+  --r: 20px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 500 14px/1.55 Manrope, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- shell ---------- */
+.app { display: grid; grid-template-columns: 244px minmax(0, 1fr); min-height: 100vh; }
+.side {
+  position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; overflow-y: auto;
+  background: var(--side); border-right: 1px solid var(--line);
+  padding: 22px 16px; display: flex; flex-direction: column; gap: 22px;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 6px; text-decoration: none; color: var(--ink); }
+.logo {
+  width: 36px; height: 36px; border-radius: 11px; flex: none;
+  background: linear-gradient(145deg, #ffb070 0%, #ff7a1a 55%, #d4540a 100%);
+  display: grid; place-items: center; font-weight: 800; font-size: 17px; color: var(--on-accent);
+  box-shadow: 0 6px 18px rgba(255,122,26,.28);
+}
+.brand b { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.brand small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; }
+.nav { display: grid; gap: 2px; }
+.nav .sec { color: var(--faint); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; margin: 14px 12px 6px; }
+.nav a {
+  display: flex; align-items: center; gap: 11px; color: var(--muted); text-decoration: none;
+  padding: 10px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600; transition: background .2s, color .2s;
+}
+.nav a svg { width: 17px; height: 17px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav a:hover { background: var(--hover); color: var(--ink); }
+.nav a.active { background: var(--card-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.nav a.active svg { stroke: var(--accent); }
+.rate-card {
+  margin-top: auto; border-radius: 16px; padding: 16px;
+  background: radial-gradient(120% 120% at 100% 0%, rgba(255,122,26,.22), transparent 60%), var(--card);
+  border: 1px solid var(--line);
+}
+.rate-card .l { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.rate-card .v { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin-top: 4px; }
+.rate-card .v small { font-size: 14px; color: var(--muted); font-weight: 600; }
+.rate-card .d { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+
+.main {
+  min-width: 0; padding-inline: clamp(16px, 2.4vw, 32px); padding-block: 22px 40px;
+  background: radial-gradient(900px 420px at 95% -8%, rgba(255,122,26,.11), transparent 55%), var(--bg);
+}
+@media (max-width: 1080px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; height: auto; flex-direction: row; align-items: center; padding: 10px 16px; gap: 14px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .brand small, .nav .sec, .rate-card { display: none; }
+  .nav { display: flex; gap: 4px; }
+  .nav a { white-space: nowrap; padding: 8px 10px; }
+}
+
+/* ---------- header & filters ---------- */
+.top { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px 24px; flex-wrap: wrap; }
+.crumb { font-size: 12px; color: var(--muted); font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.crumb i { width: 4px; height: 4px; border-radius: 50%; background: var(--faint); }
+.top h1 { font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -.035em; margin-top: 6px; line-height: 1.15; }
+.top h1 span { color: var(--accent); }
+.top p { margin: 6px 0 0; color: var(--muted); max-width: 70ch; font-weight: 500; }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  border-radius: 999px; padding: 8px 13px; font-size: 12px; font-weight: 700;
+  background: rgba(255,122,26,.12); color: var(--accent-2); border: 1px solid rgba(255,122,26,.3);
+}
+.badge.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255,122,26,.18); }
+.badge.plain { background: var(--card); color: var(--ink-2); border-color: var(--line); }
+
+.filters {
+  margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 14px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px;
+}
+.fgroup { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.flabel { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 3px; background: var(--bg); border-radius: 999px; padding: 4px; border: 1px solid var(--line); }
+.seg button {
+  border: 0; background: transparent; cursor: pointer; border-radius: 999px;
+  padding: 7px 13px; font-size: 13px; font-weight: 700; color: var(--muted); transition: background .2s, color .2s;
+}
+.seg button:hover { color: var(--ink); background: var(--hover); }
+.seg button[aria-pressed="true"] { background: linear-gradient(145deg, #ff9a3c, #ff7a1a); color: var(--on-accent); }
+.freset { margin-left: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--card-2); color: var(--ink); cursor: pointer; border-radius: 12px; padding: 9px 14px; font-size: 13px; font-weight: 700; }
+.btn:hover { border-color: var(--accent); }
+.ctx { margin-top: 10px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.ctx b { color: var(--accent-2); font-weight: 700; }
+
+/* ---------- KPI cards ---------- */
+.kpis { margin-top: 16px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; }
+.kpi {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 15px 15px 14px;
+  display: flex; flex-direction: column; gap: 6px; min-width: 0;
+}
+.kpi .kh { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.kpi .c { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.kpi .v { font-size: clamp(22px, 1.8vw, 27px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; white-space: nowrap; }
+.kpi .v small { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0; margin-left: 3px; }
+.kpi .s { font-size: 11.5px; color: var(--muted); line-height: 1.4; font-weight: 500; }
+.kpi .st { margin-top: auto; }
+.kpi.hi {
+  background: radial-gradient(130% 130% at 0% 0%, #ffc28a 0%, #ff8a2e 42%, #e2600e 100%);
+  border-color: transparent; color: var(--on-accent); box-shadow: 0 14px 36px -14px rgba(255,122,26,.55);
+}
+.kpi.hi .c, .kpi.hi .s, .kpi.hi .v small { color: rgba(26,16,8,.72); }
+@media (max-width: 1640px) { .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.st { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: var(--ink-2); white-space: nowrap;
+  background: var(--card-2); border-radius: 999px; padding: 3px 9px 3px 8px; width: max-content; max-width: 100%; }
+.st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex: none; }
+.st.good { color: var(--good); background: rgba(61,214,140,.1); } .st.good::before { background: var(--good); }
+.st.warn { color: var(--warn); background: rgba(255,176,32,.1); } .st.warn::before { background: var(--warn); transform: rotate(45deg); border-radius: 1px; }
+.st.crit { color: var(--crit); background: rgba(255,93,108,.1); } .st.crit::before { background: var(--crit); border-radius: 1px; }
+
+/* ---------- sections ---------- */
+section.block { margin-top: 34px; }
+.shead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px 24px; flex-wrap: wrap; margin-bottom: 14px; }
+.eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.shead h2 { font-size: 20px; font-weight: 800; letter-spacing: -.025em; margin-top: 4px; }
+.shead p { margin: 4px 0 0; color: var(--muted); max-width: 76ch; font-weight: 500; font-size: 13.5px; }
+.tag { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--accent-2);
+  border: 1px dashed rgba(255,122,26,.45); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+
+.g { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.c5 { grid-column: span 5; } .c6 { grid-column: span 6; } .c7 { grid-column: span 7; } .c12 { grid-column: span 12; }
+@media (max-width: 1080px) { .g > * { grid-column: span 12; } }
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 18px 16px; min-width: 0; }
+.ph { display: flex; justify-content: space-between; align-items: center; gap: 8px 14px; flex-wrap: wrap; }
+.ph h3 { font-size: 14.5px; font-weight: 700; letter-spacing: -.01em; }
+.ph .u { font-size: 11.5px; color: var(--muted); font-weight: 700; background: var(--card-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.cap { font-size: 12px; color: var(--muted); margin-top: 10px; font-weight: 500; }
+.box { position: relative; margin-top: 14px; }
+.h160 { height: 160px; } .h240 { height: 240px; } .h300 { height: 300px; } .h340 { height: 340px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend i.dash { height: 0; border-top: 2px dashed; background: none; }
+.legend i.sq { width: 11px; height: 11px; border-radius: 3px; }
+.legend i.hatch { background: repeating-linear-gradient(135deg, #5a534c 0 2px, #26241f 2px 5px); }
+
+/* class structure */
+.stack { display: flex; gap: 3px; height: 40px; margin-top: 18px; }
+.stack div { min-width: 0; border-radius: 8px; transition: flex-basis .4s; }
+.ctable { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+.ctable th { text-align: right; font-weight: 700; color: var(--muted); font-size: 11px; padding: 0 0 8px; }
+.ctable th:first-child, .ctable td:first-child { text-align: left; }
+.ctable td { padding: 11px 0; border-top: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ctable td:first-child { display: flex; align-items: center; gap: 9px; font-weight: 700; }
+.ctable td:first-child i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.ctable .off td { color: var(--faint); }
+.tscroll { overflow-x: auto; }
+
+/* macro */
+.macro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr); gap: 22px; align-items: start; margin-top: 14px; }
+.macro-facts { display: grid; gap: 10px; }
+.fact { background: var(--card-2); border-radius: 14px; padding: 12px 14px; }
+.fact .v { font-size: 24px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+.fact .v small { font-size: 12px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.fact .c { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+.mini-t { font-size: 11.5px; color: var(--muted); margin: 0; font-weight: 700; }
+@media (max-width: 1080px) { .macro { grid-template-columns: 1fr; } .macro-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .macro-facts { grid-template-columns: 1fr; } }
+
+/* balance sheet */
+.sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto 104px; align-items: center; gap: 14px; padding-block: 12px; border-bottom: 1px solid var(--line); }
+.row .k { color: var(--ink-2); font-weight: 600; }
+.row .v { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.row .st { justify-self: start; }
+@media (max-width: 900px) { .sheet { grid-template-columns: 1fr; } }
+@media (max-width: 460px) { .row { grid-template-columns: minmax(0, 1fr) auto; } .row .st { grid-column: 1 / -1; } }
+
+/* cards */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.card .kind { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.card h3 { font-size: 15.5px; font-weight: 800; letter-spacing: -.015em; line-height: 1.3; }
+.card p { margin: 0; color: var(--ink-2); font-weight: 500; line-height: 1.6; max-width: 76ch; }
+
+/* personas */
+.persona { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.persona .who { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.persona h3 { font-size: 20px; font-weight: 800; letter-spacing: -.025em; margin-top: -6px; }
+.pstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.pstats > div { background: var(--card-2); border-radius: 14px; padding: 11px 12px; min-width: 0; }
+.pstats .v { font-size: 19px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.pstats .v small { font-size: 11px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.pstats .c { font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+@media (max-width: 560px) { .pstats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.persona p { margin: 0; color: var(--ink-2); line-height: 1.6; font-weight: 500; }
+.verdict { margin-top: auto; padding: 13px 15px; border-radius: 14px; display: grid; gap: 3px;
+  background: linear-gradient(90deg, rgba(255,122,26,.14), rgba(255,122,26,.03)); border: 1px solid rgba(255,122,26,.25); }
+.verdict b { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; }
+.verdict span { font-weight: 700; color: var(--ink); line-height: 1.5; }
+
+/* forecast table */
+.stable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.stable th { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; padding: 0 0 8px 10px; }
+.stable th:first-child { text-align: left; padding-left: 0; }
+.stable td { border-top: 1px solid var(--line); padding: 13px 0 13px 10px; vertical-align: top; text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; white-space: nowrap; }
+.stable td:first-child { text-align: left; padding-left: 0; white-space: normal; font-weight: 500; }
+.stable .sn { display: flex; align-items: center; gap: 9px; font-weight: 800; color: var(--ink); }
+.stable .sn i { width: 18px; height: 0; border-top: 2px dashed; flex: none; }
+.stable .cond { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+/* pipeline & regulation */
+.chip-city { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--ink-2);
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+.chip-city::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sc3); }
+.lag { display: grid; gap: 0; margin-top: 16px; }
+.lag .stp { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 12px; }
+.lag .dot { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-weight: 800; font-size: 12px;
+  background: var(--card-2); border: 1px solid var(--line); color: var(--accent-2); }
+.lag .stp.now .dot { background: linear-gradient(145deg, #ff9a3c, #ff7a1a); color: var(--on-accent); border-color: transparent; }
+.lag b { display: block; font-size: 14px; font-weight: 800; margin-top: 6px; }
+.lag p { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.lag .gap { margin-left: 16px; border-left: 2px dashed var(--line); padding: 8px 0 8px 28px; font-size: 11.5px; font-weight: 700; color: var(--accent-2); }
+.lag .out { margin-top: 14px; padding: 13px 15px; border-radius: 14px; background: linear-gradient(90deg, rgba(255,122,26,.14), rgba(255,122,26,.03)); border: 1px solid rgba(255,122,26,.25); font-weight: 600; color: var(--ink); line-height: 1.5; font-size: 13px; }
+.ptable { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.ptable th { text-align: left; font-size: 11px; color: var(--muted); font-weight: 700; padding: 0 12px 8px 0; }
+.ptable td { border-top: 1px solid var(--line); padding: 12px 12px 12px 0; vertical-align: top; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ptable td:first-child { color: var(--ink); font-weight: 800; white-space: nowrap; }
+.ptable td.d { font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ptable td.d.neg { color: var(--crit); } .ptable td.d.pos { color: var(--good); }
+.ptable .src { color: var(--muted); font-size: 12px; }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 12px; }
+.srcs a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.srcs a:hover { color: var(--accent-2); }
+.events { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+@media (max-width: 1400px) { .events { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .events { grid-template-columns: 1fr; } }
+.ev { background: var(--card-2); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.ev .when { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ev .dt { font-size: 12px; font-weight: 800; color: var(--accent-2); font-variant-numeric: tabular-nums; }
+.ev .act { font-size: 14px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3; }
+.ev p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); font-weight: 500; }
+.ev .fx { margin-top: auto; padding-top: 9px; border-top: 1px dashed var(--line); font-size: 12px; color: var(--muted); line-height: 1.5; }
+.ev .fx b { color: var(--ink); font-weight: 700; }
+.st.info { color: #aab3ff; background: rgba(107,122,232,.14); } .st.info::before { background: var(--sc3); }
+.pk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.pk > div { background: var(--card-2); border-radius: 14px; padding: 12px 13px; }
+.pk .v { font-size: 22px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.pk .v small { font-size: 12px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+.pk .c { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.assume { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+.ftable { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.ftable th { font-size: 11px; color: var(--muted); font-weight: 700; text-align: right; padding: 0 0 8px 10px; white-space: nowrap; }
+.ftable th:first-child { text-align: left; padding-left: 0; }
+.ftable td { border-top: 1px solid var(--line); padding: 11px 0 11px 10px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.ftable td:first-child { text-align: left; padding-left: 0; white-space: normal; font-weight: 600; color: var(--ink-2); }
+.ftable td.rate { color: var(--accent-2); font-weight: 800; }
+.ftable td.up { color: var(--crit); } .ftable td.dn { color: var(--good); }
+.ftable tr.was td { color: var(--muted); font-weight: 600; }
+
+/* info tips */
+.ti {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; padding: 0; margin-left: 6px; vertical-align: 1px;
+  border-radius: 50%; border: 1px solid var(--line); background: var(--card-2); color: var(--muted);
+  font: 800 10px/1 Manrope, system-ui, sans-serif; font-style: italic; cursor: help; transition: color .15s, border-color .15s, background .15s;
+}
+.ti:hover, .ti[aria-expanded="true"] { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.kpi.hi .ti { background: rgba(26,16,8,.12); border-color: rgba(26,16,8,.25); color: var(--on-accent); }
+.kpi.hi .ti:hover, .kpi.hi .ti[aria-expanded="true"] { background: var(--on-accent); color: var(--accent-2); }
+.ph h3, .kh, .flabel { display: inline-flex; align-items: center; }
+.tipbox {
+  position: fixed; z-index: 100; max-width: min(340px, calc(100vw - 24px)); pointer-events: none;
+  background: var(--tip-bg); border: 1px solid #343843; border-radius: 14px; padding: 13px 15px;
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,.7); font-size: 12.5px; line-height: 1.5; color: var(--ink-2);
+  opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s;
+}
+.tipbox.on { opacity: 1; transform: none; pointer-events: auto; }
+.tipbox b { display: block; color: var(--accent-2); font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+.tipbox .l { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 800; margin-top: 8px; }
+.tipbox p { margin: 2px 0 0; }
+@media (prefers-reduced-motion: reduce) { .tipbox { transition: none; } }
+
+.term {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: help; text-align: inherit;
+  letter-spacing: inherit; text-transform: inherit;
+  text-decoration: underline dotted rgba(255,176,112,.75); text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  border-radius: 3px; transition: background .15s, color .15s;
+}
+.term:hover, .term[aria-expanded="true"] { color: var(--accent-2); background: rgba(255,122,26,.12); }
+.tag .ti { margin-left: 4px; }
+
+/* glossary */
+.gloss { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1200px) { .gloss { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .gloss { grid-template-columns: 1fr; } }
+.gcol { display: grid; gap: 12px; align-content: start; }
+.gcol h3 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-2); font-weight: 800; margin: 4px 2px 0; }
+.gitem { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.gitem b { display: block; font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+.gitem p { margin: 6px 0 0; color: var(--ink-2); font-size: 12.5px; line-height: 1.55; font-weight: 500; }
+.gitem p.h { color: var(--muted); }
+.gitem p.h::before { content: "Как читать. "; color: var(--ink-2); font-weight: 700; }
+
+footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 22px; font-size: 12px; color: var(--muted); }
+.foot .fg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 28px; }
+.foot h4 { margin: 0 0 6px; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 800; }
+.foot p { margin: 0; line-height: 1.55; font-weight: 500; }
+@media (max-width: 900px) { .foot .fg { grid-template-columns: 1fr; } }
+
+/* light industrial overrides */
+#events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { #events { grid-template-columns: 1fr; } }
+.legend > span:not(.st) { display: inline-block; }
+.legend > span:not(.st) > i { margin-right: 7px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <a class="brand" href="#top"><div class="logo">F</div><div><b>Finstack</b><small>Industrial intelligence</small></div></a>
+    <nav class="nav" aria-label="Разделы">
+      <div class="sec">Обзор</div>
+      <a href="#top" class="active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Срез и KPI</a>
+      <a href="#supply"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5 3V10l5 3V10l6 3v8"/></svg>Предложение</a>
+      <a href="#demand"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>Спрос и ставки</a>
+      <a href="#pipeline"><svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>Цикл и ввод</a>
+      <div class="sec">Анализ</div>
+      <a href="#balance"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7h6z"/><path d="M19 7l-3 7h6z"/></svg>Баланс среза</a>
+      <a href="#regulation"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6"/><path d="M10 16h6"/></svg>Нормативка</a>
+      <a href="#deviations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Отклонения</a>
+      <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
+      <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
+      <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
+      <div class="sec">Контуры</div>
+      <a href="../dashboard/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Жильё: первичка</a>
+    </nav>
+    <div class="rate-card">
+      <div class="l">Промипотека<button class="ti" type="button" data-tip="promind">i</button></div>
+      <div class="v">9<small>%</small></div>
+      <div class="d">При ключевой 14%: 9% для производств, 7% для технологических компаний. Вклад около 12,8%.</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top" id="top">
+      <div>
+        <div class="crumb">Контур<i></i>Московский регион<i></i>light industrial</div>
+        <h1>Intelligence <span>·</span> light industrial</h1>
+        <p>Разведка рынка малоформатных производственно-складских комплексов Москвы и Подмосковья по данным NF Group, CMWP, IBC Real Estate, Nikoliers, Ricci и ЦБ. Логика МСП-покупателя и частного инвестора при ключевой ставке 14%.</p>
+      </div>
+      <div class="badges">
+        <span class="badge live">срез · окт 2026</span>
+        <a class="badge plain" id="chip" href="#top" style="text-decoration:none"></a>
+      </div>
+    </header>
+
+    <div class="filters" role="group" aria-label="Фильтры среза">
+      <div class="fgroup"><span class="flabel" id="lbl-zone">Локация</span><button class="ti" type="button" data-tip="zone" style="margin-left:-6px">i</button><div class="seg" data-key="zone" role="group" aria-labelledby="lbl-zone"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-klass">Формат</span><button class="ti" type="button" data-tip="klass" style="margin-left:-6px">i</button><div class="seg" data-key="klass" role="group" aria-labelledby="lbl-klass"></div></div>
+      <div class="fgroup"><span class="flabel" id="lbl-dev">Девелопер</span><button class="ti" type="button" data-tip="dev" style="margin-left:-6px">i</button><div class="seg" data-key="dev" role="group" aria-labelledby="lbl-dev"></div></div>
+      <div class="freset"><button class="btn" id="reset" type="button">Сбросить</button></div>
+    </div>
+    <div class="ctx" id="ctx"></div>
+
+    <div class="kpis" id="kpis" aria-live="polite"></div>
+
+    <section class="block" id="supply">
+      <div class="shead"><div>
+        <div class="eyebrow">Предложение</div>
+        <h2>Где стоят комплексы и кто их строит</h2>
+        <p>Готовое предложение по локациям и форматам, структура по типу девелопера и ввод по годам. Разбивка по срезам рассчитана моделью от рыночного итога.</p>
+      </div></div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Готовое предложение по локациям<button class="ti" type="button" data-tip="stock">i</button></h3><span class="u">тыс. м², середина 2026</span></div>
+          <div class="box h300"><canvas id="chZone" role="img" aria-label="Готовое предложение по локациям и форматам"></canvas></div>
+          <div class="legend" id="zoneLegend"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Структура по типу девелопера<button class="ti" type="button" data-tip="dev">i</button></h3><span class="u">доля площади</span></div>
+          <div class="stack" id="stack" aria-hidden="true"></div>
+          <div class="tscroll"><table class="ctable" id="ctable"></table></div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Ввод по годам<button class="ti" type="button" data-tip="cohort">i</button></h3><span class="u">тыс. м², весь регион</span></div>
+          <div class="box h300"><canvas id="chYear" role="img" aria-label="Ввод light industrial по годам"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>факт</span><span><i class="sq hatch"></i>ожидание II пол. 2026 по CMWP</span><span><i style="background:var(--ink)"></i>план девелоперов по NF Group</span></div>
+          <div class="cap" id="yearCap"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Разброс оценок ввода 2025<button class="ti" type="button" data-tip="consensus">i</button></h3><span class="u">тыс. м²</span></div>
+          <div class="box h300"><canvas id="chCons" role="img" aria-label="Оценки ввода 2025 года разными консультантами"></canvas></div>
+          <div class="cap">Консультанты считают по разным методикам: класс, этажность, границы формата. Сравнивайте тренды одного источника, а не цифры разных.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="demand">
+      <div class="shead"><div>
+        <div class="eyebrow">Спрос и ставки</div>
+        <h2>Сколько покупают и во что обходятся деньги</h2>
+        <p>Сделки аренды и продажи по годам и лестница ставок: ключевая, кредиты, вклад и доходность объекта в срезе. Все ставки на одной шкале в процентах годовых.</p>
+      </div></div>
+      <div class="g">
+        <div class="panel c5">
+          <div class="ph"><h3>Сделки аренды и продажи<button class="ti" type="button" data-tip="deals">i</button></h3><span class="u">тыс. м²</span></div>
+          <div class="box h300"><canvas id="chDeals" role="img" aria-label="Объём сделок по годам"></canvas></div>
+          <div class="cap" id="dealsCap"></div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Лестница ставок<button class="ti" type="button" data-tip="ladder">i</button></h3><span class="u">% годовых, октябрь 2026</span></div>
+          <div class="box h300"><canvas id="chLadder" role="img" aria-label="Ставки кредитов, вклада и доходность объекта"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>доходность объекта в срезе</span><span><i class="sq" style="background:var(--sc3)"></i>стоимость денег</span><span><i class="sq hatch"></i>рыночный ориентир</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="pipeline">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Цикл и ввод</div>
+          <h2>Пульс рынка: что растёт и что сжимается</h2>
+          <p>Изменение ключевых показателей 2026 года к прошлому году по публикациям консультантов. Ввод в первом полугодии провалился из-за переносов, а на второе полугодие девелоперы обещают рекордный объём.</p>
+        </div>
+        <span class="chip-city">весь регион · фильтры не применяются</span>
+      </div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Изменение показателей г/г<button class="ti" type="button" data-tip="pulse">i</button></h3><span class="u">%, разные источники</span></div>
+          <div class="box h340"><canvas id="chPulse" role="img" aria-label="Изменение показателей рынка год к году"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>сокращение</span><span><i class="sq" style="background:var(--sc3)"></i>рост</span></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Путь проекта<button class="ti" type="button" data-tip="cycleLI">i</button></h3></div>
+          <div class="lag">
+            <div class="stp now"><div class="dot">1</div><div><b>Участок и ВРИ</b><p>ГПЗУ, смена ВРИ, в Москве соглашение по МПТ, в Подмосковье участок по программе «272».</p></div></div>
+            <div class="gap">3–9 месяцев</div>
+            <div class="stp"><div class="dot">2</div><div><b>РНС и старт продаж</b><p>Блоки продают на стадии стройки МСП и частным инвесторам, часть оставляют под аренду.</p></div></div>
+            <div class="gap">12–24 месяца</div>
+            <div class="stp"><div class="dot">3</div><div><b>Ввод</b><p>Одноэтажный комплекс строится быстрее многоэтажного. Купленные инвесторами блоки выходят в аренду.</p></div></div>
+          </div>
+          <div class="lag"><div class="out" id="lagOut"></div></div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Факты и источники</h3><span class="u">по публикациям, октябрь 2026</span></div>
+          <div class="tscroll" style="margin-top:12px"><table class="ptable" id="pTable"></table></div>
+          <div class="srcs" id="pSrc"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="balance">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Баланс среза</div>
+          <h2>Двенадцать индикаторов одного среза</h2>
+          <p>Поглощение против ввода, вакансия, доля предложения в аренду, цены и ставки, доходность против вклада и стоимость денег для покупателя.</p>
+        </div>
+        <div class="legend" style="margin:0;align-items:center"><span style="font-size:12px;color:var(--muted)">Отметки<button class="ti" type="button" data-tip="status">i</button></span><span class="st good">норма</span><span class="st warn">наблюдать</span><span class="st crit">аномалия</span></div>
+      </div>
+      <div class="panel"><div class="sheet" id="sheet"></div></div>
+    </section>
+
+    <section class="block" id="regulation">
+      <div class="shead"><div>
+        <div class="eyebrow">Нормативка</div>
+        <h2>Что меняют правила: НДС, промипотека, МПТ, земля</h2>
+        <p>Налоги, льготное финансирование и земельные программы, которые определяют цену входа и круг покупателей. Внизу карточки оценка эффекта для выбранного среза.</p>
+      </div></div>
+      <div class="panel">
+        <div class="ph"><h3>Хронология и действующие режимы<button class="ti" type="button" data-tip="rules">i</button></h3><span class="u">реакция среза пересчитывается от фильтров</span></div>
+        <div class="events" id="events"></div>
+      </div>
+      <div class="g" style="margin-top:12px">
+        <div class="panel c6">
+          <div class="ph"><h3>НДС 22%: цена для ОСНО и УСН<button class="ti" type="button" data-tip="vat">i</button></h3><span class="u">тыс. ₽ за м²</span></div>
+          <div class="pk" id="vatStats"></div>
+          <ul class="assume" id="vatAssume"></ul>
+        </div>
+        <div class="panel c6">
+          <div class="ph"><h3>Купить блок или арендовать<button class="ti" type="button" data-tip="promind">i</button></h3><span class="u">тыс. ₽ в месяц</span></div>
+          <div class="tscroll"><table class="ftable" id="finTable"></table></div>
+          <ul class="assume" id="finAssume"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="deviations">
+      <div class="shead"><div>
+        <div class="eyebrow">Разбор отклонений</div>
+        <h2>Что в срезе ведёт себя не как рынок</h2>
+        <p>Четыре главных отклонения выбранного среза от рынка Московского региона и их причина.</p>
+      </div></div>
+      <div class="cards" id="notes"></div>
+    </section>
+
+    <section class="block" id="buyers">
+      <div class="shead"><div>
+        <div class="eyebrow">Взгляд покупателя</div>
+        <h2>Для своего производства и для дохода</h2>
+        <p>МСП покупает блок под своё производство или склад. Частный инвестор покупает блок на стадии стройки и сдаёт его в аренду.</p>
+      </div></div>
+      <div class="g">
+        <article class="persona c6" id="pSelf"></article>
+        <article class="persona c6" id="pInv"></article>
+        <div class="panel c12">
+          <div class="ph"><h3>Доходность инвестора против вклада<button class="ti" type="button" data-tip="invChart">i</button></h3><span class="u">% годовых</span></div>
+          <div class="box h240"><canvas id="chInv" role="img" aria-label="Доходность инвестора против вклада"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>выше ставки вклада</span><span><i class="sq hatch"></i>ниже ставки вклада</span></div>
+        </div>
+      </div>
+      <div class="cards" id="buyerMore" style="margin-top:12px"></div>
+    </section>
+
+    <section class="block" id="forecast">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Прогноз до конца 2027</div>
+          <h2>Три сценария для вакансии среза</h2>
+          <p>База, «стена вкладов» и навес ввода. Модель считает, сколько площадей останется свободными после ввода, предпродаж и поглощения. Это сценарий, а не прогноз-факт.</p>
+        </div>
+        <span class="tag">Сценарий, не факт<button class="ti" type="button" data-tip="scenario">i</button></span>
+      </div>
+      <div class="g">
+        <div class="panel c7">
+          <div class="ph"><h3>Вакансия среза<button class="ti" type="button" data-tip="vacancy">i</button></h3><span class="u">% свободных площадей</span></div>
+          <div class="box h340"><canvas id="chFc" role="img" aria-label="Сценарии вакансии среза"></canvas></div>
+          <div class="legend" id="fcLegend"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Вакансия на конец периода<button class="ti" type="button" data-tip="scenarios">i</button></h3></div>
+          <table class="stable">
+            <thead><tr><th>Сценарий</th><th>2026</th><th>2027</th></tr></thead>
+            <tbody id="fcTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cards" id="fcNotes" style="margin-top:12px"></div>
+    </section>
+
+    <section class="block" id="glossary">
+      <div class="shead"><div>
+        <div class="eyebrow">Словарь</div>
+        <h2>Что означают термины и как их читать</h2>
+        <p>Те же пояснения открываются по значку «i» и по подчёркнутым словам в тексте. Наведите курсор, нажмите или перейдите к значку клавишей Tab.</p>
+      </div></div>
+      <div class="gloss" id="gloss"></div>
+    </section>
+
+    <footer class="foot">
+      <div class="fg">
+        <div><h4>Источники</h4><p>NF Group, CMWP, IBC Real Estate, Nikoliers, Ricci, CORE.XP, публикации Коммерсанта, Ведомостей и РИА Недвижимость, Банк России. Ключевая ставка 14% на 11.09.2026.</p></div>
+        <div><h4>Метод</h4><p>Рыночные итоги взяты из публикаций. Распределение по локациям, форматам и типам девелоперов задаёт модель, это прототип контура, а не реестр объектов.</p></div>
+        <div><h4>Допущения</h4><p>Коммерческий кредит 18,5%, промипотека 9%, взнос 20%, срок 7 лет, OPEX 2,1 тыс. ₽ за м² в год, цены с НДС 22%. Сценарии вакансии зависят от предпродаж и поглощения.</p></div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="tipbox" id="tipbox" role="tooltip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ================= MARKET DATA (публикации, октябрь 2026) ================= */
+/* Рыночные итоги по Московскому региону. ЕРЗ, сайты консультантов и СМИ из контейнера недоступны:
+   цифры взяты из пересказов веб-поиска и сверены несколькими запросами. */
+const M = {
+  stock: 1045,      /* тыс. м² готового предложения на 30.06.2026: 985 на конец 2025 (CMWP) + 60,3 ввода I пол. 2026 (NF Group) */
+  planH2: 627,      /* план ввода II пол. 2026, NF Group */
+  real2026: 500,    /* реалистичный ввод 2026, CMWP */
+  in2025: 389,      /* ввод 2025, CMWP и Ведомости, +52% г/г */
+  in2024: 256,      /* расчёт: 389 / 1,52 */
+  inH1_2026: 60.3,  /* NF Group, −72% г/г */
+  deals2024: 112,   /* расчёт: 267 / 2,38 */
+  deals2025: 267,   /* Ricci, +138% г/г */
+  deals2026: 210,   /* ожидание 200–220, Коммерсантъ */
+  dealsQ1: 80,      /* I кв. 2026, сопоставимо с I кв. 2025, Коммерсантъ */
+  vac: 13.2,        /* одноэтажные А и В, I пол. 2026 */
+  lease: 37,        /* доля предложения с возможностью аренды, было 27% */
+  priceQ1: 120,     /* тыс. ₽/м², I кв. 2026, CMWP, +1,2% г/г */
+  rentQ1: 13.1,     /* тыс. ₽/м²/год, I кв. 2026, CMWP; класс А −7,5% г/г */
+  opex: 2.1,        /* тыс. ₽/м²/год, диапазон 1,5–2,8 */
+  cap: 11,          /* ставка капитализации, рыночный ориентир 11–13,5% */
+  key: 14, deposit: 12.8, comm: 18.5, promind: 9, promindTech: 7
+};
+
+/* ================= SLICE MODEL ================= */
+/* Доли и поправки по локациям, форматам и типам девелоперов задаёт модель. */
+const ZONES = {
+  msk:   { n:"Москва", short:"Москва", sh:.26, pipe:.34, price:172, rent:17.0, vac:9.5,  lease:30, yoy:-12, pyoy:4,  ryoy:-2,  disc:11,
+           fmt:{ small:.30, large:.15, multi:.55 }, typ:{ spec:.35, resi:.45, park:.20 } },
+  moin:  { n:"Подмосковье до ЦКАД", short:"МО до ЦКАД", sh:.52, pipe:.46, price:118, rent:12.8, vac:13.5, lease:38, yoy:-21, pyoy:1,  ryoy:-6,  disc:12,
+           fmt:{ small:.55, large:.33, multi:.12 }, typ:{ spec:.62, resi:.16, park:.22 } },
+  moout: { n:"Подмосковье за ЦКАД", short:"МО за ЦКАД", sh:.22, pipe:.20, price:84,  rent:9.6,  vac:18.0, lease:44, yoy:-33, pyoy:-3, ryoy:-11, disc:14,
+           fmt:{ small:.50, large:.47, multi:.03 }, typ:{ spec:.62, resi:.06, park:.32 } }
+};
+const FMTS = {
+  small: { n:"Малые блоки", d:"одноэтажные, до 500 м²", pm:1.08, rm:1.07, vac:-2.5, lease:-8, yoy:6,  pyoy:2,  ryoy:-3, area:350,  cycle:14 },
+  large: { n:"Крупные блоки", d:"одноэтажные, от 500 м²", pm:.88, rm:.90, vac:3.5,  lease:10, yoy:-9, pyoy:-2, ryoy:-9, area:1400, cycle:16 },
+  multi: { n:"Многоэтажный", d:"производственные этажи", pm:1.02, rm:.98, vac:2.5,  lease:4,  yoy:-5, pyoy:0,  ryoy:-7, area:700,  cycle:24 }
+};
+const TYPES = {
+  spec: { n:"Профильные LI-девелоперы", ex:"Industrial City, Parametr, LI Group", pm:1.0,  rm:1.0,  vac:0,    lease:0,  yoy:0,  delay:0 },
+  resi: { n:"Жилые девелоперы", ex:"ПИК «Густав», Level Group «Level Work»", pm:1.06, rm:1.03, vac:3,    lease:-6, yoy:-4, delay:3 },
+  park: { n:"Индустриальные парки", ex:"«Шишкин лес», «Сенькино», «Чехов»", pm:.95,  rm:.96,  vac:-1.5, lease:12, yoy:3,  delay:0 }
+};
+const OPTS = {
+  zone:  [["all","Весь регион"],["msk","Москва"],["moin","МО до ЦКАД"],["moout","МО за ЦКАД"]],
+  klass: [["all","Все"],["small","Малые блоки"],["large","Крупные блоки"],["multi","Многоэтажный"]],
+  dev:   [["all","Все"],["spec","Профильные"],["resi","Жилые девелоперы"],["park","Индустриальные парки"]]
+};
+
+/* ================= STATE ================= */
+const STORE_KEY = "msk-li-slice";
+let state = { zone:"all", klass:"all", dev:"all" };
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+  if (saved) for (const k of Object.keys(state)) if (OPTS[k].some(o => o[0] === saved[k])) state[k] = saved[k];
+} catch (e) {}
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
+
+const fmt = (n, d = 1) => Number(n).toLocaleString("ru-RU", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+const sgn = (n, d = 1) => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n), d);
+const annuity = (P, rate, n) => { const i = rate / 1200; return i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n)); };
+
+function cells(s) {
+  const out = [];
+  for (const z of Object.keys(ZONES)) {
+    if (s.zone !== "all" && s.zone !== z) continue;
+    for (const f of Object.keys(FMTS)) {
+      if (s.klass !== "all" && s.klass !== f) continue;
+      for (const t of Object.keys(TYPES)) {
+        if (s.dev !== "all" && s.dev !== t) continue;
+        const Z = ZONES[z], F = FMTS[f], P = TYPES[t];
+        const base = Z.fmt[f] * Z.typ[t];
+        out.push({ z, f, t, w: Z.sh * base, wp: Z.pipe * base,
+          price: Z.price * F.pm * P.pm, rent: Z.rent * F.rm * P.rm,
+          vac: Math.max(2, Z.vac + F.vac + P.vac), lease: Math.max(5, Z.lease + F.lease + P.lease),
+          yoy: Z.yoy + F.yoy + P.yoy, pyoy: Z.pyoy + F.pyoy, ryoy: Z.ryoy + F.ryoy,
+          disc: Z.disc + (t === "resi" ? 2 : 0), cycle: F.cycle + P.delay, area: F.area });
+      }
+    }
+  }
+  return out;
+}
+function agg(list) {
+  const S = list.reduce((a, c) => a + c.w, 0), Sp = list.reduce((a, c) => a + c.wp, 0);
+  const avg = k => list.reduce((a, c) => a + c[k] * c.w, 0) / Math.max(S, 1e-9);
+  return { S, Sp, price: avg("price"), rent: avg("rent"), vac: avg("vac"), lease: avg("lease"), yoy: avg("yoy"),
+    pyoy: avg("pyoy"), ryoy: avg("ryoy"), disc: avg("disc"), cycle: avg("cycle"), area: avg("area") };
+}
+const ALL = agg(cells({ zone:"all", klass:"all", dev:"all" }));
+/* калибровка: средние по всему рынку приводятся к опубликованным итогам */
+const CAL = { price: M.priceQ1 / ALL.price, rent: M.rentQ1 / ALL.rent, vac: M.vac - ALL.vac, lease: M.lease - ALL.lease, yoy: ((M.deals2026 / M.deals2025 - 1) * 100) - ALL.yoy };
+
+function compute() {
+  const s = { ...state };
+  const list = cells(s), a = agg(list);
+  const price = a.price * CAL.price, rent = a.rent * CAL.rent;
+  const vac = a.vac + CAL.vac, lease = a.lease + CAL.lease, yoy = a.yoy + CAL.yoy;
+  const stock = M.stock * a.S, planH2 = M.planH2 * a.Sp, real2026 = M.real2026 * a.Sp;
+  const deals2026 = M.deals2026 * a.S * (1 + (yoy - (ALL.yoy + CAL.yoy)) / 100);
+  const deals2025 = deals2026 / (1 + yoy / 100);
+  const absorb = deals2026 / Math.max(real2026, 1e-6);
+  const gross = rent / price * 100;
+  const net = (rent * (1 - vac / 100) - M.opex) / price * 100;
+  const cycle = a.cycle, disc = a.disc, pyoy = a.pyoy, ryoy = a.ryoy;
+  const stageGrowth = disc + pyoy * cycle / 12;                  /* % за цикл стройки */
+  const stageAnn = (Math.pow(1 + stageGrowth / 100, 12 / cycle) - 1) * 100;
+  const invIrr = (Math.pow((1 + stageGrowth / 100) * (1 + net / 100), 12 / (cycle + 12)) - 1) * 100;
+  const area = a.area, ticket = price * area / 1000;          /* млн ₽ */
+  const loan = ticket * 0.8;
+  const rentM = rent * area / 12;                              /* тыс. ₽ в месяц */
+  const opexM = M.opex * area / 12;
+  const payProm = annuity(loan, M.promind, 84) * 1000, payTech = annuity(loan, M.promindTech, 84) * 1000, payComm = annuity(loan, M.comm, 84) * 1000;
+  const vatNet = price / 1.22, vatDiff = price - vatNet;
+  const share = a.S, sharePipe = a.Sp;
+
+  /* сценарии вакансии: полугодия II 2026, I 2027, II 2027 */
+  const demandK = 1 + (yoy - (ALL.yoy + CAL.yoy)) / 100;
+  const SC = {
+    base:    { D:[440, 260, 260], p:.55, A:80 },
+    wall:    { D:[440, 260, 260], p:.62, A:100 },
+    overhang:{ D:[627, 300, 300], p:.50, A:60 }
+  };
+  const path = sc => {
+    let st = stock, vacant = stock * vac / 100; const out = [vac];
+    sc.D.forEach(d => { const dd = d * sharePipe; vacant = Math.max(0, vacant + dd * (1 - sc.p) - sc.A * share * demandK); st += dd; out.push(vacant / st * 100); });
+    return out;
+  };
+  const fc = { base: path(SC.base), wall: path(SC.wall), overhang: path(SC.overhang) };
+
+  return { s, list, a, price, rent, vac, lease, yoy, stock, planH2, real2026, deals2026, deals2025, absorb, gross, net,
+    cycle, disc, pyoy, ryoy, stageGrowth, stageAnn, invIrr, area, ticket, loan, rentM, opexM, payProm, payTech, payComm,
+    vatNet, vatDiff, share, sharePipe, fc };
+}
+
+function labelOf(s) {
+  const z = { all:"весь регион", msk:"Москва", moin:"МО до ЦКАД", moout:"МО за ЦКАД" }[s.zone];
+  const k = { all:"все форматы", small:"малые блоки", large:"крупные блоки", multi:"многоэтажный" }[s.klass];
+  const d = { all:"все девелоперы", spec:"профильные", resi:"жилые девелоперы", park:"индустриальные парки" }[s.dev];
+  return `${z} · ${k} · ${d}`;
+}
+
+/* ================= GLOSSARY ================= */
+const GLOSS = {
+  li: { g:"Предложение", t:"Light industrial",
+    d:"Малоформатные производственно-складские комплексы: блоки обычно от 100 до 5000 м² с офисом, воротами и отдельным входом. Продаются и сдаются малому и среднему бизнесу.",
+    h:"Это не большой логистический склад и не офис. Покупатель здесь сам работает в помещении: производство, сборка, мастерская, склад интернет-магазина." },
+  zone: { g:"Фильтры", t:"Локация",
+    d:"Москва в границах города, Подмосковье внутри ЦКАД и Подмосковье за ЦКАД.",
+    h:"Чем дальше от Москвы, тем дешевле метр и выше доходность, но ниже ставки аренды, слабее спрос и выше вакансия." },
+  klass: { g:"Фильтры", t:"Формат",
+    d:"Малые блоки: одноэтажные помещения до 500 м². Крупные блоки: одноэтажные от 500 м². Многоэтажный: производственные этажи, в основном в Москве.",
+    h:"Малые блоки ближе к рознице: их покупает МСП и частный инвестор. Крупные блоки зависят от средних компаний и дольше ищут арендатора." },
+  dev: { g:"Фильтры", t:"Тип девелопера",
+    d:"Профильные LI-девелоперы, жилые девелоперы, которые входят в формат через МПТ и КРТ, и индустриальные парки.",
+    h:"Портфели отдельных компаний не публикуются, поэтому контур режет рынок по типу игрока. Названия в таблице приведены как примеры из публикаций." },
+  stock: { g:"Предложение", t:"Готовое предложение",
+    d:"Площадь введённых комплексов light industrial. Около 1,05 млн м² на середину 2026 года: 985 тыс. м² на конец 2025 года по CMWP и 60 тыс. м² ввода за I полугодие 2026 года.",
+    h:"По оценке NF Group, к концу 2026 года предложение может вырасти до 1,59 млн м², на 76% за год. Рынок растёт быстрее спроса." },
+  cohort: { g:"Предложение", t:"Ввод по годам",
+    d:"Площадь, введённая в эксплуатацию за год. 2025 год: 389 тыс. м², +52%. I полугодие 2026 года: 60 тыс. м², −72% из-за переносов.",
+    h:"Разрыв между планом девелоперов на II полугодие (627 тыс. м²) и реалистичной оценкой (около 440 тыс. м²) показывает, сколько проектов может снова сдвинуться." },
+  consensus: { g:"Источники", t:"Разброс оценок",
+    d:"Разные консультанты по-разному определяют формат: класс, этажность, минимальный размер комплекса.",
+    h:"Ввод 2025 года оценивают от 349 до 660 тыс. м². Сравнивайте динамику внутри одного источника." },
+  deals: { g:"Спрос и цены", t:"Сделки",
+    d:"Площадь, по которой заключены договоры аренды и купли-продажи за период.",
+    h:"2025 год стал пиком: 267 тыс. м², +138% за год. В 2026 году ожидают 200–220 тыс. м²: спрос не исчез, но стал чувствительнее к цене." },
+  yoy: { g:"Спрос и цены", t:"Спрос г/г",
+    d:"Изменение объёма сделок к прошлому году.",
+    h:"Ниже −30%: срез теряет покупателя. От −30% до −10%: охлаждение. Выше −10%: срез держится." },
+  price: { g:"Спрос и цены", t:"Цена продажи",
+    d:"Средневзвешенная запрашиваемая цена за м², с НДС. I квартал 2026 года: около 120 тыс. ₽, +1,2% за год по CMWP.",
+    h:"Рост цены остановился. Цены разных консультантов расходятся: Ricci давал 132,6 тыс. ₽ в среднем за 2025 год." },
+  rent: { g:"Спрос и цены", t:"Ставка аренды",
+    d:"Запрашиваемая годовая аренда за м², без НДС и операционных расходов. I квартал 2026 года: 13,1 тыс. ₽ по CMWP.",
+    h:"В классе А ставки снизились на 7,5% за год. Собственники уступают, потому что в аренду вышли блоки, купленные инвесторами." },
+  opex: { g:"Спрос и цены", t:"OPEX",
+    d:"Операционные расходы на содержание: охрана, уборка территории, обслуживание, управление. Обычно 1,5–2,8 тыс. ₽ за м² в год.",
+    h:"Арендатор платит их сверх ставки аренды. Собственник платит их сам за время простоя." },
+  ladder: { g:"Деньги и ставки", t:"Лестница ставок",
+    d:"Ставки, под которые можно взять или разместить деньги, рядом с доходностью объекта в срезе.",
+    h:"Если доходность объекта ниже вклада, инвестор теряет на каждом рубле. Если ниже ставки кредита, покупка в долг невыгодна." },
+  vacancy: { g:"Баланс", t:"Вакансия",
+    d:"Доля свободных площадей в готовых объектах. По одноэтажным комплексам классов А и В в I полугодии 2026 года около 13,2%.",
+    h:"До 8% рынок сбалансирован, 8–15% рынок покупателя, выше 15% навес: ставки аренды под давлением." },
+  leaseShare: { g:"Баланс", t:"Доля предложения в аренду",
+    d:"Часть свободного предложения, которую можно арендовать, а не только купить. За полгода выросла с 27% до 37%.",
+    h:"Рост доли означает, что частные инвесторы выводят купленные блоки в аренду и конкурируют с девелоперами за арендатора." },
+  absorb: { g:"Баланс", t:"Поглощение к вводу",
+    d:"Отношение объёма сделок к объёму ввода за год.",
+    h:"Около 1 и выше: рынок поглощает новое предложение. 0,6–0,9: охлаждение. Ниже 0,6: новое предложение копится, растёт вакансия." },
+  status: { g:"Баланс", t:"Норма, наблюдать, аномалия",
+    d:"Отметка сравнивает значение показателя с типичным для здорового рынка.",
+    h:"Норма: в пределах коридора. Наблюдать: на границе. Аномалия: заметное отклонение, которое объясняет поведение среза." },
+  gross: { g:"Инвестор", t:"Валовая доходность",
+    d:"Годовая аренда, делённая на цену покупки.",
+    h:"Ориентир рынка около 11%. Маркетинговые 14–20% обычно считаются от цены на старте продаж и без простоя." },
+  net: { g:"Инвестор", t:"Чистая доходность",
+    d:"Аренда с учётом вакансии за вычетом OPEX, делённая на цену.",
+    h:"Именно её сравнивают со вкладом. Налоги и ремонт сюда не входят." },
+  cap: { g:"Инвестор", t:"Ставка капитализации",
+    d:"Отношение текущего арендного дохода к цене объекта. Рыночный ориентир для light industrial 11–13,5%.",
+    h:"Когда ключевая ставка выше ставки капитализации, цены объектов под давлением: деньги дешевле держать на депозите." },
+  stage: { g:"Инвестор", t:"Дисконт стадии",
+    d:"Насколько блок на стадии стройки дешевле такого же готового.",
+    h:"Это основная часть заработка инвестора до ввода. Если цены на готовое не растут, дисконт стадии становится единственным ростом." },
+  cycleLI: { g:"Цикл", t:"Цикл проекта",
+    d:"Путь от участка до ввода: ГПЗУ и смена ВРИ, РНС, старт продаж, стройка, ввод. Одноэтажный комплекс строится 12–18 месяцев, многоэтажный дольше.",
+    h:"Короткий цикл позволяет девелоперу быстро реагировать на спрос, но и переносы в 2026 году случались массово." },
+  pulse: { g:"Цикл", t:"Пульс рынка",
+    d:"Изменение ключевых показателей 2026 года к тому же периоду 2025 года по разным источникам.",
+    h:"Ввод и ставки аренды сжимаются, предложение растёт. Цены стоят на месте. Это картина рынка покупателя." },
+  invChart: { g:"Инвестор", t:"Доходность инвестора против вклада",
+    d:"Несколько способов посчитать доходность блока в срезе рядом со ставкой вклада, отмеченной линией.",
+    h:"Оранжевые столбцы обгоняют вклад, заштрихованные не обгоняют." },
+  deposit: { g:"Деньги и ставки", t:"Ставка вклада",
+    d:"Типичная ставка нового годового депозита, около 12,8%.",
+    h:"Безрисковая альтернатива. Частный инвестор в light industrial сравнивает доходность блока именно с ней." },
+  keyrate: { g:"Деньги и ставки", t:"Ключевая ставка ЦБ",
+    d:"14% после паузы на заседании 11.09.2026. Пик был 21% в октябре 2024 года.",
+    h:"От неё зависят ставка коммерческого кредита и плавающая ставка промипотеки." },
+  promind: { g:"Деньги и ставки", t:"Промышленная ипотека",
+    d:"Льготный кредит Минпромторга на покупку, строительство или модернизацию производственного объекта: до 500 млн ₽, до 7 лет. При ключевой ставке выше 10% ставка равна 5% (3% для технологических компаний) плюс разница между ключевой ставкой и 10%.",
+    h:"При ключевой 14% это 9% и 7%. Доступна только промышленным компаниям, а не инвесторам под аренду. Условия плавают, перед сделкой сверяйте с ГИСП и банком." },
+  comm: { g:"Деньги и ставки", t:"Коммерческий кредит",
+    d:"Обычный банковский кредит бизнесу без субсидии. В модели 18,5% годовых: ключевая ставка плюс маржа банка.",
+    h:"Покупка блока в долг по такой ставке проигрывает аренде почти всегда." },
+  vat: { g:"Нормативка", t:"НДС 22%",
+    d:"С 01.01.2026 общая ставка НДС выросла с 20% до 22% (закон 425-ФЗ). Цены light industrial указываются с НДС.",
+    h:"Покупатель на общей системе налогообложения принимает НДС к вычету. Для него метр фактически дешевле на 18%." },
+  usn: { g:"Нормативка", t:"УСН и порог 20 млн",
+    d:"С 2026 года упрощенцы с доходом выше 20 млн ₽ платят НДС. Можно выбрать ставку 5% или 7% без вычета входящего НДС либо 22% с вычетом.",
+    h:"Покупатель на ставке 5% или 7% не возвращает НДС с покупки блока: для него помещение дороже, чем для компании на общей системе." },
+  mpt: { g:"Нормативка", t:"МПТ",
+    d:"Московская программа создания мест приложения труда. Инвестор, который строит производство или другие объекты с рабочими местами, получает льготу по плате за изменение ВРИ или по аренде земли.",
+    h:"Для производства коэффициенты льготы самые высокие. Склады не больше 25% площади. Льгота обеспечивается банковской гарантией, при смене профиля её доплачивают с пенями." },
+  krt: { g:"Нормативка", t:"КРТ",
+    d:"Комплексное развитие территорий: редевелопмент промзон и кварталов по единому проекту.",
+    h:"Через КРТ и МПТ в Москве появляется много многоэтажного light industrial у жилых девелоперов." },
+  vri: { g:"Нормативка", t:"ВРИ",
+    d:"Вид разрешённого использования земельного участка.",
+    h:"Для light industrial нужен производственный или складской ВРИ. Его смена стоит денег и времени." },
+  vriFee: { g:"Нормативка", t:"Плата за изменение ВРИ",
+    d:"Москва берёт плату при смене ВРИ на вид, разрешающий строительство. Размер зависит от прироста кадастровой стоимости. С 2652-ПП от 22.11.2024 её вносят до изменения ПЗЗ.",
+    h:"Льгота МПТ снижает эту плату, поэтому производственный профиль выгоден девелоперу." },
+  pzz: { g:"Нормативка", t:"ПЗЗ",
+    d:"Правила землепользования и застройки: где записаны ВРИ и предельные параметры участка.",
+    h:"Изменение ПЗЗ завершает смену ВРИ." },
+  gpzu: { g:"Цикл", t:"ГПЗУ",
+    d:"Градостроительный план земельного участка: что и в каких параметрах можно построить.",
+    h:"Первый документ проекта. Без него нельзя проектировать и получить РНС." },
+  rns: { g:"Цикл", t:"РНС",
+    d:"Разрешение на строительство. В Москве его выдаёт Мосгосстройнадзор, в Подмосковье региональный орган.",
+    h:"После РНС девелопер открывает продажи блоков и ищет инвесторов." },
+  prog272: { g:"Нормативка", t:"Программа «272»",
+    d:"Подмосковная программа предоставления земли инвесторам в аренду без торгов. После выполнения обязательств участок выкупают за 7,5–15% кадастровой стоимости.",
+    h:"Дешёвая земля снижает себестоимость проектов в Подмосковье. По программе передано 758 участков, в 2026 году заключено 11 соглашений." },
+  indPark: { g:"Предложение", t:"Индустриальный парк",
+    d:"Территория с подготовленной инфраструктурой и управляющей компанией для размещения производств.",
+    h:"Парки чаще сдают площади в аренду и меньше зависят от частных инвесторов." },
+  bts: { g:"Предложение", t:"Built-to-suit",
+    d:"Строительство здания под конкретного заказчика по его техническому заданию.",
+    h:"Для крупных блоков это способ запустить проект без продаж мелким покупателям." },
+  specs: { g:"Предложение", t:"Параметры блока",
+    d:"Обычно высота потолков 6–10 м, нагрузка на пол до 5 т на м², выделенная электрическая мощность, ворота и офисная антресоль.",
+    h:"Для производства решают электрическая мощность и нагрузка на пол. Для склада решают ворота и высота потолков." },
+  smallBlock: { g:"Предложение", t:"Малые блоки",
+    d:"Одноэтажные помещения до 500 м².",
+    h:"Самый ликвидный продукт: его покупают МСП и частные инвесторы. Ставки аренды и цены метра здесь выше." },
+  multi: { g:"Предложение", t:"Многоэтажный light industrial",
+    d:"Производственные этажи с грузовыми лифтами и усиленными перекрытиями.",
+    h:"Типичен для Москвы, где земля дорогая. Стройка дольше, а для тяжёлого производства формат подходит хуже." },
+  rules: { g:"Нормативка", t:"Режимы и правила",
+    d:"Налоги, льготное финансирование и земельные программы, которые меняют цену входа: МПТ в Москве, «272» в Подмосковье, плата за ВРИ, НДС 22%, промипотека и ключевая ставка.",
+    h:"Смотрите не только на цену метра. Для одного и того же блока покупатель на общей системе с промипотекой и упрощенец с коммерческим кредитом платят очень разные деньги." },
+  pp: { g:"Деньги и ставки", t:"п.п.",
+    d:"Процентный пункт: разница между двумя значениями в процентах.",
+    h:"Доходность 8% при вкладе 12,8% отстаёт на 4,8 п.п." },
+  scenario: { g:"Прогноз", t:"Сценарий",
+    d:"Условный расчёт «что будет, если». Модель задаёт ввод, предпродажи и поглощение и считает вакансию.",
+    h:"Сравнивайте разброс сценариев и следите, какие условия начинают выполняться." },
+  scenarios: { g:"Прогноз", t:"Вакансия по сценариям",
+    d:"Доля свободных площадей среза на конец 2026 и 2027 года в трёх сценариях.",
+    h:"Разброс показывает, насколько срез чувствителен к переносам ввода и к деньгам частных инвесторов." },
+  wall: { g:"Прогноз", t:"Стена вкладов",
+    d:"Гипотеза: в IV квартале 2026 и I полугодии 2027 года истекают вклады, открытые под 20% и выше на пике ставки. Light industrial продают частным инвесторам как альтернативу вкладу.",
+    h:"Сценарий сработает, если ставки вкладов опустятся ниже чистой доходности блоков. Сейчас вклад выше." },
+  overhang: { g:"Прогноз", t:"Навес ввода",
+    d:"Сценарий, в котором девелоперы вводят весь заявленный объём II полугодия 2026 года, а спрос остаётся слабым.",
+    h:"Новые площади не находят покупателя, вакансия растёт, ставки аренды снижаются." },
+  presale: { g:"Сделка", t:"Предпродажи",
+    d:"Продажа блоков до ввода комплекса.",
+    h:"Чем выше доля предпродаж, тем меньше свободных площадей появляется на рынке после ввода. Но часть покупателей это инвесторы, которые потом сами выходят в аренду." },
+  nf: { g:"Источники", t:"NF Group",
+    d:"Консалтинговая компания, публикует обзоры light industrial Московского региона: предложение, ввод, вакансия.", h:"Источник данных по вводу I полугодия 2026 года и прогнозу предложения." },
+  cmwp: { g:"Источники", t:"CMWP",
+    d:"Commonwealth Partnership, консалтинговая компания по коммерческой недвижимости.", h:"Источник данных по предложению на конец 2025 года, ценам и ставкам I квартала 2026 года." },
+  ibc: { g:"Источники", t:"IBC Real Estate",
+    d:"Консалтинговая компания, публикует обзоры рынка light industrial.", h:"Даёт более высокие оценки ввода 2025 года и низкую долю формата в складском вводе." },
+  ricci: { g:"Источники", t:"Ricci",
+    d:"Консалтинговая компания, публикует итоги рынка light industrial.", h:"Источник данных по сделкам 2025 года, средней цене и ставке за год." }
+};
+
+/* ================= PIPELINE & REGULATION DATA ================= */
+const PULSE = [
+  { l:"Ввод", p:"I пол. 2026", v:-72, src:"NF Group" },
+  { l:"Ввод", p:"I кв. 2026", v:-62, src:"IBC Real Estate" },
+  { l:"Ставка аренды, класс А", p:"I кв. 2026", v:-7.5, src:"CMWP" },
+  { l:"Сделки", p:"2026, ожидание", v:-21, src:"Коммерсантъ, Ricci" },
+  { l:"Сделки", p:"I кв. 2026", v:0, src:"Коммерсантъ" },
+  { l:"Цена продажи", p:"I кв. 2026", v:1.2, src:"CMWP" },
+  { l:"Предложение", p:"конец 2026, прогноз", v:76, src:"NF Group" }
+];
+const CONS = [["Invest7", 660], ["IBC Real Estate", 435], ["CMWP", 389], ["Nikoliers", 386], ["Ricci", 349]];
+const P_ROWS = [
+  ["Предложение", "985 тыс. м² на конец года", "до 1,59 млн м² к концу года (+76%); в Подмосковье строится более 90 объектов", "+76%", "pos", "CMWP, NF Group, Страна Девелопмент"],
+  ["Ввод", "389 тыс. м², рекорд (+52%). Оценки других консультантов 349–660 тыс. м²", "I пол.: 60,3 тыс. м² (−72%). План II пол. 627 тыс. м², реалистично около 500 тыс. м² за год", "−72%", "neg", "Ведомости, CMWP, NF Group"],
+  ["Сделки", "267 тыс. м² (+138%)", "I кв.: 80 тыс. м², как годом ранее. Ожидание года 200–220 тыс. м²", "−21%", "neg", "Ricci, Коммерсантъ"],
+  ["Цена и аренда", "цена около 125–133 тыс. ₽/м², аренда около 14–14,8 тыс. ₽/м²", "I кв.: цена 120 тыс. ₽/м² (+1,2%), аренда 13,1 тыс. ₽/м², класс А −7,5%", "+1,2% / −7,5%", "neg", "Ricci, CMWP"],
+  ["Вакансия", "около 10% в I пол. 2025 по CORE.XP", "13,2% в одноэтажных А и В. Доля предложения в аренду 27% → 37%", "↑", "neg", "NF Group, CORE.XP"],
+  ["Проекты", "доля формата в складском вводе 23%", "I кв.: 14% (CMWP), 8% (IBC), 6,9% (Nikoliers). Подмосковье: ещё 1,3 млн м² стартов до 2029 года", "−9 п.п.", "neg", "Коммерсантъ, Ведомости"]
+];
+const P_SRC = [
+  ["РИА: рекорд ввода ожидают в 2026", "https://realty.ria.ru/20260723/m-2106426111.html"],
+  ["Коммерсантъ: доля light industrial 14%", "https://www.kommersant.ru/doc/8655913"],
+  ["CMWP: 389 тыс. м² за 2025", "https://www.cmwp.ru/news/rynok-light-industrial-prodolzhaet-rasti-389-tys-kv-m-novykh-ploshchadey-po-itogam-2025-g/"],
+  ["CMWP: рынок light industrial 2026", "https://www.cmwp.ru/analytics/rynok-light-industrial-2026/"],
+  ["Ricci: итоги 2025", "https://ricci.ru/analitics/analytical-center-reports/obzor-rynka-light-industrial-moskovskogo-regiona-itogi-2025-goda/"],
+  ["NF Group: итоги 2025, PDF", "https://media.kf.expert/lenta_analytics/0/925/NF%20Group_%D0%A0%D1%8B%D0%BD%D0%BE%D0%BA%20light%20industrial_%D0%9C%D0%BE%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D1%80%D0%B5%D0%B3%D0%B8%D0%BE%D0%BD_%D0%B8%D1%82%D0%BE%D0%B3%D0%B8%202025.pdf"],
+  ["Рамблер: ввод I пол. 2026 −72%", "https://finance.rambler.ru/realty/57043992-v-moskovskom-makroregione-snizilsya-obem-vvoda-kompleksov-populyarnogo-formata-light-industrial/"],
+  ["Ведомости: 1,3 млн м² до 2029 года", "https://www.vedomosti.ru/press_releases/2026/09/30/do-2029-goda-v-podmoskove-nachnut-stroitelstvo-esche-13-mln-kv-m-obektov-v-formate-lait-indastrial"],
+  ["Контур: промипотека 2026", "https://kontur.ru/articles/1969"],
+  ["Консультант: закон 425-ФЗ о НДС", "https://www.consultant.ru/legalnews/29652/"],
+  ["Ведомости: «272», 750 участков", "https://www.vedomosti.ru/press_releases/2026/05/05/svishe-750-uchastkov-peredano-podmoskovnomu-biznesu-bez-torgov"],
+  ["ЕРЗ: порядок платы за ВРИ", "https://erzrf.ru/news/v-moskve-aktualizirovan-poryadok-vzimaniya-platy-za-arendu-i-za-izmeneniye-vida-razreshennogo-ispolzovaniya-zemelnogo-uchastka"]
+];
+
+function regEvents(v) {
+  const s = v.s, inMsk = s.zone === "msk", inMo = s.zone === "moin" || s.zone === "moout";
+  return [
+    { dt:"Москва", act:"МПТ: льгота за рабочие места", st:["good","действует"],
+      d:"Инвестор, создающий рабочие места, получает льготу по плате за изменение ВРИ или по аренде земли. Для производства коэффициенты самые высокие, склады не больше 25% площади.",
+      fx: s.dev === "resi" ? "Главная причина прихода жилых девелоперов: льгота МПТ дешевле смены ВРИ под жильё. Обязательство держать профиль делает продукт менее гибким." : inMo ? "Для Подмосковья программа не действует, там работает «272»." : "Двигатель многоэтажного light industrial в Москве. Согласовано 50 промпарков на 1,7 млн м²." },
+    { dt:"Подмосковье", act:"«272»: земля без торгов", st:["good","действует"],
+      d:"Участок в аренду без торгов под инвестпроект, выкуп за 7,5–15% кадастровой стоимости. Передано 758 участков, в 2026 году 11 новых соглашений.",
+      fx: inMsk ? "Для Москвы не действует: себестоимость земли здесь выше, отсюда разница в цене метра." : "Дешёвая земля позволяет держать цену ниже московской и строить одноэтажные комплексы." },
+    { dt:"22.11.2024", act:"2652-ПП: плата за ВРИ до ПЗЗ", st:["good","действует"],
+      d:"В Москве плату за изменение ВРИ вносят до изменения ПЗЗ. Размер зависит от прироста кадастровой стоимости участка.",
+      fx: inMo ? "Подмосковья не касается." : "Деньги уходят раньше проектного финансирования. Льгота МПТ частично это компенсирует." },
+    { dt:"01.01.2026", act:"НДС 22% и порог УСН 20 млн", st:["warn","действует"],
+      d:"Общая ставка НДС выросла до 22%. Упрощенцы с доходом выше 20 млн ₽ платят НДС: 5% или 7% без вычета либо 22% с вычетом.",
+      fx:`Для компании на общей системе метр в срезе стоит ${fmt(v.vatNet, 0)} тыс. ₽ после вычета, для упрощенца на 5% или 7% все ${fmt(v.price, 0)} тыс. ₽. Разница ${fmt(v.vatDiff, 0)} тыс. ₽ на м².` },
+    { dt:"2026", act:"Промипотека: плавающая ставка", st:["info","сверить условия"],
+      d:"До 500 млн ₽ на 7 лет. При ключевой ставке выше 10% ставка 5% (3% для технологических компаний) плюс разница между ключевой и 10%.",
+      fx:`При ключевой 14% это 9%. Платёж по блоку среза ${fmt(v.payProm, 0)} тыс. ₽ в месяц против ${fmt(v.payComm, 0)} тыс. ₽ по коммерческому кредиту.` },
+    { dt:"11.09.2026", act:"ЦБ: ключевая ставка 14%, пауза", st:["good","действует"],
+      d:"После снижения с 21% Банк России взял паузу. Коммерческий кредит бизнесу около 18–19%.",
+      fx:`Чистая доходность блока в срезе ${fmt(v.net, 1)}% против вклада ${fmt(M.deposit, 1)}%. ` + (v.net < M.deposit ? "Пока ставка высокая, частный инвестор выбирает депозит." : "Срез обгоняет вклад даже при высокой ставке.") }
+  ];
+}
+
+/* ================= TEXT ENGINES ================= */
+function deviations(v) {
+  const { s, vac, absorb, yoy, net, rent, price, lease, stageAnn, cycle } = v;
+  const out = [];
+  if (absorb < 0.6) out.push({ k:"Баланс", t:"Ввод обгоняет спрос",
+    b:`Поглощение к вводу ${fmt(absorb, 2)}. На каждый введённый метр приходится меньше половины метра сделок. Новое предложение копится, растут вакансия и доля блоков в аренду (${fmt(lease, 0)}%).` });
+  else if (absorb < 0.9) out.push({ k:"Баланс", t:"Охлаждение без обвала",
+    b:`Поглощение к вводу ${fmt(absorb, 2)}. Срез ещё переваривает новые площади, но запас прочности тает.` });
+  else out.push({ k:"Баланс", t:"Срез поглощает ввод",
+    b:`Поглощение к вводу ${fmt(absorb, 2)}. Спрос успевает за новым предложением, вакансия под контролем.` });
+
+  if (s.zone === "msk") out.push({ k:"География", t:"Москва дороже и плотнее",
+    b:`Метр около ${fmt(price, 0)} тыс. ₽ при рыночных 120 тыс. ₽. Земля дорогая, поэтому растёт многоэтажный формат через МПТ и КРТ. Вакансия ниже рынка: покупатель держится за близость к городу.` });
+  if (s.zone === "moout") out.push({ k:"География", t:"За ЦКАД рынок покупателя",
+    b:`Метр около ${fmt(price, 0)} тыс. ₽, вакансия ${fmt(vac, 1)}%. Дешевле, но арендатора ищут дольше, а ставки аренды падают быстрее рынка.` });
+  if (s.klass === "multi") out.push({ k:"Формат", t:"Многоэтажный формат строится дольше",
+    b:`Цикл около ${fmt(cycle, 0)} месяцев против 14–16 у одноэтажных комплексов. Для тяжёлого производства этажи подходят хуже, покупатель уже, вакансия выше.` });
+  if (s.klass === "small") out.push({ k:"Формат", t:"Малые блоки держат спрос",
+    b:"Самый ликвидный продукт: малый бизнес и частные инвесторы. Но именно сюда инвесторы выводят купленные блоки в аренду, и конкуренция за арендатора растёт." });
+  if (s.klass === "large") out.push({ k:"Формат", t:"Крупные блоки ждут арендатора",
+    b:`Спрос ${sgn(yoy, 0)}% г/г. Средний бизнес откладывает расширение при ставке 14%, вакансия ${fmt(vac, 1)}%. Девелоперы переходят на built-to-suit.` });
+  if (s.dev === "resi") out.push({ k:"Девелопер", t:"Жилые девелоперы пришли за льготой",
+    b:"Вход через МПТ и КРТ снижает плату за изменение ВРИ. Опыта управления индустриальными объектами меньше, поэтому сроки и вакансия хуже, чем у профильных игроков." });
+  if (s.dev === "park") out.push({ k:"Девелопер", t:"Парки живут арендой",
+    b:"Индустриальные парки чаще сдают площади, чем продают. Они меньше зависят от частных инвесторов и устойчивее при падении продаж." });
+
+  if (rent > 0 && v.ryoy < -5) out.push({ k:"Ставки", t:"Аренда дешевеет",
+    b:`Ставка аренды в срезе ${fmt(rent, 1)} тыс. ₽ за м² в год, около ${sgn(v.ryoy, 0)}% за год. Собственники уступают, чтобы удержать арендатора при растущей вакансии.` });
+  if (net < M.deposit) out.push({ k:"Инвестор", t:"Блок проигрывает вкладу",
+    b:`Чистая доходность ${fmt(net, 1)}% против вклада ${fmt(M.deposit, 1)}%. Покупка под аренду имеет смысл только на стадии стройки со скидкой: рост к вводу около ${fmt(stageAnn, 1)}% в год.` });
+  else out.push({ k:"Инвестор", t:"Срез обгоняет вклад",
+    b:`Чистая доходность ${fmt(net, 1)}% выше вклада ${fmt(M.deposit, 1)}%.` });
+  const pads = [
+    { k:"Спрос", t: yoy <= -30 ? "Срез теряет покупателя" : yoy <= -10 ? "Спрос остывает после рекорда" : "Спрос держится",
+      b:`Сделки в срезе ${sgn(yoy, 0)}% к рекордному 2025 году. Малый бизнес покупает осторожнее при ставке 14%, а частные инвесторы ушли во вклады.` },
+    { k:"Цены", t:"Цена стоит, аренда дешевеет",
+      b:`Цена метра в срезе около ${fmt(price, 0)} тыс. ₽, за год ${sgn(v.pyoy, 1)}%. Ставка аренды ${fmt(rent, 1)} тыс. ₽, за год ${sgn(v.ryoy, 0)}%. Доходность объектов снижается, пока цены не скорректируются.` }
+  ];
+  for (const c of pads) { if (out.length >= 4) break; if (!out.some(o => o.k === c.k)) out.splice(out.length - 1, 0, c); }
+  return out.slice(0, 4);
+}
+
+function buyers(v) {
+  const self = { b:"", v:"" }, inv = { b:"", v:"" };
+  self.b = `Блок около ${fmt(v.area, 0)} м² стоит ${fmt(v.ticket, 1)} млн ₽ с НДС. Аренда такого блока ${fmt(v.rentM, 0)} тыс. ₽ в месяц плюс OPEX ${fmt(v.opexM, 0)} тыс. ₽. Покупка с промипотекой под ${M.promind}% даёт платёж ${fmt(v.payProm, 0)} тыс. ₽ на 7 лет, с коммерческим кредитом под ${M.comm}% ${fmt(v.payComm, 0)} тыс. ₽. Компании на общей системе возвращают ${fmt(v.vatDiff * v.area / 1000, 1)} млн ₽ НДС, упрощенцы на 5% или 7% нет.`;
+  self.v = v.payProm <= v.rentM * 1.6
+    ? "Производству с правом на промипотеку выгоднее купить: платёж сопоставим с арендой, а через 7 лет помещение своё."
+    : "Без промипотеки покупка в долг не окупается: аренда кратно дешевле платежа. Покупать стоит за свои деньги или ждать снижения ставки.";
+  inv.b = `Блок на стадии стройки дешевле готового на ${fmt(v.disc, 0)}%. С учётом движения цен рост к вводу около ${fmt(v.stageGrowth, 1)}% за ${fmt(v.cycle, 0)} мес., это ${fmt(v.stageAnn, 1)}% в год. После ввода валовая доходность ${fmt(v.gross, 1)}%, чистая с учётом вакансии ${fmt(v.vac, 1)}% и OPEX ${fmt(v.net, 1)}%. Вклад рядом ${fmt(M.deposit, 1)}%.`;
+  inv.v = v.invIrr >= M.deposit
+    ? "Вход на стадии стройки ещё обгоняет вклад. Нужен блок малого формата и арендатор до ввода."
+    : `Полная доходность около ${fmt(v.invIrr, 1)}% в год ниже вклада. Покупать под аренду имеет смысл только с дисконтом сверх стадии или без кредитного плеча.`;
+  const more = [
+    { k:"Аренда или покупка", t:"Что решает сделку МСП", b:`Право на промипотеку, система налогообложения и горизонт. Производственная компания на общей системе с промипотекой платит ${fmt(v.payProm, 0)} тыс. ₽ в месяц и возвращает НДС. Торговая компания на УСН без льготы платит ${fmt(v.payComm, 0)} тыс. ₽ и НДС не возвращает: для неё аренда за ${fmt(v.rentM, 0)} тыс. ₽ почти всегда разумнее.` },
+    { k:"Риск инвестора", t:"Конкуренция за арендатора", b:`Доля предложения в аренду выросла с 27% до 37%: инвесторы, купившие блоки в 2024–2025 годах, ищут арендаторов одновременно. В срезе свободно ${fmt(v.vac, 1)}% площадей, а ставки аренды за год изменились на ${sgn(v.ryoy, 0)}%. Закладывайте 3–6 месяцев простоя после ввода.` }
+  ];
+  return { self, inv, more };
+}
+
+function forecastNotes(v) {
+  const f = v.fc;
+  return [
+    { k:"Механика", t:"Как модель считает вакансию",
+      b:`Каждое полугодие к свободным площадям добавляется ввод за вычетом предпродаж и вычитается поглощение. В базовом сценарии к концу 2027 года вакансия среза ${fmt(f.base[3], 1)}%.` },
+    { k:"Навес ввода", t:"Что будет, если девелоперы сдадут всё обещанное",
+      b:`План II полугодия 2026 года 627 тыс. м² против 60 тыс. м² в первом. Если план выполнят при слабом спросе, вакансия среза поднимется до ${fmt(f.overhang[3], 1)}% к концу 2027 года, и ставки аренды продолжат снижаться.` },
+    { k:"Стена вкладов", t:"Когда деньги частных инвесторов вернутся",
+      b:`Light industrial продают как альтернативу вкладу. Истекающие вклады 2024–2025 годов могут прийти в формат, но только если чистая доходность блока (${fmt(v.net, 1)}%) обгонит новые вклады. Тогда вакансия среза опустится до ${fmt(f.wall[3], 1)}%.` },
+    { k:"Условия", t:"Что должно совпасть для роста",
+      b:"Снижение ключевой ставки ниже 12%, удешевление промипотеки по формуле, переносы ввода и рост предпродаж. Если ставка останется на 14% и девелоперы сдадут весь объём, рынок покупателя продлится весь 2027 год." }
+  ];
+}
+
+/* ================= HTML RENDER ================= */
+function renderHtml(v) {
+  const lbl = labelOf(v.s);
+  document.getElementById("chip").textContent = lbl;
+  document.getElementById("ctx").innerHTML = `Активный срез: <b>${esc(lbl)}</b>`;
+
+  const kpis = [
+    { g:"stock", c:"Готовое предложение", v:fmt(v.stock, 0), u:"тыс. м²", s:`${fmt(v.share * 100, 0)}% рынка региона` },
+    { g:"cohort", c:"План ввода II пол. 2026", v:fmt(v.planH2, 0), u:"тыс. м²", s:`реалистично ${fmt(v.real2026, 0)} тыс. м² за год` },
+    { g:"deals", c:"Сделки 2026", v:fmt(v.deals2026, 0), u:"тыс. м²", s:"ожидание, аренда и продажа",
+      st: v.yoy <= -30 ? ["crit", sgn(v.yoy, 0) + "% г/г"] : v.yoy <= -10 ? ["warn", sgn(v.yoy, 0) + "% г/г"] : ["good", sgn(v.yoy, 0) + "% г/г"] },
+    { g:"vacancy", c:"Вакансия", v:fmt(v.vac, 1) + "%", s:`в аренду ${fmt(v.lease, 0)}% предложения`,
+      st: v.vac > 15 ? ["crit","навес"] : v.vac > 8 ? ["warn","рынок покупателя"] : ["good","баланс"] },
+    { g:"absorb", c:"Поглощение / ввод", v:fmt(v.absorb, 2), s:"сделки к вводу 2026",
+      st: v.absorb < 0.6 ? ["crit","копится"] : v.absorb < 0.9 ? ["warn","охлаждение"] : ["good","поглощает"] },
+    { g:"price", c:"Цена и аренда", v:fmt(v.price, 0), u:"тыс. ₽/м²", s:`аренда ${fmt(v.rent, 1)} тыс. ₽/м² в год` },
+    { g:"net", c:"Чистая доходность", v:fmt(v.net, 1) + "%", s:`валовая ${fmt(v.gross, 1)}%, вклад ${fmt(M.deposit, 1)}%`,
+      st: v.net >= M.deposit ? ["good","выше вклада"] : v.net >= M.deposit - 3 ? ["warn","ниже вклада"] : ["crit","сильно ниже вклада"] }
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map((k, i) => `
+    <div class="kpi${i === 0 ? " hi" : ""}">
+      <div class="kh"><span class="c">${k.c}</span>${ti(k.g)}</div>
+      <div class="v">${k.v}${k.u ? `<small>${k.u}</small>` : ""}</div>
+      <div class="s">${k.s}</div>
+      ${stHtml(k.st)}
+    </div>`).join("");
+
+  /* developer types */
+  const ramp = ["var(--o1)", "var(--o2)", "var(--o3)"], tk = ["spec", "resi", "park"];
+  const tAgg = tk.map(t => agg(v.list.filter(c => c.t === t)));
+  const tShare = tAgg.map(x => x.S / Math.max(v.share, 1e-9) * 100);
+  document.getElementById("stack").innerHTML = tShare.map((p, i) => p > 0.5 ? `<div style="flex:${p} 1 0;background:${ramp[i]}" title="${TYPES[tk[i]].n}: ${fmt(p, 0)}%"></div>` : "").join("");
+  document.getElementById("ctable").innerHTML = `
+    <thead><tr><th>Тип</th><th>Доля</th><th>тыс. м²</th><th>Цена</th><th>Вакансия</th></tr></thead>
+    <tbody>${tk.map((t, i) => {
+      const x = tAgg[i], on = x.S > 0;
+      return `<tr class="${on ? "" : "off"}"><td><i style="background:${ramp[i]}"></i>${TYPES[t].n}</td>
+        <td>${fmt(tShare[i], 0)}%</td><td>${fmt(M.stock * x.S, 0)}</td>
+        <td>${on ? fmt(x.price * CAL.price, 0) : "—"}</td><td>${on ? fmt(x.vac + CAL.vac, 1) + "%" : "—"}</td></tr>
+        <tr class="${on ? "" : "off"}"><td colspan="5" style="font-weight:500;color:var(--muted);font-size:12px;padding-top:0;border-top:0">примеры: ${TYPES[t].ex}</td></tr>`;
+    }).join("")}</tbody>`;
+
+  document.getElementById("yearCap").textContent = `Факт 2024 года рассчитан от роста 2025 года на 52%. Доля среза в вводе около ${fmt(v.sharePipe * 100, 0)}%, это ${fmt(M.real2026 * v.sharePipe, 0)} тыс. м² из реалистичных 500 тыс. м² 2026 года.`;
+  document.getElementById("dealsCap").textContent = `Срез: около ${fmt(v.deals2026, 0)} тыс. м² сделок в 2026 году против ${fmt(v.deals2025, 0)} тыс. м² в 2025 году. 2024 год рассчитан от роста 2025 года на 138%.`;
+
+  /* zone legend */
+  document.getElementById("zoneLegend").innerHTML = Object.keys(FMTS).map((f, i) => `<span><i class="sq" style="background:var(--sc${i + 1})"></i>${FMTS[f].n}, ${FMTS[f].d}</span>`).join("");
+
+  /* pipeline */
+  document.getElementById("lagOut").innerHTML = `Ввод I полугодия 2026 года упал на 72%, а на второе полугодие заявлено 627 тыс. м². Даже реалистичные 440 тыс. м² за полгода это больше, чем рынок купил за весь 2026 год. Для среза это ${fmt(440 * v.sharePipe, 0)} тыс. м² нового предложения против ${fmt(v.deals2026, 0)} тыс. м² годового спроса.`;
+  document.getElementById("pTable").innerHTML = `<thead><tr><th>Показатель</th><th>2025</th><th>2026</th><th>г/г</th><th>Источник</th></tr></thead><tbody>` +
+    P_ROWS.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="d ${r[4]}">${r[3]}</td><td class="src">${r[5]}</td></tr>`).join("") + "</tbody>";
+  document.getElementById("pSrc").innerHTML = P_SRC.map(x => `<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join("");
+
+  /* balance sheet */
+  const rows = [
+    ["Ключевая ставка", "14,00%", "warn", "keyrate"],
+    ["Поглощение к вводу", fmt(v.absorb, 2), v.absorb < 0.6 ? "crit" : v.absorb < 0.9 ? "warn" : "good", "absorb"],
+    ["Вакансия", fmt(v.vac, 1) + "%", v.vac > 15 ? "crit" : v.vac > 8 ? "warn" : "good", "vacancy"],
+    ["Доля предложения в аренду", fmt(v.lease, 0) + "%", v.lease > 40 ? "crit" : v.lease > 30 ? "warn" : "good", "leaseShare"],
+    ["Спрос г/г", sgn(v.yoy, 0) + "%", v.yoy <= -30 ? "crit" : v.yoy <= -10 ? "warn" : "good", "yoy"],
+    ["Цена продажи", fmt(v.price, 0) + " тыс. ₽/м²", v.pyoy < 0 ? "crit" : v.pyoy < 3 ? "warn" : "good", "price"],
+    ["Ставка аренды", fmt(v.rent, 1) + " тыс. ₽/м²", v.ryoy < -5 ? "crit" : v.ryoy < 0 ? "warn" : "good", "rent"],
+    ["Валовая доходность", fmt(v.gross, 1) + "%", v.gross >= M.cap ? "good" : "warn", "gross"],
+    ["Чистая доходность против вклада", fmt(v.net, 1) + "% / " + fmt(M.deposit, 1) + "%", v.net >= M.deposit ? "good" : "crit", "net"],
+    ["Рост к вводу, в год", fmt(v.stageAnn, 1) + "% за " + fmt(v.cycle, 0) + " мес.", v.stageAnn >= M.deposit ? "good" : "warn", "stage"],
+    ["Промипотека / кредит", M.promind + "% / " + M.comm + "%", "warn", "promind"],
+    ["Платёж против аренды", fmt(v.payProm, 0) + " / " + fmt(v.rentM, 0) + " тыс. ₽", v.payProm <= v.rentM * 1.6 ? "warn" : "crit", "comm"]
+  ];
+  const word = { good:"норма", warn:"наблюдать", crit:"аномалия" };
+  document.getElementById("sheet").innerHTML = rows.map(r =>
+    `<div class="row"><span class="k">${r[0]}${ti(r[3])}</span><span class="v">${r[1]}</span><span class="st ${r[2]}">${word[r[2]]}</span></div>`).join("");
+
+  /* regulation */
+  document.getElementById("events").innerHTML = regEvents(v).map(e => `
+    <div class="ev"><div class="when"><span class="dt">${e.dt}</span>${stHtml(e.st)}</div>
+    <div class="act">${esc(e.act)}</div><p>${esc(e.d)}</p><div class="fx"><b>Для среза.</b> ${esc(e.fx)}</div></div>`).join("");
+  document.getElementById("vatStats").innerHTML = `
+    <div><div class="v">${fmt(v.price, 0)}</div><div class="c">цена с НДС, столько платит упрощенец на 5% или 7%</div></div>
+    <div><div class="v">${fmt(v.vatNet, 0)}</div><div class="c">после вычета НДС для общей системы</div></div>
+    <div><div class="v">${fmt(v.vatDiff, 0)}</div><div class="c">разница на м², это 18% цены</div></div>
+    <div><div class="v">${fmt(v.vatDiff * v.area / 1000, 1)}<small>млн ₽</small></div><div class="c">на типичный блок ${fmt(v.area, 0)} м²</div></div>`;
+  document.getElementById("vatAssume").innerHTML = [
+    "Цены light industrial указываются с НДС 22%, девелоперы работают на общей системе.",
+    "Упрощенец с доходом выше 20 млн ₽ на ставке 5% или 7% не принимает входящий НДС к вычету.",
+    "Перед сделкой сравните ставки 5%, 7% и 22% с учётом выручки и стоимости блока."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+  const fin = [
+    ["Аренда", "—", fmt(v.rentM, 0), "плюс OPEX " + fmt(v.opexM, 0)],
+    ["Промипотека, технологическая компания", M.promindTech + "%", fmt(v.payTech, 0), "7 лет, затем своё"],
+    ["Промипотека, производство", M.promind + "%", fmt(v.payProm, 0), "7 лет, затем своё"],
+    ["Коммерческий кредит", M.comm + "%", fmt(v.payComm, 0), "7 лет, затем своё"]
+  ];
+  document.getElementById("finTable").innerHTML = `<thead><tr><th>Вариант</th><th>Ставка</th><th>В месяц</th><th>Итог</th></tr></thead><tbody>` +
+    fin.map((r, i) => `<tr class="${i === 0 ? "was" : ""}"><td>${r[0]}</td><td class="${i ? "rate" : ""}">${r[1]}</td><td>${r[2]}</td><td style="font-weight:600;color:var(--muted)">${r[3]}</td></tr>`).join("") + "</tbody>";
+  document.getElementById("finAssume").innerHTML = [
+    `Типичный блок среза ${fmt(v.area, 0)} м² за ${fmt(v.ticket, 1)} млн ₽, взнос 20%, кредит ${fmt(v.loan, 1)} млн ₽ на 7 лет.`,
+    "Промипотека доступна только промышленным компаниям при наличии бюджетных лимитов. Ставка плавающая: сверяйте с ГИСП и банком.",
+    "Платёж включает погашение долга: через 7 лет помещение остаётся у компании, аренда за это время ничего не оставляет."
+  ].map(t => `<li>${esc(t)}</li>`).join("");
+
+  /* deviations */
+  document.getElementById("notes").innerHTML = deviations(v).map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+
+  /* buyers */
+  const B = buyers(v);
+  document.getElementById("pSelf").innerHTML = `
+    <span class="who">МСП</span><h3>Для своего производства</h3>
+    <div class="pstats">
+      <div><div class="v">${fmt(v.ticket, 1)}<small>млн ₽</small></div><div class="c">блок ${fmt(v.area, 0)} м² с НДС${ti("specs")}</div></div>
+      <div><div class="v">${fmt(v.rentM, 0)}<small>тыс. ₽</small></div><div class="c">аренда в месяц</div></div>
+      <div><div class="v">${fmt(v.payProm, 0)}<small>тыс. ₽</small></div><div class="c">платёж по промипотеке</div></div>
+      <div><div class="v">${fmt(v.payComm, 0)}<small>тыс. ₽</small></div><div class="c">платёж по кредиту</div></div>
+    </div>
+    <p>${esc(B.self.b)}</p>
+    <div class="verdict"><b>Вывод</b><span>${esc(B.self.v)}</span></div>`;
+  document.getElementById("pInv").innerHTML = `
+    <span class="who">Частный инвестор</span><h3>Аренда и рост к вводу</h3>
+    <div class="pstats">
+      <div><div class="v">${fmt(v.gross, 1)}<small>%</small></div><div class="c">валовая доходность</div></div>
+      <div><div class="v">${fmt(v.net, 1)}<small>%</small></div><div class="c">чистая доходность</div></div>
+      <div><div class="v">−${fmt(v.disc, 0)}<small>%</small></div><div class="c">дисконт стадии${ti("stage")}</div></div>
+      <div><div class="v">${fmt(M.deposit, 1)}<small>%</small></div><div class="c">ставка вклада${ti("deposit")}</div></div>
+    </div>
+    <p>${esc(B.inv.b)}</p>
+    <div class="verdict"><b>Вывод</b><span>${esc(B.inv.v)}</span></div>`;
+  document.getElementById("buyerMore").innerHTML = B.more.map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+
+  /* forecast table */
+  const f = v.fc;
+  const sc = [
+    ["База", "var(--sc1)", f.base, "base", "Реалистичный ввод около 440 тыс. м² во II полугодии, предпродажи 55%, спрос как в 2026 году."],
+    ["Стена вкладов", "var(--sc2)", f.wall, "wall", "Частные инвесторы возвращаются из вкладов, предпродажи 62%, поглощение на четверть выше."],
+    ["Навес ввода", "var(--sc3)", f.overhang, "overhang", "Девелоперы сдают весь план 627 тыс. м², предпродажи 50%, спрос слабеет."]
+  ];
+  document.getElementById("fcTable").innerHTML = sc.map(r => `
+    <tr><td><div class="sn"><i style="border-color:${r[1]}"></i>${r[0]}${ti(r[3])}</div><div class="cond">${r[4]}</div></td>
+    <td>${fmt(r[2][1], 1)}%</td><td>${fmt(r[2][3], 1)}%</td></tr>`).join("");
+  document.getElementById("fcLegend").innerHTML = `<span><i style="background:var(--ink)"></i>I пол. 2026, оценка среза</span>` +
+    sc.map(r => `<span><i class="dash" style="border-color:${r[1]}"></i>${r[0]}</span>`).join("");
+  document.getElementById("fcNotes").innerHTML = forecastNotes(v).map(i =>
+    `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+}
+
+/* ================= CHARTS ================= */
+function renderCharts(v) {
+  if (!window.Chart) return;
+  const t = T();
+  Chart.defaults.font.family = FONT;
+  Chart.defaults.color = t.muted;
+  const tip = () => baseOpts(t).plugins.tooltip;
+
+  /* supply by zone and format */
+  const zk = Object.keys(ZONES), fk = Object.keys(FMTS);
+  const zoneOn = z => v.s.zone === "all" || v.s.zone === z;
+  const fmtOn = f => v.s.klass === "all" || v.s.klass === f;
+  const scCol = [t.sc1, t.sc2, t.sc3];
+  upsert("chZone", {
+    type: "bar",
+    data: { labels: zk.map(z => ZONES[z].short), datasets: fk.map((f, i) => ({
+      label: FMTS[f].n,
+      data: zk.map(z => { const Z = ZONES[z]; const typ = v.s.dev === "all" ? 1 : Z.typ[v.s.dev]; return +(M.stock * Z.sh * Z.fmt[f] * typ).toFixed(0); }),
+      backgroundColor: zk.map(z => zoneOn(z) && fmtOn(f) ? scCol[i] : hexA(scCol[i], .22)),
+      borderColor: t.panel, borderWidth: { right: 2 }, borderSkipped: false, maxBarThickness: 30, categoryPercentage: .7
+    }))},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: { x: axis(t, { stacked: true, beginAtZero: true }), y: axis(t, { stacked: true, grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { tooltip: Object.assign(tip(), { mode: "index", intersect: false, callbacks: {
+        title: c => ZONES[zk[c[0].dataIndex]].n,
+        label: c => ` ${c.dataset.label}: ${fmt(c.parsed.x, 0)} тыс. м²`
+      } }) })
+    })
+  });
+
+  /* delivery by year */
+  upsert("chYear", {
+    type: "bar",
+    data: { labels: ["2024", "2025", "2026"], datasets: [
+      { label: "Факт", data: [M.in2024, M.in2025, M.inH1_2026], backgroundColor: c => barGrad(c.chart, false), stack: "s", borderRadius: 8, borderSkipped: "start", maxBarThickness: 64 },
+      { label: "Ожидание II пол. 2026", data: [null, null, M.real2026 - M.inH1_2026], backgroundColor: () => hatch(), stack: "s", borderRadius: 8, borderSkipped: "start", maxBarThickness: 64 },
+      { type: "line", label: "План NF Group", data: [null, null, M.inH1_2026 + M.planH2], borderColor: t.ink, backgroundColor: t.ink, pointRadius: 6, pointStyle: "line", pointBorderWidth: 3, showLine: false }
+    ]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }), y: axis(t, { beginAtZero: true, max: 800 }) },
+      plugins: Object.assign(baseOpts(t).plugins, { tooltip: Object.assign(tip(), { callbacks: {
+        label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 0)} тыс. м²`
+      } }) })
+    })
+  });
+
+  /* consultant spread */
+  upsert("chCons", {
+    type: "bar",
+    data: { labels: CONS.map(x => x[0]), datasets: [{ label: "Ввод 2025", data: CONS.map(x => x[1]),
+      backgroundColor: c => CONS[c.dataIndex] && CONS[c.dataIndex][0] === "CMWP" ? barGrad(c.chart, true) : hatch(),
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 22, categoryPercentage: .7 }]},
+    options: baseOpts(t, {
+      indexAxis: "y", layout: { padding: { right: 36 } },
+      scales: { x: axis(t, { beginAtZero: true, max: 700 }), y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => fmt(x, 0) },
+        tooltip: Object.assign(tip(), { callbacks: { label: c => ` ${fmt(c.parsed.x, 0)} тыс. м²` } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* deals */
+  upsert("chDeals", {
+    type: "bar",
+    data: { labels: ["2024", "2025", "2026, ожидание"], datasets: [
+      { label: "Рынок региона", data: [M.deals2024, M.deals2025, M.deals2026], backgroundColor: () => hatch(), borderRadius: 8, borderSkipped: "start", maxBarThickness: 44, categoryPercentage: .62, barPercentage: .9 },
+      { label: "Срез", data: [M.deals2024 * v.deals2025 / M.deals2025, v.deals2025, v.deals2026].map(x => +x.toFixed(0)), backgroundColor: c => barGrad(c.chart, false), borderRadius: 8, borderSkipped: "start", maxBarThickness: 44, categoryPercentage: .62, barPercentage: .9 }
+    ]},
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }), y: axis(t, { beginAtZero: true }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => fmt(x, 0), vertical: true },
+        tooltip: Object.assign(tip(), { mode: "index", intersect: false, callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 0)} тыс. м²` } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* rate ladder */
+  const lad = [
+    ["Коммерческий кредит", M.comm, "money"], ["Ключевая ставка", M.key, "money"], ["Вклад", M.deposit, "money"],
+    ["Рыночная ставка капитализации", M.cap, "mkt"], ["Валовая доходность среза", +v.gross.toFixed(1), "obj"],
+    ["Промипотека, производство", M.promind, "money"], ["Чистая доходность среза", +v.net.toFixed(1), "obj"],
+    ["Промипотека, технологии", M.promindTech, "money"]
+  ].sort((a, b) => b[1] - a[1]);
+  upsert("chLadder", {
+    type: "bar",
+    data: { labels: lad.map(x => x[0]), datasets: [{ label: "% годовых", data: lad.map(x => x[1]),
+      backgroundColor: c => { const x = lad[c.dataIndex]; if (!x) return t.sc3; return x[2] === "obj" ? barGrad(c.chart, true) : x[2] === "mkt" ? hatch() : t.sc3; },
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 20, categoryPercentage: .74 }]},
+    options: baseOpts(t, {
+      indexAxis: "y", layout: { padding: { right: 40 } },
+      scales: { x: axis(t, { beginAtZero: true, max: 22, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => fmt(x, 1) + "%" },
+        tooltip: Object.assign(tip(), { callbacks: { label: c => ` ${fmt(c.parsed.x, 1)}% годовых` } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* pulse */
+  const pMax = 90;
+  upsert("chPulse", {
+    type: "bar",
+    data: { labels: PULSE.map(x => [x.l, x.p]), datasets: [{ label: "г/г", data: PULSE.map(x => x.v),
+      backgroundColor: c => { const x = PULSE[c.dataIndex]; return x && x.v >= 0 ? t.sc3 : barGrad(c.chart, true); },
+      borderRadius: 6, borderSkipped: false, maxBarThickness: 20, categoryPercentage: .72, minBarLength: 3 }]},
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: {
+        x: axis(t, { min: -pMax, max: pMax, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => (x > 0 ? "+" : "") + x + "%" },
+          grid: { color: c => c.tick.value === 0 ? t.muted : t.grid, drawTicks: false } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12 } } })
+      },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => sgn(x, 1) + "%" },
+        tooltip: Object.assign(tip(), { callbacks: {
+          title: c => PULSE[c[0].dataIndex].l + ", " + PULSE[c[0].dataIndex].p,
+          label: c => [` ${sgn(PULSE[c.dataIndex].v, 1)}% г/г`, ` источник: ${PULSE[c.dataIndex].src}`]
+        } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  /* investor vs deposit */
+  const inv = [
+    ["Валовая доходность", v.gross], ["Чистая доходность", v.net],
+    ["Рост к вводу, в год", v.stageAnn], ["Полная доходность с входом на стройке", v.invIrr]
+  ];
+  const xmax = Math.ceil(Math.max(M.deposit, ...inv.map(r => r[1])) * 1.18 / 2) * 2;
+  upsert("chInv", {
+    type: "bar",
+    data: { labels: inv.map(r => r[0]), datasets: [{ label: "% годовых", data: inv.map(r => +r[1].toFixed(1)),
+      backgroundColor: c => (inv[c.dataIndex] && inv[c.dataIndex][1] >= M.deposit) ? barGrad(c.chart, true) : hatch(),
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 22, categoryPercentage: .7 }]},
+    options: baseOpts(t, {
+      indexAxis: "y", layout: { padding: { top: 14 } },
+      scales: { x: axis(t, { min: 0, max: xmax, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        refLine: { value: M.deposit, label: `вклад ${fmt(M.deposit, 1)}%` },
+        tooltip: Object.assign(tip(), { callbacks: { label: c => ` ${fmt(c.parsed.x, 1)}% в год, ${c.parsed.x >= M.deposit ? "выше" : "ниже"} вклада на ${fmt(Math.abs(c.parsed.x - M.deposit), 1)} п.п.` } })
+      })
+    }),
+    plugins: [refLine]
+  });
+
+  /* forecast */
+  const labels = ["I пол. 26", "II пол. 26", "I пол. 27", "II пол. 27"];
+  const f = v.fc;
+  const scen = (name, arr, color) => ({ label: name, data: arr.map(x => +x.toFixed(1)), borderColor: color, backgroundColor: color, borderWidth: 2, borderDash: [6, 4], tension: .25,
+    pointRadius: arr.map((x, i) => i === arr.length - 1 ? 4 : 0), pointBackgroundColor: color, pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 });
+  const all = [...f.base, ...f.wall, ...f.overhang];
+  upsert("chFc", {
+    type: "line",
+    data: { labels, datasets: [
+      { label: "Сейчас", endLabel: false, data: [+v.vac.toFixed(1), null, null, null], borderColor: t.ink, backgroundColor: t.ink, pointRadius: 5, pointBackgroundColor: t.ink, pointBorderColor: t.panel, pointBorderWidth: 2 },
+      scen("База", f.base, t.sc1), scen("Стена вкладов", f.wall, t.sc2), scen("Навес ввода", f.overhang, t.sc3)
+    ]},
+    options: baseOpts(t, {
+      interaction: { mode: "index", intersect: false },
+      layout: { padding: { right: 140 } },
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.muted, font: { family: FONT, size: 12 } } }),
+        y: axis(t, { min: 0, max: Math.ceil((Math.max(...all) + 4) / 5) * 5, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        zone: { from: 0 }, endLabels: { on: true },
+        tooltip: Object.assign(tip(), { mode: "index", intersect: false, filter: item => item.raw !== null && !(item.dataIndex === 0 && item.datasetIndex > 0),
+          callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 1)}%` } })
+      })
+    }),
+    plugins: [zone, crosshair, endLabels]
+  });
+}
+
+/* ================= TERMS ================= */
+const TERMS = [
+  ["wall", "стен[аыуеой]{1,2}\\s+вкладов"],
+  ["overhang", "навес[а-яё]*(?:\\s+ввода)?"],
+  ["promind", "промипотек[а-яё]*|промышленн[а-яё]*\\s+ипотек[а-яё]*"],
+  ["comm", "коммерческ[а-яё]*\\s+кредит[а-яё]*"],
+  ["vriFee", "плат[а-яё]*\\s+за\\s+изменение\\s+ВРИ"],
+  ["vat", "НДС"],
+  ["usn", "УСН|упрощенц[а-яё]*"],
+  ["mpt", "МПТ"],
+  ["krt", "КРТ"],
+  ["vri", "ВРИ"],
+  ["pzz", "ПЗЗ"],
+  ["gpzu", "ГПЗУ"],
+  ["rns", "РНС"],
+  ["prog272", "«272»"],
+  ["li", "light industrial"],
+  ["bts", "built-to-suit"],
+  ["indPark", "индустриальн[а-яё]*\\s+парк[а-яё]*|промпарк[а-яё]*"],
+  ["multi", "многоэтажн[а-яё]*"],
+  ["smallBlock", "мал[а-яё]*\\s+блок[а-яё]*"],
+  ["presale", "предпродаж[а-яё]*"],
+  ["leaseShare", "доля\\s+предложения\\s+в\\s+аренду|доли\\s+блоков\\s+в\\s+аренду"],
+  ["vacancy", "вакансия|вакансии|вакансию"],
+  ["absorb", "поглощени[а-яё]*"],
+  ["opex", "OPEX"],
+  ["cap", "ставк[а-яё]*\\s+капитализации"],
+  ["gross", "валов[а-яё]*\\s+доходност[а-яё]*"],
+  ["net", "чист[а-яё]*\\s+доходност[а-яё]*"],
+  ["stage", "дисконт[а-яё]*\\s+стадии|стадии\\s+стройки"],
+  ["keyrate", "ключев[а-яё]*\\s+ставк[а-яё]*"],
+  ["deposit", "вклад[а-яё]*|депозит[а-яё]*"],
+  ["pp", "п\\.п\\."],
+  ["nf", "NF Group"],
+  ["cmwp", "CMWP"],
+  ["ibc", "IBC Real Estate|IBC"],
+  ["ricci", "Ricci"],
+  ["scenario", "сценари[а-яё]*"]
+];
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const ti = k => GLOSS[k] ? `<button class="ti" type="button" data-tip="${k}" aria-label="Что такое: ${esc(GLOSS[k].t)}">i</button>` : "";
+const stHtml = st => st ? `<span class="st ${st[0]}">${st[1]}</span>` : "";
+
+
+/* ================= CONTROLS ================= */
+function buildControls() {
+  document.querySelectorAll(".seg").forEach(seg => {
+    const key = seg.dataset.key;
+    seg.innerHTML = OPTS[key].map((o, i) => `<button type="button" id="f-${key}-${i}" data-v="${o[0]}">${o[1]}</button>`).join("");
+    seg.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      state[key] = b.dataset.v; save(); refresh();
+    });
+  });
+  document.getElementById("reset").addEventListener("click", () => { state = { zone:"all", klass:"all", dev:"all" }; save(); refresh(); });
+}
+function syncControls() {
+  document.querySelectorAll(".seg").forEach(seg => {
+    seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === state[seg.dataset.key])));
+  });
+}
+
+
+/* ================= CHARTS ================= */
+const charts = {};
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function T() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = n => cs.getPropertyValue(n).trim();
+  return { ink:g("--ink"), ink2:g("--ink-2"), muted:g("--muted"), faint:g("--faint"), grid:g("--grid"), line:g("--line"),
+    panel:g("--panel"), panel2:g("--panel-2"), tip:g("--tip-bg"), s1:g("--s1"), dim:g("--dim"), accent:g("--accent"),
+    accent2:g("--accent-2"), deep:g("--accent-deep"), sc1:g("--sc1"), sc2:g("--sc2"), sc3:g("--sc3") };
+}
+const FONT = 'Manrope, "Segoe UI", system-ui, sans-serif';
+
+function baseOpts(t, extra = {}) {
+  return Object.assign({
+    responsive: true, maintainAspectRatio: false,
+    animation: reduceMotion ? false : { duration: 350 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: t.tip, titleColor: t.ink, bodyColor: t.ink2, borderColor: t.line, borderWidth: 1,
+        padding: 10, cornerRadius: 6, boxWidth: 8, boxHeight: 8, boxPadding: 4, usePointStyle: true,
+        titleFont: { family: FONT, weight: "500", size: 13 }, bodyFont: { family: FONT, size: 12.5 }
+      }
+    }
+  }, extra);
+}
+function axis(t, o = {}) {
+  return Object.assign({
+    border: { display: false },
+    grid: { color: t.grid, drawTicks: false },
+    ticks: { color: t.muted, font: { family: FONT, size: 12 }, padding: 8 }
+  }, o);
+}
+function upsert(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+/* vertical crosshair on hover for line charts */
+const crosshair = {
+  id: "crosshair",
+  afterDatasetsDraw(chart) {
+    const a = chart.tooltip && chart.tooltip.getActiveElements();
+    if (!a || !a.length) return;
+    const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = T().faint; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+  }
+};
+/* direct labels at the end of each series, de-collided */
+const endLabels = {
+  id: "endLabels",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.on) return;
+    const t = T(), ctx = chart.ctx, items = [];
+    chart.data.datasets.forEach((ds, i) => {
+      if (ds.endLabel === false) return;
+      const meta = chart.getDatasetMeta(i); if (meta.hidden) return;
+      let j = ds.data.length - 1; while (j >= 0 && (ds.data[j] === null || ds.data[j] === undefined)) j--;
+      if (j < 0) return;
+      const p = meta.data[j];
+      const name = ds.endLabel != null ? ds.endLabel : ds.label;
+      items.push({ x: p.x, y: p.y, text: (name ? name + " " : "") + fmt(ds.data[j], 2) });
+    });
+    items.sort((a, b) => a.y - b.y);
+    for (let k = 1; k < items.length; k++) if (items[k].y - items[k - 1].y < 15) items[k].y = items[k - 1].y + 15;
+    ctx.save(); ctx.font = `500 12px ${FONT}`; ctx.textBaseline = "middle";
+    ctx.fillStyle = t.ink;
+    items.forEach(it => ctx.fillText(it.text, it.x + 10, it.y));
+    ctx.restore();
+  }
+};
+/* shaded scenario zone from a category index to the right edge */
+const zone = {
+  id: "zone",
+  beforeDatasetsDraw(chart, args, opts) {
+    if (!opts || opts.from == null) return;
+    const t = T(), { top, bottom, right } = chart.chartArea, x = chart.scales.x.getPixelForValue(opts.from), ctx = chart.ctx;
+    ctx.save(); ctx.fillStyle = t.panel2; ctx.globalAlpha = .7; ctx.fillRect(x, top, right - x, bottom - top); ctx.globalAlpha = 1;
+    ctx.fillStyle = t.muted; ctx.font = `500 11px ${FONT}`; ctx.textBaseline = "top"; ctx.fillText("СЦЕНАРИЙ", x + 8, top + 8); ctx.restore();
+  }
+};
+/* value labels at bar ends */
+const valueLabels = {
+  id: "valueLabels",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.fmt) return;
+    const t = T(), ctx = chart.ctx; ctx.save(); ctx.font = `700 11.5px ${FONT}`; ctx.fillStyle = t.ink;
+    chart.data.datasets.forEach((ds, di) => {
+      chart.getDatasetMeta(di).data.forEach((bar, i) => {
+        const val = ds.data[i]; if (val == null) return;
+        if (opts.inside) { const txt = opts.fmt(val); if (!txt) return; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = di === 0 ? "#1a1008" : t.ink; ctx.fillText(txt, (bar.x + bar.base) / 2, bar.y); ctx.fillStyle = t.ink; return; }
+        if (opts.vertical) { ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(opts.fmt(val), bar.x, bar.y - 5); }
+        else { const neg = val < 0; ctx.textBaseline = "middle"; ctx.textAlign = neg ? "right" : "left"; ctx.fillText(opts.fmt(val), bar.x + (neg ? -6 : 6), bar.y); }
+      });
+    });
+    ctx.restore();
+  }
+};
+
+/* vertical reference line (deposit rate) for horizontal bars */
+const refLine = {
+  id: "refLine",
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || opts.value == null) return;
+    const t = T(), { top, bottom } = chart.chartArea, x = chart.scales.x.getPixelForValue(opts.value), ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = t.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, top - 4); ctx.lineTo(x, bottom); ctx.stroke();
+    ctx.fillStyle = t.ink; ctx.font = `500 12px ${FONT}`; ctx.textAlign = x > chart.chartArea.right - 110 ? "right" : "left"; ctx.textBaseline = "bottom";
+    ctx.fillText(opts.label, x + (ctx.textAlign === "right" ? -6 : 6), top + 10); ctx.restore();
+  }
+};
+
+
+/* orange gradient fill for bars; horizontal = left→right */
+function barGrad(chart, horizontal) {
+  const a = chart.chartArea, t = T();
+  if (!a) return t.accent;
+  const c = chart.ctx;
+  const g = horizontal ? c.createLinearGradient(a.left, 0, a.right, 0) : c.createLinearGradient(0, a.bottom, 0, a.top);
+  g.addColorStop(0, t.deep); g.addColorStop(.55, t.accent); g.addColorStop(1, t.accent2);
+  return g;
+}
+/* diagonal hatch for de-emphasised bars */
+let _hatch = null;
+function hatch() {
+  if (_hatch) return _hatch;
+  const cv = document.createElement("canvas"); cv.width = cv.height = 8;
+  const c = cv.getContext("2d");
+  c.fillStyle = "#26241f"; c.fillRect(0, 0, 8, 8);
+  c.strokeStyle = "#5a534c"; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(-2, 10); c.lineTo(10, -2); c.moveTo(-2, 2); c.lineTo(2, -2); c.moveTo(6, 10); c.lineTo(10, 6); c.stroke();
+  _hatch = c.createPattern(cv, "repeat");
+  return _hatch;
+}
+
+function hexA(hex, a) {
+  const h = hex.replace("#", ""); const f = h.length === 3 ? h.split("").map(c => c + c).join("") : h;
+  const n = parseInt(f, 16); return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+
+const L = "а-яёА-ЯЁa-zA-Z";
+const TERM_RE = new RegExp(`(?<![${L}])(?:${TERMS.map(t => `(${t[1]})`).join("|")})(?![${L}])`, "gi");
+const TERM_SEL = ".card h3, .card p, .persona p, .verdict span, .shead p, .cond, .cap, .ctable th, .foot p, .top p, .legend > span, .rate-card .d, .stable .sn, .ev .act, .ev p, .ev .fx, .lag p, .lag .out, .ptable td, .assume li, .pk .c, .ftable td";
+const SCOPE_SEL = ".card, .persona, .shead, .ev, .stp, .lag, .assume, .pk > div, tr, .panel, .foot .fg > div, .top, .rate-card";
+
+function linkTerms(root = document) {
+  root.querySelectorAll(TERM_SEL).forEach(el => {
+    const scope = el.closest(SCOPE_SEL) || el;
+    const used = new Set([...scope.querySelectorAll(".term, .ti")].map(b => b.dataset.tip));
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => n.parentElement.closest(".term, .ti, button, .st") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue; TERM_RE.lastIndex = 0;
+      let m, last = 0, frag = null;
+      while ((m = TERM_RE.exec(text))) {
+        const gi = m.slice(1).findIndex(x => x !== undefined);
+        const key = TERMS[gi][0];
+        if (used.has(key) || !GLOSS[key]) continue;
+        used.add(key);
+        frag = frag || document.createDocumentFragment();
+        frag.append(text.slice(last, m.index));
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "term"; b.dataset.tip = key; b.textContent = m[0];
+        frag.append(b); last = m.index + m[0].length;
+      }
+      if (frag) { frag.append(text.slice(last)); node.replaceWith(frag); }
+    });
+  });
+}
+
+
+function refresh() { syncControls(); const v = compute(); renderHtml(v); renderCharts(v); linkTerms(); }
+buildControls();
+refresh();
+
+/* glossary section */
+(() => {
+  const groups = {};
+  Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
+  const cols = [["Фильтры","Предложение","Цикл"], ["Спрос и цены","Баланс","Деньги и ставки","Сделка"], ["Инвестор","Нормативка","Прогноз","Источники"]];
+  document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.filter(g => groups[g]).map(g => `<h3>${g}</h3>` +
+    groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
+})();
+
+/* info tooltips: hover on desktop, tap on touch, focus via keyboard */
+(() => {
+  const box = document.getElementById("tipbox");
+  let cur = null, pinned = false;
+  document.querySelectorAll(".ti").forEach(b => { const e = GLOSS[b.dataset.tip]; if (e && !b.hasAttribute("aria-label")) b.setAttribute("aria-label", "Что такое: " + e.t); });
+  function show(btn) {
+    const e = GLOSS[btn.dataset.tip]; if (!e) return;
+    if (cur && cur !== btn) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); }
+    cur = btn;
+    box.innerHTML = `<b>${esc(e.t)}</b><span class="l">Что это</span><p>${esc(e.d)}</p><span class="l">Как читать</span><p>${esc(e.h)}</p>`;
+    btn.setAttribute("aria-expanded", "true"); btn.setAttribute("aria-describedby", "tipbox");
+    box.classList.add("on");
+    const r = btn.getBoundingClientRect(), bw = box.offsetWidth, bh = box.offsetHeight, m = 12;
+    let x = r.left + r.width / 2 - bw / 2; x = Math.max(m, Math.min(x, window.innerWidth - bw - m));
+    let y = r.bottom + 8; if (y + bh > window.innerHeight - m) y = Math.max(m, r.top - bh - 8);
+    box.style.left = x + "px"; box.style.top = y + "px";
+  }
+  function hide() {
+    box.classList.remove("on"); pinned = false;
+    if (cur) { cur.setAttribute("aria-expanded", "false"); cur.removeAttribute("aria-describedby"); cur = null; }
+  }
+  document.addEventListener("pointerover", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned) show(b); });
+  document.addEventListener("pointerout", e => { const b = e.target.closest(".ti, .term"); if (b && e.pointerType === "mouse" && !pinned && !box.contains(e.relatedTarget)) hide(); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".ti, .term");
+    if (b) { e.preventDefault(); if (pinned && cur === b) hide(); else { show(b); pinned = true; } return; }
+    if (!box.contains(e.target)) hide();
+  });
+  let quiet = false;
+  document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti, .term"); if (b && !quiet) show(b); });
+  document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti, .term") && !pinned) hide(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && cur) { const b = cur; hide(); quiet = true; b.focus(); quiet = false; } });
+  window.addEventListener("scroll", () => { if (cur) hide(); }, { passive: true });
+  window.addEventListener("resize", () => { if (cur) hide(); });
+})();
+(() => {
+  const links = [...document.querySelectorAll('.nav a[href^="#"]')];
+  const targets = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id)); });
+  }, { rootMargin: "-20% 0px -70% 0px" });
+  targets.forEach(t => io.observe(t));
+})();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderCharts(compute()));
+</script>
+</body>
+</html>
