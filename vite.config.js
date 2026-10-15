@@ -10,6 +10,7 @@ export default defineConfig({
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         dashboard: fileURLToPath(new URL('./dashboard/index.html', import.meta.url)),
         lightIndustrial: fileURLToPath(new URL('./light-industrial/index.html', import.meta.url)),
+        offices: fileURLToPath(new URL('./offices/index.html', import.meta.url)),
       },
     },
   },

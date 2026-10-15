@@ -377,6 +377,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
       <div class="sec">Контуры</div>
       <a href="../light-industrial/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5 3V10l5 3V10l6 3v8"/></svg>Light industrial</a>
+      <a href="../offices/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V4h9v17"/><path d="M14 9h5v12"/><path d="M8 8h3M8 12h3M8 16h3"/></svg>Офисы B+ и выше</a>
     </nav>
     <div class="rate-card">
       <div class="l">Ключевая ставка<button class="ti" type="button" data-tip="keyrate">i</button></div>
@@ -1910,8 +1911,8 @@ function linkTerms(root = document) {
         used.add(key);
         frag = frag || document.createDocumentFragment();
         frag.append(text.slice(last, m.index));
-        const b = document.createElement("button");
-        b.type = "button"; b.className = "term"; b.dataset.tip = key; b.textContent = m[0];
+        const b = document.createElement("span");
+        b.className = "term"; b.tabIndex = 0; b.setAttribute("role", "button"); b.dataset.tip = key; b.textContent = m[0];
         frag.append(b); last = m.index + m[0].length;
       }
       if (frag) { frag.append(text.slice(last)); node.replaceWith(frag); }
@@ -1966,7 +1967,7 @@ refresh();
   document.addEventListener("focusin", e => { const b = e.target.closest && e.target.closest(".ti, .term"); if (b && !quiet) show(b); });
   document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".ti, .term") && !pinned) hide(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && cur) { const b = cur; hide(); quiet = true; b.focus(); quiet = false; } });
-  window.addEventListener("scroll", () => { if (cur) hide(); }, { passive: true });
+  window.addEventListener("scroll", () => { if (!cur) return; if (document.activeElement === cur) show(cur); else hide(); }, { passive: true });
   window.addEventListener("resize", () => { if (cur) hide(); });
 })();
 (() => {
