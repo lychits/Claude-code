@@ -11,6 +11,7 @@ export default defineConfig({
         dashboard: fileURLToPath(new URL('./dashboard/index.html', import.meta.url)),
         lightIndustrial: fileURLToPath(new URL('./light-industrial/index.html', import.meta.url)),
         offices: fileURLToPath(new URL('./offices/index.html', import.meta.url)),
+        compare: fileURLToPath(new URL('./compare/index.html', import.meta.url)),
       },
     },
   },
