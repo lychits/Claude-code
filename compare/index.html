@@ -430,6 +430,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
         <input type="range" id="dep" min="8" max="16" step="0.1" value="12.8" style="flex:1;min-width:140px;accent-color:var(--accent)">
         <b id="depVal" style="font-size:18px;min-width:64px;font-variant-numeric:tabular-nums"></b>
       </div>
+      <div class="fgroup"><span class="flabel" id="lbl-hk">Класс жилья</span><button class="ti" type="button" data-tip="hk" style="margin-left:-6px">i</button><div class="seg" data-key="hk" role="group" aria-labelledby="lbl-hk"></div></div>
       <div class="ctx" style="margin:0;flex:1 1 280px" id="depNote"></div>
       <div class="freset"><button class="btn" id="reset" type="button">Сбросить</button></div>
     </div>
@@ -546,18 +547,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
 const DEP0 = 12.8;
 const METRICS = [["demand","Спрос"],["price","Цена продажи"],["rent","Ставка аренды"],["delivery","Ввод"],["pipeline","Новое предложение"]];
 const MK = [
-  { k:"h", n:"Жильё", sub:"первичка Москвы", col:"sc1", url:"../dashboard/",
-    yoy: {
-      demand:   [-38,  "ДДУ, I пол. 2026", "Росреестр, контур жилья"],
-      price:    [21.4, "цена м² новостроек, за год", "bnMAP.pro"],
-      rent:     [-13,  "аренда квартир, III кв. 2026", "обзор рынка аренды"],
-      delivery: [-33,  "ввод новостроек на продажу, I пол.", "Коммерсантъ"],
-      pipeline: [-29,  "запуск проектов, старая Москва, I пол.", "Коммерсантъ"] },
-    lvl: { size:"15,7 млн м² в стройке", free:"43% стройки не продано, 10% не открыто", price:"470 тыс. ₽/м² в модели, 419–425 тыс. по DataFlat и Домклику", rent:"около 100 тыс. ₽ в месяц за квартиру", buyer:"семьи: 58% сделок с ипотекой, 19% семейная" },
-    inv: { gross:4.4, net:4.4 * 0.85, sg:22, cycle:33 },
-    fin: [["Рыночная ипотека", 16], ["Семейная с 01.10, один ребёнок", 12]],
-    sc: { metric:"спрос, I пол. 2027 к сен. 2026", base:"+9%", pos:["Стена вкладов", "+18%"], neg:["Вклады липкие", "−2%"] },
-    freeShort: "43% стройки не продано", freeSt: "warn" },
+  null,
   { k:"o", n:"Офисы класса A", sub:"Москва", col:"sc2", url:"../offices/",
     yoy: {
       demand:   [-23,  "сделки, I кв. 2026, весь рынок", "обзоры консультантов"],
@@ -584,11 +574,52 @@ const MK = [
     freeShort: "вакансия 13,2%", freeSt: "crit" }
 ];
 
+/* Жильё по классам: изменения г/г из публикаций, доходности из модели жилого контура.
+   Для ставок аренды и ввода отдельных цифр по классам нет, там стоит весь рынок. */
+const HOUSING = {
+  all: { k:"h", n:"Жильё", sub:"первичка Москвы, все классы", col:"sc1", url:"../dashboard/",
+    yoy: {
+      demand:   [-38,  "ДДУ, I пол. 2026", "Росреестр, контур жилья"],
+      price:    [21.4, "цена м² новостроек, за год", "bnMAP.pro"],
+      rent:     [-13,  "аренда квартир, III кв. 2026", "обзор рынка аренды"],
+      delivery: [-33,  "ввод новостроек на продажу, I пол.", "Коммерсантъ"],
+      pipeline: [-29,  "запуск проектов, старая Москва, I пол.", "Коммерсантъ"] },
+    lvl: { size:"15,7 млн м² в стройке", free:"43% стройки не продано, 10% не открыто", price:"470 тыс. ₽/м² в модели, 419–425 тыс. по DataFlat и Домклику", rent:"около 100 тыс. ₽ в месяц за квартиру", buyer:"семьи: 58% сделок с ипотекой, 19% семейная" },
+    inv: { gross:4.4, net:4.4 * 0.85, sg:22, cycle:33 },
+    fin: [["Рыночная ипотека", 16], ["Семейная с 01.10, один ребёнок", 12]],
+    sc: { metric:"спрос, I пол. 2027 к сен. 2026", base:"+9%", pos:["Стена вкладов", "+18%"], neg:["Вклады липкие", "−2%"] },
+    freeShort: "43% стройки не продано", freeSt: "warn" },
+  business: { k:"h", n:"Жильё · бизнес", sub:"первичка Москвы, бизнес-класс", col:"sc1", url:"../dashboard/",
+    yoy: {
+      demand:   [-30,  "спрос, III кв. 2026, старая Москва", "Метриум"],
+      price:    [16,   "цена м² бизнес-класса, I пол. 2026", "STONE"],
+      rent:     [-13,  "аренда квартир, весь рынок, III кв.", "обзор рынка аренды"],
+      delivery: [-33,  "ввод новостроек на продажу, весь рынок, I пол.", "Коммерсантъ"],
+      pipeline: [-3,   "предложение, III кв. 2026, старая Москва", "Метриум"] },
+    lvl: { size:"около 6,6 млн м² в стройке, модель", free:"51% стройки не продано, модель", price:"553 тыс. ₽/м² по STONE, 570 тыс. по Метриуму", rent:"около 100 тыс. ₽ в месяц за квартиру, весь рынок", buyer:"41% сделок с ипотекой, 9% семейная" },
+    inv: { gross:3.8, net:3.8 * 0.85, sg:26, cycle:34 },
+    fin: [["Рыночная ипотека", 16], ["Семейная с 01.10, один ребёнок", 12]],
+    sc: { metric:"спрос, I пол. 2027 к сен. 2026", base:"+9%", pos:["Стена вкладов", "+21%"], neg:["Вклады липкие", "−2%"] },
+    freeShort: "51% стройки не продано", freeSt: "warn" },
+  premium: { k:"h", n:"Жильё · премиум", sub:"первичка Москвы, премиум и элит", col:"sc1", url:"../dashboard/",
+    yoy: {
+      demand:   [-38.7, "продажи элитных новостроек, 9 мес. 2026, м²", "Метриум"],
+      price:    [13,   "цена м² премиум-класса, I пол. 2026", "STONE"],
+      rent:     [-13,  "аренда квартир, весь рынок, III кв.", "обзор рынка аренды"],
+      delivery: [-33,  "ввод новостроек на продажу, весь рынок, I пол.", "Коммерсантъ"],
+      pipeline: [-58,  "новое предложение премиум-класса, I пол.", "STONE"] },
+    lvl: { size:"около 2,8 млн м² в стройке, модель", free:"56% стройки не продано, модель", price:"1,05 млн ₽/м² по STONE, элит около 2,5 млн", rent:"около 100 тыс. ₽ в месяц за квартиру, весь рынок", buyer:"кэш: 18% сделок с ипотекой, 2% семейная" },
+    inv: { gross:2.6, net:2.6 * 0.85, sg:19, cycle:36 },
+    fin: [["Рыночная ипотека", 16]],
+    sc: { metric:"спрос, I пол. 2027 к сен. 2026", base:"+11%", pos:["Стена вкладов", "+26%"], neg:["Вклады липкие", "−2%"] },
+    freeShort: "56% стройки не продано", freeSt: "warn" }
+};
+
 /* ================= STATE ================= */
-const OPTS = {};
-let state = { dep: DEP0 };
+const OPTS = { hk: [["all","Все классы"],["business","Бизнес"],["premium","Премиум"]] };
+let state = { dep: DEP0, hk: "all" };
 const STORE_KEY = "msk-re-compare";
-try { const sv = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (sv && sv.dep >= 8 && sv.dep <= 16) state.dep = sv.dep; } catch (e) {}
+try { const sv = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (sv && sv.dep >= 8 && sv.dep <= 16) state.dep = sv.dep; if (sv && HOUSING[sv.hk]) state.hk = sv.hk; } catch (e) {}
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
 const fmt = (n, d = 1) => Number(n).toLocaleString("ru-RU", { maximumFractionDigits: d, minimumFractionDigits: 0 });
 const sgn = (n, d = 1) => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n), d);
@@ -608,8 +639,11 @@ const stYoy = {
   pipeline: x => x <= -10 ? "good" : x <= 20 ? "warn" : "crit"
 };
 function compute() {
-  const dep = state.dep ?? DEP0;
-  const s = { dep };
+  if (state.dep == null) state.dep = DEP0;
+  if (!HOUSING[state.hk]) state.hk = "all";
+  const dep = state.dep;
+  const s = { dep, hk: state.hk };
+  MK[0] = HOUSING[state.hk];
   const markets = MK.map(m => {
     const inv = invOf(m);
     const gap = inv.full - dep;
@@ -633,6 +667,9 @@ const GLOSS = {
   yoyCmp: { g:"Сравнение", t:"Изменение показателей г/г",
     d:"Изменение к тому же периоду прошлого года по пяти показателям: спрос, цена продажи, ставка аренды, ввод, новое предложение.",
     h:"Периоды и методики у источников разные: сравнивайте направление и масштаб, а не десятые доли." },
+  hk: { g:"Сравнение", t:"Класс жилья",
+    d:"Какой срез первичного жилья сравнивается с офисами и light industrial: весь рынок, бизнес-класс или премиум вместе с элитом.",
+    h:"Для ставок аренды и ввода отдельных цифр по классам нет, там показан весь рынок. Спрос, цена, предложение и доходности меняются вместе с классом." },
   levels: { g:"Сравнение", t:"Уровни сейчас",
     d:"Объём рынка, свободные или непроданные площади, цена, аренда и основной покупатель.",
     h:"Изменение г/г показывает направление, уровень показывает, с какой точки рынок движется." },
@@ -683,6 +720,7 @@ const GLOSS = {
 /* ================= RENDER ================= */
 function renderHtml(v) {
   const dep = v.dep;
+  syncControls();
   document.getElementById("dep").value = dep;
   document.getElementById("depVal").textContent = fmt(dep, 1) + "%";
   const beat = v.markets.filter(m => m.gap >= 0);
@@ -696,12 +734,14 @@ function renderHtml(v) {
 
   /* market cards */
   const word = { good:"поддерживает", warn:"нейтрально", crit:"давит" };
+  const byFull = [...v.markets].sort((a, b) => b.inv.full - a.inv.full);
+  const rankWord = m => m === byFull[0] ? "самая высокая из трёх" : m === byFull[byFull.length - 1] ? "самая низкая из трёх" : "вторая из трёх";
   document.getElementById("markets").innerHTML = v.markets.map(m => {
     const verdict = m.crit >= 4 ? ["crit", "давление"] : m.crit >= 2 ? ["warn", "смешанно"] : ["good", "устойчиво"];
     const thesis = {
-      h: `Цена за год ${sgn(m.yoy.price[0], 1)}%, а спрос ${sgn(m.yoy.demand[0], 0)}% и аренда ${sgn(m.yoy.rent[0], 0)}%. Рынок держится ценой, а доходность аренды сжалась до ${fmt(m.inv.gross, 1)}%.`,
-      o: `Аренда ${sgn(m.yoy.rent[0], 1)}% и цена ${sgn(m.yoy.price[0], 0)}% растут, но предложение на продажу удвоилось. Доходность ${fmt(m.inv.full, 1)}% самая низкая из трёх.`,
-      l: `Самая высокая доходность (${fmt(m.inv.full, 1)}%), но ввод I полугодия ${sgn(m.yoy.delivery[0], 0)}% и навес +76% к концу года. Аренда ${sgn(m.yoy.rent[0], 1)}%.`
+      h: `Цена за год ${sgn(m.yoy.price[0], 1)}%, а спрос ${sgn(m.yoy.demand[0], 0)}% и аренда ${sgn(m.yoy.rent[0], 0)}%. Рынок держится ценой, доходность аренды сжалась до ${fmt(m.inv.gross, 1)}%. Полная доходность ${fmt(m.inv.full, 1)}%, ${rankWord(m)}.`,
+      o: `Аренда ${sgn(m.yoy.rent[0], 1)}% и цена ${sgn(m.yoy.price[0], 0)}% растут, но предложение на продажу удвоилось. Полная доходность ${fmt(m.inv.full, 1)}%, ${rankWord(m)}.`,
+      l: `Полная доходность ${fmt(m.inv.full, 1)}%, ${rankWord(m)}. Ввод I полугодия ${sgn(m.yoy.delivery[0], 0)}%, но к концу года предложение +76%. Аренда ${sgn(m.yoy.rent[0], 1)}%.`
     }[m.k];
     return `<div class="mcard">
       <div class="mh"><div><span class="mdot" style="background:var(--${m.col})"></span><b>${m.n}</b><small>${m.sub}</small></div>${stHtml(verdict)}</div>
@@ -752,8 +792,8 @@ function renderHtml(v) {
   /* conclusions */
   const H = v.markets[0], O = v.markets[1], L = v.markets[2];
   document.getElementById("concl").innerHTML = [
-    { k:"Спрос", t:"Остыли все три рынка, сильнее всех жильё",
-      b:`ДДУ ${sgn(H.yoy.demand[0], 0)}%: жильё зависит от ипотеки, а семейная с октября дорожает до 12% при одном ребёнке. Офисы ${sgn(O.yoy.demand[0], 0)}% по сделкам, хотя продажи класса A внутри МКАД выросли на 36%. Light industrial ${sgn(L.yoy.demand[0], 0)}% после рекордного 2025 года.` },
+    { k:"Спрос", t: H.yoy.demand[0] <= Math.min(O.yoy.demand[0], L.yoy.demand[0]) ? "Остыли все три рынка, сильнее всех жильё" : "Остыли все три рынка",
+      b:`${{ all:`ДДУ ${sgn(H.yoy.demand[0], 0)}%: жильё зависит от ипотеки, а семейная с октября дорожает до 12% при одном ребёнке.`, business:`Спрос в бизнес-классе ${sgn(H.yoy.demand[0], 0)}%: льгота здесь почти не участвует, покупатель ждёт и сравнивает с готовым жильём.`, premium:`Продажи элитных новостроек ${sgn(H.yoy.demand[0], 0)}%: отложенный спрос исчерпан, часть инвесторов ушла во вклады.` }[v.s.hk]} Офисы ${sgn(O.yoy.demand[0], 0)}% по сделкам, хотя продажи класса A внутри МКАД выросли на 36%. Light industrial ${sgn(L.yoy.demand[0], 0)}% после рекордного 2025 года.` },
     { k:"Цена и аренда", t:"Три разные траектории",
       b:`Жильё дорожает (${sgn(H.yoy.price[0], 1)}%) при дешевеющей аренде (${sgn(H.yoy.rent[0], 0)}%), поэтому доходность сжимается. Офисы растут и в цене, и в аренде. Light industrial стоит в цене и теряет в аренде на фоне рекордного предложения.` },
     { k:"Доходность", t:`Лидер ${best.n}, но ниже вклада`,
