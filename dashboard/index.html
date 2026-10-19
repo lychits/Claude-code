@@ -194,6 +194,17 @@ section.block { margin-top: 34px; }
 
 /* class structure */
 .stack { display: flex; gap: 3px; height: 40px; margin-top: 18px; }
+.kpis.k5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 1400px) { .kpis.k5 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .kpis.k5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mixrow { display: grid; grid-template-columns: 92px minmax(0,1fr); gap: 12px; align-items: center; margin-top: 14px; }
+.mixrow .yr { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.mixrow .stack { margin-top: 0; height: 34px; }
+.mixrow .stack div { display: grid; place-items: center; font-size: 11.5px; font-weight: 800; color: #1a1008; overflow: hidden; }
+.geo td.cell { font-weight: 600; color: var(--ink-2); }
+.geo td.cell b { color: var(--ink); font-weight: 800; }
+.geo td.cell .d { font-size: 11px; margin-left: 4px; color: var(--muted); }
+.geo tr.hl td:first-child, .geo th.hl { color: var(--accent-2); }
 .stack div { min-width: 0; border-radius: 8px; transition: flex-basis .4s; }
 .ctable { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
 .ctable th { text-align: right; font-weight: 700; color: var(--muted); font-size: 11px; padding: 0 0 8px; }
@@ -283,7 +294,9 @@ section.block { margin-top: 34px; }
 .srcs a:hover { color: var(--accent-2); }
 .events { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
 @media (max-width: 1400px) { .events { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 900px) { .events { grid-template-columns: 1fr; } }
+.events.e4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1400px) { .events.e4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .events, .events.e4 { grid-template-columns: 1fr; } }
 .ev { background: var(--card-2); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
 .ev .when { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ev .dt { font-size: 12px; font-weight: 800; color: var(--accent-2); font-variant-numeric: tabular-nums; }
@@ -373,6 +386,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <a href="#regulation"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6"/><path d="M10 16h6"/></svg>Нормативка</a>
       <a href="#deviations"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Отклонения</a>
       <a href="#buyers"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7"/><path d="M18 14.8c2 .7 3.2 2.5 3.6 5.2"/></svg>Покупатели</a>
+      <a href="#decade"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>10 лет рынка</a>
       <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Прогноз</a>
       <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
       <div class="sec">Контуры</div>
@@ -584,6 +598,48 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
       <div class="cards" id="buyerMore" style="margin-top:12px"></div>
     </section>
 
+    <section class="block" id="decade">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">10 лет рынка</div>
+          <h2>Что изменилось в Москве за 2016–2025 годы</h2>
+          <p>Длинная история первичного рынка внутри МКАД без класса «стандарт» по отчёту Ricci на данных Dataflat и Росстата. Цифры не пересчитываются от фильтров, выбранный класс подсвечен. Массовый сегмент контура соответствует комфорт-классу Ricci.</p>
+        </div>
+        <span class="tag">Ricci · 2016–2025</span>
+      </div>
+      <div class="kpis k5" id="decKpis"></div>
+      <div class="g" style="margin-top:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Рост цены против инфляции<button class="ti" type="button" data-tip="realGrowth">i</button></h3><span class="u">2016 → 2025, %</span></div>
+          <div class="box h300"><canvas id="chDecPrice" role="img" aria-label="Номинальный и реальный рост цены метра по классам за 2016–2025 годы"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>рост цены</span><span><i class="sq" style="background:var(--sc3)"></i>сверх инфляции</span><span><i style="background:var(--ink)"></i>инфляция +84%</span></div>
+          <div class="lag"><div class="out" id="decPriceOut"></div></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Структура нового предложения<button class="ti" type="button" data-tip="classMix">i</button></h3><span class="u">доля новых площадей</span></div>
+          <div id="decMix"></div>
+          <div class="legend" id="decMixLegend"></div>
+          <div class="cap">Учтены проекты и очереди на старте продаж. В 2025 году доля бизнес-класса достигла 61%, комфорт-класса 20%.</div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Средняя площадь лота в новых проектах<button class="ti" type="button" data-tip="lotSize">i</button></h3><span class="u">м²</span></div>
+          <div class="box h300"><canvas id="chDecLot" role="img" aria-label="Средняя площадь лота в новых проектах по годам и классам"></canvas></div>
+          <div class="legend" id="decLotLegend"></div>
+          <div class="cap">Минимум в 2022 году. Рост с 2023 года объясняют семейная ипотека для семей с одним ребёнком и запрет квартир меньше 28 м² с 2024 года.</div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>География классов<button class="ti" type="button" data-tip="classGeo">i</button></h3><span class="u">доля класса в новых площадях зоны</span></div>
+          <div class="tscroll"><table class="ftable geo" id="decGeo"></table></div>
+          <div class="cap">СК: Садовое кольцо. Первое число: проекты 2016–2020 годов, второе: 2021–2025 годов, сумма по столбцу 100%. Для бизнес- и комфорт-класса без проектов реновации.</div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Вехи десятилетия<button class="ti" type="button" data-tip="decadeEvents">i</button></h3><span class="u">по ленте событий Ricci, сгруппировано по периодам</span></div>
+          <div class="events e4" id="decEvents"></div>
+        </div>
+      </div>
+      <div class="cards" id="decCards" style="margin-top:12px"></div>
+    </section>
+
     <section class="block" id="forecast">
       <div class="shead">
         <div>
@@ -621,7 +677,7 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
 
     <footer class="foot">
       <div class="fg">
-        <div><h4>Источники</h4><p>ЕИСЖС / ДОМ.РФ, ЕРЗ, Росреестр по Москве, Метриум, Банк России (ключевая ставка 14% на 11.09.2026).</p></div>
+        <div><h4>Источники</h4><p>ЕИСЖС / ДОМ.РФ, ЕРЗ, Росреестр по Москве, Метриум, Банк России (ключевая ставка 14% на 11.09.2026). Десять лет рынка: Ricci, «10 лет изменений: рынок жилой недвижимости Москвы 2016–2025» (Dataflat, Росстат).</p></div>
         <div><h4>Метод</h4><p>Фильтры масштабируют городской срез правилами зоны, класса и группы. Это прототип аналитического контура, а не покорпусный API.</p></div>
         <div><h4>Допущения</h4><p>Семейная ипотека в модели работает как узкий льготный канал. «Стена вкладов» остаётся сценарием: переток в жильё ограничен, пока новые депозиты держат около 13%.</p></div>
       </div>
@@ -692,6 +748,24 @@ const KLASS_NAMES = { mass:"Массовый", business:"Бизнес", premium:
 /* ================= GLOSSARY ================= */
 /* t: термин, d: что это, h: как читать, g: группа для словаря */
 const GLOSS = {
+  realGrowth: { g:"Десять лет", t:"Рост цены сверх инфляции",
+    d:"Насколько цена выросла быстрее накопленной инфляции: (1 + рост цены) / (1 + инфляция) − 1. За 2016–2025 годы инфляция в России составила 84%.",
+    h:"Средняя цена +185% даёт около +55% сверх инфляции, премиум +88% только около +2%. Средняя цена растёт ещё и от смены структуры: в ней больше дорогих классов и компактных лотов." },
+  lotSize: { g:"Десять лет", t:"Средняя площадь лота",
+    d:"Средняя площадь квартиры: в новых проектах на старте продаж или в сделках по ДДУ. Покупатели держат бюджет, выбирая квартиры меньше.",
+    h:"В новых проектах 67 → 58 м² с минимумом 52 м² в 2022 году, в сделках 60 → 51 м². Средний бюджет вырос с 11 до 27 млн ₽, на 143%, медленнее цены метра." },
+  classMix: { g:"Десять лет", t:"Структура нового предложения",
+    d:"Доля классов в площади проектов и очередей, вышедших на старт продаж внутри МКАД, без класса «стандарт».",
+    h:"Бизнес-класс вырос с 47% в 2016–2020 годах до 52% в 2021–2025 годах и до 61% в 2025 году. Дорогая земля, стройка и кредит сделали комфорт-класс внутри МКАД невыгодным." },
+  classGeo: { g:"Десять лет", t:"География классов",
+    d:"Доля каждого класса в новых площадях внутри зоны: Садовое кольцо (СК), СК — ТТК, ТТК — МКАД. Сумма по зоне 100%.",
+    h:"Делюкс закрепился внутри Садового (78%), премиум переехал в зону Садовое — ТТК, бизнес-класс уходит за ТТК, комфорт-класс за МКАД. Это важно для льготы МПТ: она действует за ТТК." },
+  floors: { g:"Десять лет", t:"Этажность новостроек",
+    d:"Средняя этажность проектов на старте продаж. 2016–2020 годы против 2021–2025 годов: комфорт 22 → 26, бизнес 24 → 25, премиум 17 → 23, делюкс 7 → 9.",
+    h:"Высотность растёт из-за дефицита участков и дорогой земли, проекты всё чаще строят на многофункциональных стилобатах. Рекорд десятилетия: ЖК One от MR Group, 90 этажей." },
+  decadeEvents: { g:"Десять лет", t:"Вехи десятилетия",
+    d:"Ключевые решения, которые меняли спрос, финансирование и себестоимость, по ленте событий Ricci. Годы сгруппированы по периодам.",
+    h:"Эскроу и удорожание ВРИ подняли себестоимость, льготная ипотека разогнала спрос, сворачивание льгот и ставка 21% его охладили. НДС 22% с 2026 года снова поднимает стройку." },
   zone: { g:"Фильтры", t:"Макрозона",
     d:"Часть города. Старая Москва: территория в границах до расширения 2012 года. ТиНАО: Троицкий и Новомосковский округа, так называемая Новая Москва.",
     h:"В ТиНАО метр дешевле примерно на треть, и туда уходит массовый ипотечный спрос. В старой Москве строят в основном бизнес и премиум." },
@@ -1311,6 +1385,63 @@ const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", "
 const ti = k => GLOSS[k] ? `<button class="ti" type="button" data-tip="${k}" aria-label="Что такое: ${esc(GLOSS[k].t)}">i</button>` : "";
 const stHtml = st => st ? `<span class="st ${st[0]}">${st[1]}</span>` : "";
 
+/* ================= 10 ЛЕТ РЫНКА (Ricci, «10 лет изменений: рынок жилой недвижимости Москвы 2016–2025») ================= */
+const DEC = {
+  infl: 84,                                   /* накопленная инфляция 2016–2025, Росстат */
+  /* ключ, класс, цена 2016, цена 2025 (тыс. ₽/м²), рост по отчёту, % */
+  price: [["all", "Все классы", 183, 520, 185], ["mass", "Комфорт", 156, 368, 136], ["business", "Бизнес", 201, 517, 157], ["premium", "Премиум", 569, 1070, 88]],
+  years: ["2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"],
+  lot: [["all", "Все классы", [67.0,64.1,60.7,61.0,58.3,57.0,52.1,53.4,56.4,58.0]],
+        ["mass", "Комфорт", [56.9,56.5,55.0,51.7,50.7,47.0,43.0,45.1,44.8,48.5]],
+        ["business", "Бизнес", [70.5,68.8,65.9,64.2,62.8,63.9,58.9,54.9,57.2,56.3]]],
+  /* комфорт, бизнес, премиум, делюкс */
+  mix: [["2016–2020", [45, 47, 6, 2]], ["2021–2025", [35, 52, 11, 2]]],
+  mixNames: ["Комфорт", "Бизнес", "Премиум", "Делюкс"], mixKeys: ["mass", "business", "premium", "deluxe"],
+  geo: [["Внутри СК", [[0,0],[0,0],[33,22],[67,78]]], ["СК — ТТК", [[6,5],[76,60],[16,33],[2,2]]], ["ТТК — МКАД", [[55,43],[41,51],[4,6],[0,0]]]],
+  floors: [["Комфорт", 22, 26], ["Бизнес", 24, 25], ["Премиум", 17, 23], ["Делюкс", 7, 9]],
+  events: [
+    ["2016–2018", "Город и программы", ["Москва привлекает инвесторов к строительству ТПУ", "Старт программы реновации", "Запуск семейной ипотеки"]],
+    ["2019–2020", "Новая модель финансирования", ["Переход на эскроу-счета", "НДС с 18% до 20%", "Массовая льготная ипотека", "Существенное удорожание смены ВРИ", "Старт программ КРТ и МПТ", "Субсидирование кредитов застройщикам"]],
+    ["2021–2023", "Пик льгот", ["Семейная ипотека для семей с одним ребёнком", "IT-ипотека", "Мораторий на штрафы застройщикам", "Рекордные скидки", "Первый взнос по льготной ипотеке 15% → 30%, по IT 15% → 20%"]],
+    ["2024–2026", "Сворачивание льгот", ["Конец безадресной льготной и IT-ипотеки", "Запрет квартир меньше 28 м²", "Запрет новых апартаментов в Москве", "Рассрочки застройщиков, ипотечный стандарт", "Отмена моратория на штрафы", "Ключевая ставка 21% → 15,5%", "НДС с 20% до 22% (2026)"]]
+  ]
+};
+const DEC_COL = ["var(--o1)", "var(--o2)", "var(--o3)", "var(--ink-2)"];
+const decReal = n => ((1 + n / 100) / (1 + DEC.infl / 100) - 1) * 100;
+function renderDecade(v) {
+  const k = v.s.klass;
+  const P = DEC.price.map(([key, n, a, b, g]) => ({ key, n, a, b, nom: g, real: decReal(g) }));
+  const kp = [
+    { c:"Цена метра", v:"520", u:"тыс. ₽", s:"183 тыс. ₽ в 2016 году: +185% при инфляции +84%", g:"realGrowth" },
+    { c:"Средний бюджет", v:"27", u:"млн ₽", s:"11 млн ₽ в 2016 году: +143%", g:"lotSize" },
+    { c:"Площадь лота в сделках", v:"51", u:"м²", s:"60 м² в 2016 году: −15%", g:"lotSize" },
+    { c:"Бизнес-класс в новом предложении", v:"61", u:"%", s:"рекорд 2025 года; 47% в 2016–2020 годах", g:"classMix" },
+    { c:"Этажность новостроек", v:"25", u:"этажей", s:"22 в 2016–2020 годах; премиум +6 этажей", g:"floors" }
+  ];
+  document.getElementById("decKpis").innerHTML = kp.map((x, i) => `<div class="kpi${i === 0 ? " hi" : ""}"><div class="kh"><span class="c">${x.c}</span>${ti(x.g)}</div><div class="v">${x.v}<small>${x.u}</small></div><div class="s">${x.s}</div></div>`).join("");
+  const sel = P.find(x => x.key === k) || P[0];
+  document.getElementById("decPriceOut").innerHTML = (k === "all"
+    ? `Средняя цена выросла сильнее любого класса: +185% против +88…+157% внутри классов. Разница в смене структуры: в предложении стало больше бизнес-класса и компактных лотов с дорогим метром. Часть роста средней цены г/г тоже даёт структура, а не подорожание той же квартиры.`
+    : `${sel.n}: ${fmt(sel.a, 0)} → ${fmt(sel.b, 0)} тыс. ₽ за м², ${sgn(sel.nom, 0)}% номинально и ${sgn(sel.real, 0)}% сверх инфляции. ` +
+      (k === "premium" ? `Премиум почти не обогнал инфляцию: для покупателя это была защита капитала, а не доход.` : k === "mass" ? `Комфорт-класс рос медленнее бизнеса: девелоперы уходят из него в бизнес-класс, а внутри МКАД его замещает реновация.` : `Бизнес-класс рос быстрее всех классов и стал основным продуктом рынка.`));
+  document.getElementById("decMix").innerHTML = DEC.mix.map(([yr, sh]) => `<div class="mixrow"><span class="yr">${yr}</span><div class="stack">${sh.map((x, i) => x > 0 ? `<div style="flex:${x} 1 0;background:${DEC_COL[i]};${k !== "all" && DEC.mixKeys[i] !== k ? "opacity:.35" : ""}" title="${DEC.mixNames[i]}: ${x}%">${x >= 8 ? x + "%" : ""}</div>` : "").join("")}</div></div>`).join("");
+  document.getElementById("decMixLegend").innerHTML = DEC.mixNames.map((n, i) => `<span><i class="sq" style="background:${DEC_COL[i]}"></i>${n}</span>`).join("");
+  const ki = DEC.mixKeys.indexOf(k);
+  document.getElementById("decGeo").innerHTML = `<thead><tr><th>Класс</th>${DEC.geo.map(([z]) => `<th>${z}</th>`).join("")}</tr></thead><tbody>` +
+    DEC.mixNames.map((n, ci) => `<tr class="${ci === ki ? "hl" : ""}"><td><i class="sq" style="display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:7px;background:${DEC_COL[ci]}"></i>${n}</td>${DEC.geo.map(([, cells]) => { const [a, b] = cells[ci], d = b - a;
+      return `<td class="cell">${a} → <b>${b}%</b>${d ? `<span class="d">${sgn(d, 0)}</span>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+  document.getElementById("decLotLegend").innerHTML = DEC.lot.map(([key, n], i) => `<span><i style="background:${["var(--ink)", "var(--o1)", "var(--o2)"][i]}"></i>${n}</span>`).join("");
+  document.getElementById("decEvents").innerHTML = DEC.events.map(([yr, t, items]) =>
+    `<div class="ev"><div class="when"><span class="dt">${yr}</span></div><div class="act">${t}</div>${items.map(x => `<p>${esc(x)}</p>`).join("")}</div>`).join("");
+  const cards = [
+    { k:"Продукт", t:"Бизнес-класс стал стандартом Москвы", b:"Доля бизнес-класса в новом предложении внутри МКАД выросла с 47% до 61%, комфорт-класса упала с 45% до 20%. Комфорт уходит в Новую Москву и Подмосковье, а внутри МКАД его замещает реновация. Срез «Массовый» в старой Москве будет и дальше сжиматься." },
+    { k:"Нормативка", t:"Бизнес-класс уходит за ТТК, где работает льгота МПТ", b:"Доля бизнес-класса в новых площадях зоны ТТК — МКАД выросла с 41% до 51%, а в зоне Садовое — ТТК упала с 76% до 60%. Льгота МПТ по плате за ВРИ действует за ТТК, поэтому основной объём нового бизнес-класса может её получить. Премиум переехал из центра в зону Садовое — ТТК (16% → 33%), за ТТК его 6%: льгота ему почти недоступна." },
+    { k:"Инвестор", t:"Премиум за 10 лет почти не обогнал инфляцию", b:"Премиум +88% при инфляции +84%, то есть около +2% в реальном выражении. Комфорт +28% и бизнес +40% сверх инфляции. Средняя цена +55% сверх инфляции, но это во многом смена структуры предложения, а не рост цены той же квартиры." },
+    { k:"Себестоимость", t:"Дома выше, квартиры меньше, метр дороже", b:"Этажность выросла с 22 до 25 этажей, в премиуме на 6 этажей, лот в новых проектах сократился с 67 до 58 м². Высотность дорожает через фасады, инженерию и лифты и снижает долю продаваемой площади: в проектных бюджетах бизнес- и премиум-класса она около 0,6. Компактный лот поднимает цену метра, но держит бюджет покупки, который вырос с 11 до 27 млн ₽." }
+  ];
+  document.getElementById("decCards").innerHTML = cards.map(i => `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+}
+
 function renderHtml(v) {
   const lbl = labelOf(v.s);
   document.getElementById("chip").textContent = lbl;
@@ -1383,6 +1514,7 @@ function renderHtml(v) {
     `<div class="row"><span class="k">${r[0]}${ti(r[3])}</span><span class="v">${r[1]}</span><span class="st ${r[2]}">${word[r[2]]}</span></div>`).join("");
 
   /* deviations */
+  renderDecade(v);
   document.getElementById("notes").innerHTML = deviations(v).map(i =>
     `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
 
@@ -1596,6 +1728,39 @@ function renderCharts(v) {
   const t = T();
   Chart.defaults.font.family = FONT;
   Chart.defaults.color = t.muted;
+
+  /* 10 лет: номинальный и реальный рост по классам */
+  const DP = DEC.price.map(([key, n, a, b, g]) => ({ key, n, a, b, nom: g, real: decReal(g) }));
+  const dimK = i => v.s.klass !== "all" && DP[i].key !== v.s.klass && DP[i].key !== "all";
+  upsert("chDecPrice", {
+    type: "bar",
+    data: { labels: DP.map(x => x.n), datasets: [
+      { label: "Рост цены", data: DP.map(x => +x.nom.toFixed(0)), backgroundColor: DP.map((_, i) => dimK(i) ? hexA(t.accent, .3) : t.accent), borderRadius: 4, borderSkipped: "start", maxBarThickness: 16, categoryPercentage: .74, barPercentage: .9 },
+      { label: "Сверх инфляции", data: DP.map(x => +x.real.toFixed(0)), backgroundColor: DP.map((_, i) => dimK(i) ? hexA(t.sc3, .3) : t.sc3), borderRadius: 4, borderSkipped: "start", maxBarThickness: 16, categoryPercentage: .74, barPercentage: .9 }
+    ]},
+    options: baseOpts(t, {
+      indexAxis: "y", layout: { padding: { right: 44 } },
+      scales: { x: axis(t, { beginAtZero: true, max: 200, ticks: { color: t.muted, font: { family: FONT, size: 12 }, stepSize: 50, maxRotation: 0, callback: x => "+" + x + "%" } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => sgn(x, 0) + "%" }, refLine: { value: DEC.infl, label: "инфляция +84%" },
+        tooltip: Object.assign(baseOpts(t).plugins.tooltip, { callbacks: {
+          title: c => { const x = DP[c[0].dataIndex]; return `${x.n}: ${fmt(x.a, 0)} → ${fmt(x.b, 0)} тыс. ₽/м²`; },
+          label: c => ` ${c.dataset.label}: ${sgn(c.parsed.x, 0)}%` } }) })
+    }),
+    plugins: [valueLabels, refLine]
+  });
+  const lotCol = [t.ink, getComputedStyle(document.documentElement).getPropertyValue("--o1").trim(), t.accent];
+  upsert("chDecLot", {
+    type: "line",
+    data: { labels: DEC.years, datasets: DEC.lot.map(([key, n, d], i) => ({ label: n, data: d, borderColor: v.s.klass !== "all" && key !== v.s.klass && key !== "all" ? hexA(lotCol[i], .35) : lotCol[i],
+      borderWidth: key === v.s.klass ? 3 : 2, tension: .25, pointRadius: d.map((_, j) => j === d.length - 1 ? 4 : 0), pointBackgroundColor: lotCol[i], pointBorderColor: t.panel, pointBorderWidth: 2, pointHoverRadius: 5 })) },
+    options: baseOpts(t, {
+      interaction: { mode: "index", intersect: false }, layout: { padding: { right: 112 } },
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, maxRotation: 0 } }), y: axis(t, { min: 40, max: 75, ticks: { color: t.muted, font: { family: FONT, size: 11.5 }, stepSize: 5, padding: 8 } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { endLabels: { on: true }, tooltip: Object.assign(baseOpts(t).plugins.tooltip, { mode: "index", intersect: false, callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.parsed.y, 1)} м²` } }) })
+    }),
+    plugins: [crosshair, endLabels]
+  });
 
   /* portfolio by group: highlight selected group */
   const shown = v.allDevs.filter(d => d.name !== "Прочие");
@@ -1929,9 +2094,9 @@ refresh();
 (() => {
   const groups = {};
   Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
-  const order = ["Фильтры","Предложение","Спрос","Цикл стройки","Баланс","Деньги и ставки","Сделка","Нормативка","Инвестор","Прогноз","Источники"];
+  const order = ["Фильтры","Предложение","Спрос","Цикл стройки","Баланс","Деньги и ставки","Сделка","Десять лет","Нормативка","Инвестор","Прогноз","Источники"];
   const cols = [[], [], []];
-  order.forEach((g, i) => cols[[0,0,0,0,1,1,1,2,2,2,2][i]].push(g));
+  order.forEach((g, i) => cols[[0,0,0,0,1,1,1,1,2,2,2,2][i]].push(g));
   document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.map(g => `<h3>${g}</h3>` +
     groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
 })();
