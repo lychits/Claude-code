@@ -530,9 +530,9 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
           <div class="lag"><div class="out" id="beOut"></div></div>
         </div>
         <div class="panel c12">
-          <div class="ph"><h3>Себестоимость по статьям</h3><span class="u">тыс. ₽ за м² продаваемой площади, 2026</span></div>
+          <div class="ph"><h3>Себестоимость по статьям</h3><span class="u">тыс. ₽ за м² продаваемой площади, цены 2026</span></div>
           <div class="tscroll" style="margin-top:12px"><table class="ftable" id="costTable"></table></div>
-          <div class="cap">Прямые затраты включают СМР, проектирование, сети и паркинг. Земля и права включают участок и плату за изменение ВРИ, в жилье за вычетом льготы МПТ, если она включена. Для офисов и light industrial суммы указаны с НДС, как и цена продажи. Девелопер возвращает входящий НДС, поэтому в бюджет уходит только НДС с разницы. Квартиры продаются без НДС, и входящий НДС остаётся в затратах.</div>
+          <div class="cap">Все статьи на м² продаваемой площади в ценах 2026 года, как и цена продажи. Прямые затраты заданы на м² общей площади, как их считают подрядчики, и переведены через долю продаваемой площади в общей: 0,75 в жилье, 0,70 в премиуме и офисах, 1 в light industrial. Прямые затраты включают СМР, проектирование, сети и паркинг. Земля и права включают участок и плату за изменение ВРИ, в жилье за вычетом льготы МПТ, если она включена. Для офисов и light industrial суммы указаны с НДС, как и цена продажи. Девелопер возвращает входящий НДС, поэтому в бюджет уходит только НДС с разницы. Квартиры продаются без НДС, и входящий НДС остаётся в затратах.</div>
         </div>
         <div class="panel c7">
           <div class="ph"><h3>Мост цены 2025 → 2026<button class="ti" type="button" data-tip="bridge">i</button></h3><span class="u" id="bridgeUnit">тыс. ₽ за м²</span></div>
@@ -688,7 +688,9 @@ const HOUSING = {
    склад класса A: 69,1 тыс. ₽/м² без НДС, +1,9% г/г (IBC, I кв. 2026), принят как СМР light industrial;
    жильё: медианная стоимость строительства в Москве 143,5 тыс. ₽/м² (Кодекс-Люкс), рост затрат 2025 +9%, прогноз 2026 +12% (Совкомбанк);
    проектное финансирование: средневзвешенная ставка 9,9% (ЦБ), покрытие эскроу 88% → 68% (ДОМ.РФ).
-   Прямые затраты = СМР + проектирование + сети + паркинг.
+   Прямые затраты = СМР + проектирование + сети + паркинг. Они заданы на м² общей площади с НДС, как их котирует рынок,
+   и переводятся на м² продаваемой делением на ks (продаваемая / общая). Бенчмарки: жильё бизнес-класса до 210 тыс. ₽
+   на м² общей с НДС, проектирование и согласования 7–8 тыс. ₽ (экспертная оценка), офисы A 215 (IBC, STONE).
    Земля и права = участок + плата за изменение ВРИ − льгота МПТ (если включена).
    Прочие косвенные = соцобъекты и обременения + коммерческие и управленческие.
    mpt — доля платы за ВРИ, которую в среднем покрывает льгота МПТ (1874-ПП). Льгота даётся только при смене ВРИ
@@ -698,27 +700,27 @@ const KEY25 = 19.2;   /* средняя ключевая ставка 2025 го�
 const COST_YOY = { years:["2024","2025","2026"], h:[12, 9, 12], o:[17, 18, 15], l:[null, null, 1.9] };
 const UNIT = {
   h_all:      { price:470,  vat:false, cycle:33, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
-                smr:150, design:22, nets:10, parking:10, plot:45, vri:25, mpt:.40, social:5,
+                ks:.75, smr:112.5, design:7.5, nets:7.5, parking:7.5, plot:45, vri:25, mpt:.40, social:5,
                 g:{ price:21.4, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-38,
                 ds:[["Каркас и коробка", .45], ["Инженерия", .25], ["Фасад", .15], ["Отделка и благоустройство", .15]],
                 parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
   h_business: { price:553,  vat:false, cycle:34, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
-                smr:205, design:28, nets:10, parking:12, plot:70, vri:40, mpt:.30, social:3,
+                ks:.75, smr:154, design:8, nets:7.5, parking:9, plot:70, vri:40, mpt:.30, social:3,
                 g:{ price:16, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-30,
                 ds:[["Каркас и коробка", .42], ["Инженерия", .25], ["Фасад", .18], ["Отделка и благоустройство", .15]],
                 parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
   h_premium:  { price:1048, vat:false, cycle:36, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
-                smr:320, design:50, nets:10, parking:8, plot:150, vri:60, mpt:0, social:2,
+                ks:.70, smr:224, design:12, nets:7, parking:5.6, plot:150, vri:60, mpt:0, social:2,
                 g:{ price:13, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-38.7,
                 ds:[["Каркас и коробка", .35], ["Инженерия", .25], ["Фасад", .22], ["Отделка и благоустройство", .18]],
                 parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
   o:          { price:556,  vat:true,  cycle:36, mode:"loan", presale:.45, spread:3.5, salesPct:.05,
-                smr:307, design:18, nets:12, parking:0, plot:45, vri:25, mpt:0, social:0,
+                ks:.70, smr:215, design:8, nets:8.4, parking:0, plot:45, vri:25, mpt:0, social:0,
                 g:{ price:8, smr:15, design:100, nets:10, parking:0, plot:8, vri:8, social:0 }, dem:-23,
                 ds:[["Каркас и общестрой", .38], ["Инженерия", .26], ["Фасад", .18], ["Отделка МОП и благоустройство", .18]],
                 parkingName:"Паркинг (входит в СМР)", netsName:"Сети и техприсоединение" },
   l:          { price:120,  vat:true,  cycle:16, mode:"loan", presale:.50, spread:4, salesPct:.05,
-                smr:84.3, design:3, nets:5, parking:0, plot:5, vri:1, mpt:0, social:0,
+                ks:1, smr:84.3, design:3, nets:5, parking:0, plot:5, vri:1, mpt:0, social:0,
                 g:{ price:1.2, smr:1.9, design:5, nets:5, parking:0, plot:5, vri:5, social:0 }, dem:-21,
                 ds:[["Каркас и фундамент", .45], ["Оболочка: панели, кровля, ворота", .25], ["Инженерия", .20], ["Полы, офисы, благоустройство", .10]],
                 parkingName:"Парковка (открытая, в СМР)", netsName:"Сети и электрическая мощность" }
@@ -731,7 +733,8 @@ function unit(u, p) {
   const sc = (x, g) => y25 ? x / (1 + (g || 0) / 100) : x;
   const dk = y25 ? 1 : 1 + (p.dc || 0) / 100, ik = y25 ? 1 : 1 + (p.di || 0) / 100;
   const price = sc(u.price, u.g.price);
-  const smr = sc(u.smr, u.g.smr) * dk, design = sc(u.design, u.g.design) * dk, nets = sc(u.nets, u.g.nets) * dk, parking = sc(u.parking, u.g.parking) * dk;
+  const ga = dk / u.ks;                           /* м² общей → м² продаваемой */
+  const smr = sc(u.smr, u.g.smr) * ga, design = sc(u.design, u.g.design) * ga, nets = sc(u.nets, u.g.nets) * ga, parking = sc(u.parking, u.g.parking) * ga;
   const direct = smr + design + nets + parking;
   const plot = sc(u.plot, u.g.plot) * ik, vri = sc(u.vri, u.g.vri) * ik;
   const mptOff = p.mpt === "on" ? vri * u.mpt : 0;
@@ -753,7 +756,7 @@ function unit(u, p) {
   const vatPay = u.vat ? Math.max(0, price - Cv) * f : 0;
   const pre = price - C - fin - vatPay, tax = Math.max(0, pre) * 0.25, net = pre - tax;
   const be = u.vat ? ((C - sales) + fin - (Cv - sales) * f) / (1 - u.salesPct - f * (1 - u.salesPct)) : (C - sales + fin) / (1 - u.salesPct);
-  return { price, smr, design, nets, parking, direct, plot, vri, mptOff, land, social, sales, other, ind: land + other, C, fin, rate, cov, presale, vatPay, tax, taxes: vatPay + tax, pre, net, be, key };
+  return { price, smr, design, nets, parking, direct, directG: direct * u.ks, plot, vri, mptOff, land, social, sales, other, ind: land + other, C, fin, rate, cov, presale, vatPay, tax, taxes: vatPay + tax, pre, net, be, key };
 }
 function costState() {
   return { key: state.ckey ?? 14, dd: state.cdd ?? 0, dc: state.cdc ?? 0, mpt: state.mpt === "on" ? "on" : "off" };
@@ -798,6 +801,7 @@ function renderCost(v) {
   /* [название, значение, подсказка, тип строки, подпись по рынку] */
   const comp = [
     ["Прямые затраты", r => r.now.direct, "direct", "grp"],
+    ["то же на м² общей площади", r => r.now.directG, "grossArea", "sub", r => "×" + fmt(r.u.ks, 2), true],
     ["СМР", r => r.now.smr, null, "sub"],
     ["Проектирование и согласования", r => r.now.design, null, "sub"],
     ["Сети и техприсоединение", r => r.now.nets, null, "sub"],
@@ -816,9 +820,9 @@ function renderCost(v) {
     ["Цена продажи", r => r.now.price, null, "tot"]
   ];
   document.getElementById("costTable").innerHTML = `<thead><tr><th>Статья</th>${c.rows.map(r => `<th>${r.n}</th>`).join("")}</tr></thead><tbody>` +
-    comp.map(([name, f, tip, kind, lbl]) => `<tr class="${kind}"><td>${name}${tip ? ti(tip) : ""}</td>${c.rows.map(r => {
+    comp.map(([name, f, tip, kind, lbl, np]) => `<tr class="${kind}"><td>${name}${tip ? ti(tip) : ""}</td>${c.rows.map(r => {
       const x = f(r);
-      return `<td><b>${x === 0 ? "—" : (x < 0 ? "−" + fmt(-x, 0) : fmt(x, 0))}</b>${x === 0 ? "" : ` <span class="sub">${x < 0 ? "−" + fmt(-x / r.now.price * 100, 0) + "%" : pct(x, r)}</span>`}${lbl && lbl(r) ? ` <span class="sub">${esc(lbl(r))}</span>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+      return `<td><b>${x === 0 ? "—" : (x < 0 ? "−" + fmt(-x, 0) : fmt(x, 0))}</b>${x === 0 || np ? "" : ` <span class="sub">${x < 0 ? "−" + fmt(-x / r.now.price * 100, 0) + "%" : pct(x, r)}</span>`}${lbl && lbl(r) ? ` <span class="sub">${esc(lbl(r))}</span>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
 
   document.getElementById("beTable").innerHTML = `<thead><tr><th>Рынок</th><th>Цена</th><th>Безубыточная</th><th>Запас</th><th>Ставка ПФ</th></tr></thead><tbody>` +
     c.rows.map(r => { const m = (r.now.price / r.now.be - 1) * 100;
@@ -835,11 +839,11 @@ function renderCost(v) {
   /* bridge market */
   const cm = state.cm && COST_MK.some(x => x[0] === state.cm) ? state.cm : "h";
   const r = c.rows.find(x => x.k === cm);
-  document.getElementById("dsUnit").textContent = r.n + ", тыс. ₽ за м²";
+  document.getElementById("dsUnit").textContent = r.n + ", тыс. ₽ за м² продаваемой";
   const dsRows = [...r.u.ds.map(([n, sh]) => [n, r.now.smr * sh, true]), ["Проектирование и согласования", r.now.design], [r.u.netsName, r.now.nets], [r.u.parkingName, r.now.parking]];
-  document.getElementById("dsTable").innerHTML = `<thead><tr><th>Статья</th><th>2026</th><th>Доля прямых</th><th>Доля цены</th></tr></thead><tbody>` +
-    dsRows.map(([n, x, isSmr]) => `<tr class="${isSmr ? "sub" : ""}"><td>${isSmr ? "СМР: " : ""}${esc(n)}</td><td>${x ? fmt(x, 0) : "—"}</td><td>${x ? fmt(x / r.now.direct * 100, 0) + "%" : "—"}</td><td>${x ? fmt(x / r.now.price * 100, 0) + "%" : "—"}</td></tr>`).join("") +
-    `<tr class="tot"><td>Прямые затраты</td><td>${fmt(r.now.direct, 0)}</td><td>100%</td><td>${fmt(r.now.direct / r.now.price * 100, 0)}%</td></tr></tbody>`;
+  document.getElementById("dsTable").innerHTML = `<thead><tr><th>Статья</th><th>2026</th><th>На м² общей</th><th>Доля прямых</th><th>Доля цены</th></tr></thead><tbody>` +
+    dsRows.map(([n, x, isSmr]) => `<tr class="${isSmr ? "sub" : ""}"><td>${isSmr ? "СМР: " : ""}${esc(n)}</td><td>${x ? fmt(x, 0) : "—"}</td><td>${x ? fmt(x * r.u.ks, 1) : "—"}</td><td>${x ? fmt(x / r.now.direct * 100, 0) + "%" : "—"}</td><td>${x ? fmt(x / r.now.price * 100, 0) + "%" : "—"}</td></tr>`).join("") +
+    `<tr class="tot"><td>Прямые затраты</td><td>${fmt(r.now.direct, 0)}</td><td>${fmt(r.now.directG, 0)}</td><td>100%</td><td>${fmt(r.now.direct / r.now.price * 100, 0)}%</td></tr></tbody>`;
   const b = r.bridge, d = i => b[i][1];
   const dP = r.now.price - r.y25.price, costPush = d(1) + d(2) + d(3) + d(4), finRD = d(5) + d(6), dM = d(8);
   document.getElementById("bridgeOut").innerHTML = `За год цена ${sgn(dP, 0)} тыс. ₽ за м². Прямые затраты ${sgn(d(1), 0)}, земля и права ${sgn(d(2), 0)}, прочие косвенные ${sgn(d(3), 0)}, проценты на выросшую смету ${sgn(d(4), 0)}. Ставка и спрос через финансирование ${sgn(finRD, 0)}, налоги ${sgn(d(7), 0)}. ` +
@@ -997,7 +1001,10 @@ const GLOSS = {
     h:"Смотрите на соотношения и направление изменений, а не на точную маржу конкретного проекта." },
   direct: { g:"Себестоимость", t:"Прямые затраты",
     d:"СМР (каркас, инженерия, фасад или оболочка, отделка и благоустройство), проектирование и согласования, сети и техприсоединение, паркинг. Ползунок меняет их на −10…+30% к уровню 2026 года.",
-    h:"Офисы класса A: около 215 тыс. ₽ за м² общей площади, +15% за год. Склад класса A: 69,1 тыс. ₽ без НДС, +1,9%. Жильё: рост около 9% в 2025 году и до 12% в 2026 году." },
+    h:"На м² общей площади с НДС: жильё бизнес-класса до 210 тыс. ₽, в модели около 178; проектирование и согласования 7–8 тыс. ₽; офисы класса A около 215 тыс. ₽, +15% за год; склад класса A 69,1 тыс. ₽ без НДС, +1,9%. Рост затрат в жилье около 9% в 2025 году и до 12% в 2026 году." },
+  grossArea: { g:"Себестоимость", t:"Общая и продаваемая площадь",
+    d:"Общая площадь здания включает квартиры или помещения, места общего пользования, технические этажи и подземный паркинг. Продаваемая включает только то, что покупают. Стройку считают на м² общей, цену продажи на м² продаваемой.",
+    h:"Чтобы сравнить затраты с ценой, их делят на долю продаваемой площади: 0,75 в жилье означает, что 1 м² квартир несёт затраты 1,33 м² здания. В модели доля 0,75 в массовом и бизнес-классе, 0,70 в премиуме и офисах, 1 в light industrial." },
   indirect: { g:"Себестоимость", t:"Косвенные затраты",
     d:"Затраты вне стройки, кроме земли: соцобъекты и обременения по ГПЗУ, маркетинг, продажи и управление проектом.",
     h:"Земля и права показаны отдельно. Ползунка у косвенных нет: в графике чувствительности их рост на 10% затрагивает землю, ВРИ и соцобъекты." },
