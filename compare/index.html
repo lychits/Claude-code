@@ -367,6 +367,10 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
 .sl { min-width: 58px; font-size: 15px; font-variant-numeric: tabular-nums; }
 .ftable .sub { color: var(--muted); font-size: 11.5px; font-weight: 600; }
 .ftable tr.tot td { font-weight: 800; color: var(--ink); }
+.ftable tr.grp td:first-child { font-weight: 800; color: var(--ink); }
+.ftable tr.sub td { font-weight: 500; border-top-style: dashed; }
+.ftable tr.sub td:first-child { padding-left: 14px; color: var(--muted); }
+.ftable tr.sub td b { font-weight: 600; color: var(--ink-2); }
 .h400 { height: 400px; }
 .markets { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1100px) { .markets { grid-template-columns: 1fr; } }
@@ -501,7 +505,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
         <div>
           <div class="eyebrow">Себестоимость и цена метра</div>
           <h2>Из чего складывается цена и что её двигает</h2>
-          <p>Цена метра разложена на прямые затраты, землю, прочие косвенные, финансирование, налоги и маржу девелопера. Мост показывает, что изменило цену за год: стройка, косвенные затраты, ставка, спрос или маржа. Ползунки пересчитывают расчёт 2026 года.</p>
+          <p>Цена метра разложена на прямые затраты (СМР, проект, сети, паркинг), землю и права (участок, плата за ВРИ, льгота МПТ), прочие косвенные, финансирование, налоги и маржу девелопера. Мост показывает, что изменило цену за год: стройка, косвенные затраты, ставка, спрос или маржа. Ползунки пересчитывают расчёт 2026 года.</p>
         </div>
         <span class="tag">Модель юнит-экономики<button class="ti" type="button" data-tip="unitModel">i</button></span>
       </div>
@@ -512,6 +516,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
           <input type="range" id="cdd" min="-40" max="40" step="5" value="0" style="flex:1;min-width:120px;accent-color:var(--accent)"><b id="cddVal" class="sl"></b></div>
         <div class="fgroup" style="flex:1 1 260px"><label class="flabel" for="cdc">Прямые затраты</label><button class="ti" type="button" data-tip="direct" style="margin-left:-6px">i</button>
           <input type="range" id="cdc" min="-10" max="30" step="1" value="0" style="flex:1;min-width:120px;accent-color:var(--accent)"><b id="cdcVal" class="sl"></b></div>
+        <div class="fgroup"><span class="flabel" id="lbl-mpt">Льгота МПТ по ВРИ</span><button class="ti" type="button" data-tip="mptRelief" style="margin-left:-6px">i</button><div class="seg" data-key="mpt" role="group" aria-labelledby="lbl-mpt"></div></div>
       </div>
       <div class="g" style="margin-top:12px">
         <div class="panel c7">
@@ -527,7 +532,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
         <div class="panel c12">
           <div class="ph"><h3>Себестоимость по статьям</h3><span class="u">тыс. ₽ за м² продаваемой площади, 2026</span></div>
           <div class="tscroll" style="margin-top:12px"><table class="ftable" id="costTable"></table></div>
-          <div class="cap">Для офисов и light industrial суммы указаны с НДС, как и цена продажи. Девелопер возвращает входящий НДС, поэтому в бюджет уходит только НДС с разницы. Квартиры продаются без НДС, и входящий НДС остаётся в затратах.</div>
+          <div class="cap">Прямые затраты включают СМР, проектирование, сети и паркинг. Земля и права включают участок и плату за изменение ВРИ за вычетом льготы МПТ. Для офисов и light industrial суммы указаны с НДС, как и цена продажи. Девелопер возвращает входящий НДС, поэтому в бюджет уходит только НДС с разницы. Квартиры продаются без НДС, и входящий НДС остаётся в затратах.</div>
         </div>
         <div class="panel c7">
           <div class="ph"><h3>Мост цены 2025 → 2026<button class="ti" type="button" data-tip="bridge">i</button></h3><span class="u" id="bridgeUnit">тыс. ₽ за м²</span></div>
@@ -541,8 +546,8 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
           <div class="lag"><div class="out" id="bridgeOut"></div></div>
         </div>
         <div class="panel c6">
-          <div class="ph"><h3>Рост прямых затрат по годам<button class="ti" type="button" data-tip="costYoy">i</button></h3><span class="u">% г/г</span></div>
-          <div class="box h300"><canvas id="chCostYoy" role="img" aria-label="Рост прямых затрат по годам"></canvas></div>
+          <div class="ph"><h3>Рост стоимости СМР по годам<button class="ti" type="button" data-tip="costYoy">i</button></h3><span class="u">% г/г</span></div>
+          <div class="box h300"><canvas id="chCostYoy" role="img" aria-label="Рост стоимости СМР по годам"></canvas></div>
           <div class="legend" id="costYoyLegend"></div>
           <div class="cap">Жильё: 2024 и 2025 по оценке Совкомбанка, 2026 его прогноз. Офисы класса A: IBC и STONE. Light industrial: склад класса A по IBC, за 2024 и 2025 сопоставимых данных нет.</div>
         </div>
@@ -680,41 +685,59 @@ const HOUSING = {
 /* ================= COST MODEL ================= */
 /* Юнит-экономика метра продаваемой площади, тыс. ₽. Опорные точки:
    офисы A: 215 тыс. ₽/м² общей площади с НДС, +15% г/г, инженерия 26%, фасад 18%, проектирование ×2 (STONE и IBC, I кв. 2026);
-   склад класса A: 69,1 тыс. ₽/м² без НДС, +1,9% г/г (IBC, I кв. 2026), принят как прямые затраты light industrial;
+   склад класса A: 69,1 тыс. ₽/м² без НДС, +1,9% г/г (IBC, I кв. 2026), принят как СМР light industrial;
    жильё: медианная стоимость строительства в Москве 143,5 тыс. ₽/м² (Кодекс-Люкс), рост затрат 2025 +9%, прогноз 2026 +12% (Совкомбанк);
    проектное финансирование: средневзвешенная ставка 9,9% (ЦБ), покрытие эскроу 88% → 68% (ДОМ.РФ).
-   Остальное (земля, проект, сети, доли, коэффициенты) задаёт модель. */
+   Прямые затраты = СМР + проектирование + сети + паркинг.
+   Земля и права = участок + плата за изменение ВРИ − льгота МПТ (если включена).
+   Прочие косвенные = соцобъекты и обременения + коммерческие и управленческие.
+   mpt — доля платы за ВРИ, которую в среднем покрывает льгота МПТ: 0 внутри ТТК и в ЦАО, до 0,8 за ТТК.
+   Остальные значения задаёт модель. */
 const KEY25 = 19.2;   /* средняя ключевая ставка 2025 года */
 const COST_YOY = { years:["2024","2025","2026"], h:[12, 9, 12], o:[17, 18, 15], l:[null, null, 1.9] };
 const UNIT = {
-  h_all:      { price:470,  vat:false, cycle:33, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:150, land:70,  design:22, nets:25, salesPct:.06,
-                g:{ price:21.4, direct:12, land:10, design:10, nets:10 }, dem:-38,
-                ds:[["Каркас и коробка", .45], ["Инженерия", .25], ["Фасад", .15], ["Отделка и благоустройство", .15]], netsName:"Соцобъекты, сети, паркинг" },
-  h_business: { price:553,  vat:false, cycle:34, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:205, land:110, design:28, nets:25, salesPct:.06,
-                g:{ price:16, direct:12, land:10, design:10, nets:10 }, dem:-30,
-                ds:[["Каркас и коробка", .42], ["Инженерия", .25], ["Фасад", .18], ["Отделка и благоустройство", .15]], netsName:"Соцобъекты, сети, паркинг" },
-  h_premium:  { price:1048, vat:false, cycle:36, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:320, land:210, design:50, nets:20, salesPct:.06,
-                g:{ price:13, direct:12, land:10, design:10, nets:10 }, dem:-38.7,
-                ds:[["Каркас и коробка", .35], ["Инженерия", .25], ["Фасад", .22], ["Отделка и благоустройство", .18]], netsName:"Соцобъекты, сети, паркинг" },
-  o:          { price:556,  vat:true,  cycle:36, mode:"loan", presale:.45, spread:3.5, direct:307, land:70, design:18, nets:12, salesPct:.05,
-                g:{ price:8, direct:15, land:8, design:100, nets:10 }, dem:-23,
-                ds:[["Каркас и общестрой", .38], ["Инженерия", .26], ["Фасад", .18], ["Отделка МОП и благоустройство", .18]], netsName:"Сети и техприсоединение" },
-  l:          { price:120,  vat:true,  cycle:16, mode:"loan", presale:.50, spread:4, direct:84.3, land:6, design:3, nets:5, salesPct:.05,
-                g:{ price:1.2, direct:1.9, land:5, design:5, nets:5 }, dem:-21,
-                ds:[["Каркас и фундамент", .45], ["Оболочка: панели, кровля, ворота", .25], ["Инженерия и мощность", .20], ["Полы, офисы, благоустройство", .10]], netsName:"Сети и электрическая мощность" }
+  h_all:      { price:470,  vat:false, cycle:33, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
+                smr:150, design:22, nets:10, parking:10, plot:45, vri:25, mpt:.40, social:5,
+                g:{ price:21.4, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-38,
+                ds:[["Каркас и коробка", .45], ["Инженерия", .25], ["Фасад", .15], ["Отделка и благоустройство", .15]],
+                parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
+  h_business: { price:553,  vat:false, cycle:34, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
+                smr:205, design:28, nets:10, parking:12, plot:70, vri:40, mpt:.30, social:3,
+                g:{ price:16, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-30,
+                ds:[["Каркас и коробка", .42], ["Инженерия", .25], ["Фасад", .18], ["Отделка и благоустройство", .15]],
+                parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
+  h_premium:  { price:1048, vat:false, cycle:36, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, salesPct:.06,
+                smr:320, design:50, nets:10, parking:8, plot:150, vri:60, mpt:0, social:2,
+                g:{ price:13, smr:12, design:10, nets:10, parking:10, plot:10, vri:10, social:10 }, dem:-38.7,
+                ds:[["Каркас и коробка", .35], ["Инженерия", .25], ["Фасад", .22], ["Отделка и благоустройство", .18]],
+                parkingName:"Паркинг", netsName:"Сети и техприсоединение" },
+  o:          { price:556,  vat:true,  cycle:36, mode:"loan", presale:.45, spread:3.5, salesPct:.05,
+                smr:307, design:18, nets:12, parking:0, plot:45, vri:25, mpt:.30, social:0,
+                g:{ price:8, smr:15, design:100, nets:10, parking:0, plot:8, vri:8, social:0 }, dem:-23,
+                ds:[["Каркас и общестрой", .38], ["Инженерия", .26], ["Фасад", .18], ["Отделка МОП и благоустройство", .18]],
+                parkingName:"Паркинг (входит в СМР)", netsName:"Сети и техприсоединение" },
+  l:          { price:120,  vat:true,  cycle:16, mode:"loan", presale:.50, spread:4, salesPct:.05,
+                smr:84.3, design:3, nets:5, parking:0, plot:5, vri:1, mpt:.20, social:0,
+                g:{ price:1.2, smr:1.9, design:5, nets:5, parking:0, plot:5, vri:5, social:0 }, dem:-21,
+                ds:[["Каркас и фундамент", .45], ["Оболочка: панели, кровля, ворота", .25], ["Инженерия", .20], ["Полы, офисы, благоустройство", .10]],
+                parkingName:"Парковка (открытая, в СМР)", netsName:"Сети и электрическая мощность" }
 };
 const COST_MK = [["h", "Жильё"], ["o", "Офисы A"], ["l", "Light industrial"]];
 const unitKey = (k, hk) => k === "h" ? "h_" + hk : k;
 
 function unit(u, p) {
   const y25 = p.year === 2025;
-  const sc = (x, g) => y25 ? x / (1 + g / 100) : x;
+  const sc = (x, g) => y25 ? x / (1 + (g || 0) / 100) : x;
+  const dk = y25 ? 1 : 1 + (p.dc || 0) / 100, ik = y25 ? 1 : 1 + (p.di || 0) / 100;
   const price = sc(u.price, u.g.price);
-  const direct = sc(u.direct, u.g.direct) * (y25 ? 1 : 1 + (p.dc || 0) / 100);
-  const ind = y25 ? 1 : 1 + (p.di || 0) / 100;
-  const land = sc(u.land, u.g.land) * ind, design = sc(u.design, u.g.design) * ind, nets = sc(u.nets, u.g.nets) * ind;
-  const sales = u.salesPct * price;
-  const C = direct + land + design + nets + sales;
+  const smr = sc(u.smr, u.g.smr) * dk, design = sc(u.design, u.g.design) * dk, nets = sc(u.nets, u.g.nets) * dk, parking = sc(u.parking, u.g.parking) * dk;
+  const direct = smr + design + nets + parking;
+  const plot = sc(u.plot, u.g.plot) * ik, vri = sc(u.vri, u.g.vri) * ik;
+  const mptOff = p.mpt === "on" ? vri * u.mpt : 0;
+  const land = plot + vri - mptOff;
+  const social = sc(u.social, u.g.social) * ik, sales = u.salesPct * price;
+  const other = social + sales;
+  const C = direct + land + other;
   const key = p.key ?? (y25 ? KEY25 : 14);
   const dd = y25 ? 0 : (p.dd || 0);
   const cl = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -725,29 +748,30 @@ function unit(u, p) {
   const debt = u.mode === "escrow" ? 0.85 : Math.max(0, 0.85 - presale);
   const fin = C * debt * 0.55 * rate / 100 * (u.cycle / 12) * dur;
   const vr = y25 ? 20 : 22, f = vr / (100 + vr);
-  const Cv = direct + design + nets + sales;
+  const Cv = direct + other;                      /* земля и плата за ВРИ без НДС */
   const vatPay = u.vat ? Math.max(0, price - Cv) * f : 0;
   const pre = price - C - fin - vatPay, tax = Math.max(0, pre) * 0.25, net = pre - tax;
   const be = u.vat ? ((C - sales) + fin - (Cv - sales) * f) / (1 - u.salesPct - f * (1 - u.salesPct)) : (C - sales + fin) / (1 - u.salesPct);
-  return { price, direct, land, design, nets, sales, ind: land + design + nets + sales, C, fin, rate, cov, presale, vatPay, tax, taxes: vatPay + tax, pre, net, be, key };
+  return { price, smr, design, nets, parking, direct, plot, vri, mptOff, land, social, sales, other, ind: land + other, C, fin, rate, cov, presale, vatPay, tax, taxes: vatPay + tax, pre, net, be, key };
 }
 function costState() {
-  return { key: state.ckey ?? 14, dd: state.cdd ?? 0, dc: state.cdc ?? 0 };
+  return { key: state.ckey ?? 14, dd: state.cdd ?? 0, dc: state.cdc ?? 0, mpt: state.mpt === "on" ? "on" : "off" };
 }
 function costCompute(v) {
   const p = costState();
   const rows = COST_MK.map(([k, n]) => {
     const u = UNIT[unitKey(k, v.s.hk)];
     const nm = k === "h" ? v.markets[0].n : n;
-    const now = unit(u, { ...p, year: 2026 }), base = unit(u, { year: 2026 }), y25 = unit(u, { year: 2025 });
+    const now = unit(u, { ...p, year: 2026 }), y25 = unit(u, { year: 2025, mpt: p.mpt });
+    const noMpt = unit(u, { ...p, mpt: "off", year: 2026 });
     /* мост: рост затрат → ставка → спрос */
-    const C26 = now.C;
     const fB = unit(u, { ...p, year: 2026, key: KEY25, cov: y25.cov, presale: y25.presale }).fin;
     const fC = unit(u, { ...p, year: 2026, cov: y25.cov, presale: y25.presale }).fin;
     const bridge = [
       ["Цена 2025", y25.price, "total"],
       ["Прямые", now.direct - y25.direct],
-      ["Косвенные", now.ind - y25.ind],
+      ["Земля и права", now.land - y25.land],
+      ["Прочие косвенные", now.other - y25.other],
       ["Финансирование: рост затрат", fB - y25.fin],
       ["Финансирование: ставка", fC - fB],
       ["Финансирование: спрос", now.fin - fC],
@@ -755,10 +779,9 @@ function costCompute(v) {
       ["Маржа девелопера", now.net - y25.net, "margin"],
       ["Цена 2026", now.price, "total"]
     ];
-    /* чувствительность безубыточной цены */
     const shock = q => (unit(u, { ...p, ...q, year: 2026 }).be / now.be - 1) * 100;
     const sens = { direct: shock({ dc: (p.dc || 0) + 10 }), indirect: shock({ di: 10 }), key: shock({ key: p.key + 5 }), demand: shock({ dd: p.dd - 20 }) };
-    return { k, n: nm, u, now, base, y25, bridge, sens, C26 };
+    return { k, n: nm, u, now, y25, noMpt, bridge, sens };
   });
   return { p, rows };
 }
@@ -771,35 +794,54 @@ function renderCost(v) {
   setSl("cdc", p.dc, sgn(p.dc, 0) + "%");
   const pct = (x, r) => fmt(x / r.now.price * 100, 0) + "%";
 
+  /* [название, значение, подсказка, тип строки, подпись по рынку] */
   const comp = [
-    ["Прямые затраты", r => r.now.direct, "direct"], ["Земля и права", r => r.now.land, "land"],
-    ["Проектирование и согласования", r => r.now.design, "design"], [null, r => r.now.nets, "nets"],
-    ["Коммерческие и управленческие", r => r.now.sales, "sales"], ["Финансирование", r => r.now.fin, "finCost"],
-    ["НДС к уплате", r => r.now.vatPay, "vatPay"], ["Налог на прибыль", r => r.now.tax, "profitTax"],
-    ["Маржа после налога", r => r.now.net, "margin"], ["Цена продажи", r => r.now.price, null]
+    ["Прямые затраты", r => r.now.direct, "direct", "grp"],
+    ["СМР", r => r.now.smr, null, "sub"],
+    ["Проектирование и согласования", r => r.now.design, null, "sub"],
+    ["Сети и техприсоединение", r => r.now.nets, null, "sub"],
+    ["Паркинг", r => r.now.parking, null, "sub", r => r.now.parking ? "" : "в СМР"],
+    ["Земля и права", r => r.now.land, "landRights", "grp"],
+    ["Участок", r => r.now.plot, null, "sub"],
+    ["Плата за изменение ВРИ", r => r.now.vri, "vriFee", "sub"],
+    ["Льгота МПТ", r => -r.now.mptOff, "mptRelief", "sub"],
+    ["Прочие косвенные", r => r.now.other, "indirect", "grp"],
+    ["Соцобъекты и обременения", r => r.now.social, null, "sub"],
+    ["Коммерческие и управленческие", r => r.now.sales, null, "sub"],
+    ["Финансирование", r => r.now.fin, "finCost", "grp"],
+    ["НДС к уплате", r => r.now.vatPay, "vatPay", "grp"],
+    ["Налог на прибыль", r => r.now.tax, "profitTax", "grp"],
+    ["Маржа после налога", r => r.now.net, "margin", "grp"],
+    ["Цена продажи", r => r.now.price, null, "tot"]
   ];
   document.getElementById("costTable").innerHTML = `<thead><tr><th>Статья</th>${c.rows.map(r => `<th>${r.n}</th>`).join("")}</tr></thead><tbody>` +
-    comp.map(([name, f, tip]) => `<tr${tip === null ? ' class="tot"' : ""}><td>${name || "Сети, соцобъекты, паркинг"}${tip ? ti(tip) : ""}</td>${c.rows.map(r => {
-      const x = f(r); const nm = name || r.u.netsName;
-      return `<td><b>${fmt(x, 0)}</b> <span class="sub">${pct(x, r)}</span>${name ? "" : `<div class="sub">${esc(nm)}</div>`}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+    comp.map(([name, f, tip, kind, lbl]) => `<tr class="${kind}"><td>${name}${tip ? ti(tip) : ""}</td>${c.rows.map(r => {
+      const x = f(r);
+      return `<td><b>${x === 0 ? "—" : (x < 0 ? "−" + fmt(-x, 0) : fmt(x, 0))}</b>${x === 0 ? "" : ` <span class="sub">${x < 0 ? "−" + fmt(-x / r.now.price * 100, 0) + "%" : pct(x, r)}</span>`}${lbl && lbl(r) ? ` <span class="sub">${esc(lbl(r))}</span>` : ""}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
 
   document.getElementById("beTable").innerHTML = `<thead><tr><th>Рынок</th><th>Цена</th><th>Безубыточная</th><th>Запас</th><th>Ставка ПФ</th></tr></thead><tbody>` +
     c.rows.map(r => { const m = (r.now.price / r.now.be - 1) * 100;
       return `<tr><td><span class="mdot" style="background:var(--${["sc1","sc2","sc3"][COST_MK.findIndex(x => x[0] === r.k)]})"></span>${r.n}</td><td>${fmt(r.now.price, 0)}</td><td>${fmt(r.now.be, 0)}</td>
       <td class="${m >= 15 ? "dn" : m >= 0 ? "" : "up"}">${sgn(m, 0)}%</td><td>${fmt(r.now.rate, 1)}%</td></tr>`; }).join("") + "</tbody>";
   const weakest = [...c.rows].sort((a, b) => (a.now.price / a.now.be) - (b.now.price / b.now.be))[0];
+  const H = c.rows[0];
+  const mptTxt = p.mpt === "on"
+    ? (H.now.mptOff > 0 ? `Льгота МПТ снижает плату за ВРИ в жилье на ${fmt(H.now.mptOff, 0)} тыс. ₽ за м², безубыточная цена ниже на ${fmt(H.noMpt.be - H.now.be, 0)}.` : `В премиуме льгота МПТ не работает: объекты внутри ТТК и в ЦАО, коэффициент расположения 0.`)
+    : `Включите льготу МПТ, чтобы увидеть, сколько она снимает с платы за ВРИ.`;
   document.getElementById("beOut").innerHTML = `Самый тонкий запас у рынка «${esc(weakest.n)}»: цена выше безубыточной на ${fmt((weakest.now.price / weakest.now.be - 1) * 100, 0)}%. ` +
-    `Эффективная ставка проектного финансирования в жилье ${fmt(c.rows[0].now.rate, 1)}% благодаря эскроу, в коммерческой недвижимости ${fmt(c.rows[1].now.rate, 1)}% без него.`;
+    `Ставка проектного финансирования в жилье ${fmt(H.now.rate, 1)}% благодаря эскроу, в коммерческой недвижимости ${fmt(c.rows[1].now.rate, 1)}% без него. ${mptTxt}`;
 
   /* bridge market */
   const cm = state.cm && COST_MK.some(x => x[0] === state.cm) ? state.cm : "h";
   const r = c.rows.find(x => x.k === cm);
   document.getElementById("dsUnit").textContent = r.n + ", тыс. ₽ за м²";
+  const dsRows = [...r.u.ds.map(([n, sh]) => [n, r.now.smr * sh, true]), ["Проектирование и согласования", r.now.design], [r.u.netsName, r.now.nets], [r.u.parkingName, r.now.parking]];
   document.getElementById("dsTable").innerHTML = `<thead><tr><th>Статья</th><th>2026</th><th>Доля прямых</th><th>Доля цены</th></tr></thead><tbody>` +
-    r.u.ds.map(([n, sh]) => `<tr><td>${n}</td><td>${fmt(r.now.direct * sh, 0)}</td><td>${fmt(sh * 100, 0)}%</td><td>${fmt(r.now.direct * sh / r.now.price * 100, 0)}%</td></tr>`).join("") +
+    dsRows.map(([n, x, isSmr]) => `<tr class="${isSmr ? "sub" : ""}"><td>${isSmr ? "СМР: " : ""}${esc(n)}</td><td>${x ? fmt(x, 0) : "—"}</td><td>${x ? fmt(x / r.now.direct * 100, 0) + "%" : "—"}</td><td>${x ? fmt(x / r.now.price * 100, 0) + "%" : "—"}</td></tr>`).join("") +
     `<tr class="tot"><td>Прямые затраты</td><td>${fmt(r.now.direct, 0)}</td><td>100%</td><td>${fmt(r.now.direct / r.now.price * 100, 0)}%</td></tr></tbody>`;
-  const b = r.bridge, costPush = b[1][1] + b[2][1] + b[3][1], finRD = b[4][1] + b[5][1], dM = b[7][1], dP = r.now.price - r.y25.price;
-  document.getElementById("bridgeOut").innerHTML = `За год цена ${sgn(dP, 0)} тыс. ₽ за м². Затраты на стройку и косвенные добавили ${sgn(costPush, 0)}, ставка и спрос через финансирование ${sgn(finRD, 0)}, налоги ${sgn(b[6][1], 0)}. ` +
+  const b = r.bridge, d = i => b[i][1];
+  const dP = r.now.price - r.y25.price, costPush = d(1) + d(2) + d(3) + d(4), finRD = d(5) + d(6), dM = d(8);
+  document.getElementById("bridgeOut").innerHTML = `За год цена ${sgn(dP, 0)} тыс. ₽ за м². Прямые затраты ${sgn(d(1), 0)}, земля и права ${sgn(d(2), 0)}, прочие косвенные ${sgn(d(3), 0)}, проценты на выросшую смету ${sgn(d(4), 0)}. Ставка и спрос через финансирование ${sgn(finRD, 0)}, налоги ${sgn(d(7), 0)}. ` +
     (dM >= 0 ? `Маржа девелопера выросла на ${fmt(dM, 0)}: цена обогнала затраты.` : `Маржа девелопера сжалась на ${fmt(-dM, 0)}: рост затрат не переложен в цену, и разницу съел спрос.`);
 
   document.getElementById("costLegend").innerHTML = COST_SEG.map(s => `<span><i class="sq ${s.hatch ? "hatch" : ""}" style="${s.hatch ? "" : `background:${s.css}`}"></i>${s.n}</span>`).join("");
@@ -815,7 +857,7 @@ const COST_SEG = [
 function renderCostCharts(v) {
   const t = T(), c = costCompute(v);
   const tip = () => baseOpts(t).plugins.tooltip;
-  const segVal = (r, k) => ({ direct: r.now.direct, land: r.now.land, other: r.now.design + r.now.nets + r.now.sales, fin: r.now.fin, taxes: r.now.taxes, net: r.now.net }[k]);
+  const segVal = (r, k) => ({ direct: r.now.direct, land: r.now.land, other: r.now.other, fin: r.now.fin, taxes: r.now.taxes, net: r.now.net }[k]);
   const colOf = s => s.hatch ? hatch() : s.k === "direct" ? t.sc3 : s.k === "land" ? t.sc2 : s.k === "other" ? hexA(t.sc2, .5) : s.k === "fin" ? t.sc1 : t.ink2;
   upsert("chCostStruct", {
     type: "bar",
@@ -888,11 +930,12 @@ function renderCostCharts(v) {
 }
 
 /* ================= STATE ================= */
-const OPTS = { hk: [["all","Все классы"],["business","Бизнес"],["premium","Премиум"]], cm: [["h","Жильё"],["o","Офисы A"],["l","Light industrial"]] };
-let state = { dep: DEP0, hk: "all", cm: "h", ckey: 14, cdd: 0, cdc: 0 };
+const OPTS = { hk: [["all","Все классы"],["business","Бизнес"],["premium","Премиум"]], cm: [["h","Жильё"],["o","Офисы A"],["l","Light industrial"]], mpt: [["off","Нет"],["on","Есть"]] };
+let state = { dep: DEP0, hk: "all", cm: "h", ckey: 14, cdd: 0, cdc: 0, mpt: "off" };
 const STORE_KEY = "msk-re-compare";
 try { const sv = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (sv && sv.dep >= 8 && sv.dep <= 16) state.dep = sv.dep; if (sv && HOUSING[sv.hk]) state.hk = sv.hk;
   if (sv && ["h","o","l"].includes(sv.cm)) state.cm = sv.cm;
+  if (sv && ["on","off"].includes(sv.mpt)) state.mpt = sv.mpt;
   for (const [k, a, b] of [["ckey", 8, 21], ["cdd", -40, 40], ["cdc", -10, 30]]) if (sv && sv[k] >= a && sv[k] <= b) state[k] = sv[k]; } catch (e) {}
 for (const id of ["ckey", "cdd", "cdc"]) document.getElementById(id).addEventListener("input", e => { state[id] = +e.target.value; save(); refresh(); });
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
@@ -917,6 +960,7 @@ function compute() {
   if (state.dep == null) state.dep = DEP0;
   if (!HOUSING[state.hk]) state.hk = "all";
   if (!["h","o","l"].includes(state.cm)) state.cm = "h";
+  if (!["on","off"].includes(state.mpt)) state.mpt = "off";
   if (state.ckey == null) state.ckey = 14; if (state.cdd == null) state.cdd = 0; if (state.cdc == null) state.cdc = 0;
   const dep = state.dep;
   const s = { dep, hk: state.hk };
@@ -951,11 +995,20 @@ const GLOSS = {
     d:"Расчёт на метр продаваемой площади: прямые затраты, земля, проект, сети и обременения, продажи, проценты по кредиту, налоги и маржа. Опорные цифры по стройке и ставкам взяты из публикаций, остальное задают допущения модели.",
     h:"Смотрите на соотношения и направление изменений, а не на точную маржу конкретного проекта." },
   direct: { g:"Себестоимость", t:"Прямые затраты",
-    d:"Строительно-монтажные работы: каркас, инженерия, фасад или оболочка, отделка и благоустройство. Ползунок меняет их на −10…+30% к уровню 2026 года.",
+    d:"СМР (каркас, инженерия, фасад или оболочка, отделка и благоустройство), проектирование и согласования, сети и техприсоединение, паркинг. Ползунок меняет их на −10…+30% к уровню 2026 года.",
     h:"Офисы класса A: около 215 тыс. ₽ за м² общей площади, +15% за год. Склад класса A: 69,1 тыс. ₽ без НДС, +1,9%. Жильё: рост около 9% в 2025 году и до 12% в 2026 году." },
   indirect: { g:"Себестоимость", t:"Косвенные затраты",
-    d:"Всё, кроме стройки: земля и права, плата за ВРИ, проектирование и согласования, сети, соцобъекты и паркинг, маркетинг, продажи и управление.",
-    h:"В центре Москвы и в премиуме земля может быть сопоставима с половиной прямых затрат." },
+    d:"Затраты вне стройки, кроме земли: соцобъекты и обременения по ГПЗУ, маркетинг, продажи и управление проектом.",
+    h:"Земля и права показаны отдельно. Ползунка у косвенных нет: в графике чувствительности их рост на 10% затрагивает землю, ВРИ и соцобъекты." },
+  landRights: { g:"Себестоимость", t:"Земля и права",
+    d:"Покупка или аренда участка, плата за изменение ВРИ, за вычетом льготы МПТ, если она применена.",
+    h:"В центре и в премиуме это вторая по величине статья после стройки. Плата за ВРИ после 2652-ПП вносится до изменения ПЗЗ, поэтому её тоже финансируют проценты." },
+  vriFee: { g:"Себестоимость", t:"Плата за изменение ВРИ",
+    d:"Плата Москве за смену вида разрешённого использования участка на вид, разрешающий строительство. Зависит от прироста кадастровой стоимости.",
+    h:"Для редевелопмента промзон под жильё одна из крупных статей земли. Льгота МПТ может покрыть её часть." },
+  mptRelief: { g:"Себестоимость", t:"Льгота МПТ по плате за ВРИ",
+    d:"Если в проекте создаются места приложения труда (офисы, производство, социальные и деловые объекты), Москва засчитывает льготу в счёт платы за изменение ВРИ, в том числе в жилых проектах. Размер зависит от площади МПТ и коэффициента расположения: 0 внутри ТТК и в ЦАО, до 0,8 за ТТК.",
+    h:"В модели льгота покрывает в среднем 40% платы за ВРИ в жилье, 30% в бизнес-классе и офисах, 20% в light industrial, 0 в премиуме. Взамен девелопер строит нежилые площади, даёт банковскую гарантию и обязан держать профиль, иначе доплачивает с пенями." },
   finCost: { g:"Себестоимость", t:"Финансирование",
     d:"Проценты по проектному кредиту за время стройки и продаж. Для жилья ставка снижается за счёт денег на эскроу-счетах, для офисов и light industrial эскроу нет, ставка равна ключевой плюс маржа банка.",
     h:"Средневзвешенная ставка проектного финансирования жилья около 9,9%. Покрытие кредитов деньгами на эскроу упало с 88% до 68%, поэтому снижение ключевой почти не удешевило кредит." },
