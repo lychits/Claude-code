@@ -364,6 +364,9 @@ footer.foot { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 
 .legend > span:not(.st) > i { margin-right: 7px; vertical-align: middle; }
 
 /* comparison */
+.sl { min-width: 58px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.ftable .sub { color: var(--muted); font-size: 11.5px; font-weight: 600; }
+.ftable tr.tot td { font-weight: 800; color: var(--ink); }
 .h400 { height: 400px; }
 .markets { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1100px) { .markets { grid-template-columns: 1fr; } }
@@ -396,6 +399,7 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
       <a href="#top" class="active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Три рынка</a>
       <a href="#yoy"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>Изменение г/г</a>
       <a href="#yield"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7h6z"/><path d="M19 7l-3 7h6z"/></svg>Доходность и вклад</a>
+      <a href="#cost"><svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>Себестоимость</a>
       <a href="#signals"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.5"/></svg>Светофор</a>
       <a href="#outlook"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Сценарии и выводы</a>
       <a href="#glossary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 5v16"/><path d="M9 7h6"/></svg>Словарь</a>
@@ -488,6 +492,64 @@ input[type=range]:focus-visible { outline: 2px solid var(--accent); outline-offs
           <div class="ph"><h3>Цена денег против доходности<button class="ti" type="button" data-tip="leverage">i</button></h3><span class="u">% годовых</span></div>
           <div class="tscroll" style="margin-top:12px"><table class="ftable" id="levTable"></table></div>
           <div class="cap">Отрицательное плечо: кредит дороже чистой доходности объекта, поэтому каждый заёмный рубль снижает итоговую доходность покупателя.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="cost">
+      <div class="shead">
+        <div>
+          <div class="eyebrow">Себестоимость и цена метра</div>
+          <h2>Из чего складывается цена и что её двигает</h2>
+          <p>Цена метра разложена на прямые затраты, землю, прочие косвенные, финансирование, налоги и маржу девелопера. Мост показывает, что изменило цену за год: стройка, косвенные затраты, ставка, спрос или маржа. Ползунки пересчитывают расчёт 2026 года.</p>
+        </div>
+        <span class="tag">Модель юнит-экономики<button class="ti" type="button" data-tip="unitModel">i</button></span>
+      </div>
+      <div class="filters" role="group" aria-label="Параметры себестоимости" style="margin-top:0">
+        <div class="fgroup" style="flex:1 1 260px"><label class="flabel" for="ckey">Ключевая ставка</label><button class="ti" type="button" data-tip="keyrate" style="margin-left:-6px">i</button>
+          <input type="range" id="ckey" min="8" max="21" step="0.25" value="14" style="flex:1;min-width:120px;accent-color:var(--accent)"><b id="ckeyVal" class="sl"></b></div>
+        <div class="fgroup" style="flex:1 1 260px"><label class="flabel" for="cdd">Спрос к текущему</label><button class="ti" type="button" data-tip="demandShock" style="margin-left:-6px">i</button>
+          <input type="range" id="cdd" min="-40" max="40" step="5" value="0" style="flex:1;min-width:120px;accent-color:var(--accent)"><b id="cddVal" class="sl"></b></div>
+        <div class="fgroup" style="flex:1 1 260px"><label class="flabel" for="cdc">Прямые затраты</label><button class="ti" type="button" data-tip="direct" style="margin-left:-6px">i</button>
+          <input type="range" id="cdc" min="-10" max="30" step="1" value="0" style="flex:1;min-width:120px;accent-color:var(--accent)"><b id="cdcVal" class="sl"></b></div>
+      </div>
+      <div class="g" style="margin-top:12px">
+        <div class="panel c7">
+          <div class="ph"><h3>Структура цены метра<button class="ti" type="button" data-tip="costStruct">i</button></h3><span class="u">% цены продажи, 2026</span></div>
+          <div class="box h240"><canvas id="chCostStruct" role="img" aria-label="Структура цены метра по трём рынкам"></canvas></div>
+          <div class="legend" id="costLegend"></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Безубыточная цена<button class="ti" type="button" data-tip="breakeven">i</button></h3><span class="u">тыс. ₽ за м²</span></div>
+          <div class="tscroll"><table class="ftable" id="beTable"></table></div>
+          <div class="lag"><div class="out" id="beOut"></div></div>
+        </div>
+        <div class="panel c12">
+          <div class="ph"><h3>Себестоимость по статьям</h3><span class="u">тыс. ₽ за м² продаваемой площади, 2026</span></div>
+          <div class="tscroll" style="margin-top:12px"><table class="ftable" id="costTable"></table></div>
+          <div class="cap">Для офисов и light industrial суммы указаны с НДС, как и цена продажи. Девелопер возвращает входящий НДС, поэтому в бюджет уходит только НДС с разницы. Квартиры продаются без НДС, и входящий НДС остаётся в затратах.</div>
+        </div>
+        <div class="panel c7">
+          <div class="ph"><h3>Мост цены 2025 → 2026<button class="ti" type="button" data-tip="bridge">i</button></h3><span class="u" id="bridgeUnit">тыс. ₽ за м²</span></div>
+          <div class="fgroup" style="margin-top:12px"><span class="flabel" id="lbl-cm">Рынок</span><div class="seg" data-key="cm" role="group" aria-labelledby="lbl-cm"></div></div>
+          <div class="box h340"><canvas id="chBridge" role="img" aria-label="Разложение изменения цены метра за год"></canvas></div>
+          <div class="legend"><span><i class="sq" style="background:var(--dim)"></i>цена</span><span><i class="sq" style="background:var(--accent)"></i>толкает цену вверх</span><span><i class="sq" style="background:var(--sc2)"></i>снижает затраты</span><span><i class="sq" style="background:var(--sc3)"></i>изменение маржи</span></div>
+        </div>
+        <div class="panel c5">
+          <div class="ph"><h3>Прямые затраты: состав<button class="ti" type="button" data-tip="direct">i</button></h3><span class="u" id="dsUnit"></span></div>
+          <div class="tscroll"><table class="ftable" id="dsTable"></table></div>
+          <div class="lag"><div class="out" id="bridgeOut"></div></div>
+        </div>
+        <div class="panel c6">
+          <div class="ph"><h3>Рост прямых затрат по годам<button class="ti" type="button" data-tip="costYoy">i</button></h3><span class="u">% г/г</span></div>
+          <div class="box h300"><canvas id="chCostYoy" role="img" aria-label="Рост прямых затрат по годам"></canvas></div>
+          <div class="legend" id="costYoyLegend"></div>
+          <div class="cap">Жильё: 2024 и 2025 по оценке Совкомбанка, 2026 его прогноз. Офисы класса A: IBC и STONE. Light industrial: склад класса A по IBC, за 2024 и 2025 сопоставимых данных нет.</div>
+        </div>
+        <div class="panel c6">
+          <div class="ph"><h3>Что сильнее давит на цену<button class="ti" type="button" data-tip="sens">i</button></h3><span class="u">рост безубыточной цены, %</span></div>
+          <div class="box h300"><canvas id="chSens" role="img" aria-label="Чувствительность безубыточной цены к затратам, ставке и спросу"></canvas></div>
+          <div class="legend" id="sensLegend"></div>
         </div>
       </div>
     </section>
@@ -615,11 +677,224 @@ const HOUSING = {
     freeShort: "56% стройки не продано", freeSt: "warn" }
 };
 
+/* ================= COST MODEL ================= */
+/* Юнит-экономика метра продаваемой площади, тыс. ₽. Опорные точки:
+   офисы A: 215 тыс. ₽/м² общей площади с НДС, +15% г/г, инженерия 26%, фасад 18%, проектирование ×2 (STONE и IBC, I кв. 2026);
+   склад класса A: 69,1 тыс. ₽/м² без НДС, +1,9% г/г (IBC, I кв. 2026), принят как прямые затраты light industrial;
+   жильё: медианная стоимость строительства в Москве 143,5 тыс. ₽/м² (Кодекс-Люкс), рост затрат 2025 +9%, прогноз 2026 +12% (Совкомбанк);
+   проектное финансирование: средневзвешенная ставка 9,9% (ЦБ), покрытие эскроу 88% → 68% (ДОМ.РФ).
+   Остальное (земля, проект, сети, доли, коэффициенты) задаёт модель. */
+const KEY25 = 19.2;   /* средняя ключевая ставка 2025 года */
+const COST_YOY = { years:["2024","2025","2026"], h:[12, 9, 12], o:[17, 18, 15], l:[null, null, 1.9] };
+const UNIT = {
+  h_all:      { price:470,  vat:false, cycle:33, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:150, land:70,  design:22, nets:25, salesPct:.06,
+                g:{ price:21.4, direct:12, land:10, design:10, nets:10 }, dem:-38,
+                ds:[["Каркас и коробка", .45], ["Инженерия", .25], ["Фасад", .15], ["Отделка и благоустройство", .15]], netsName:"Соцобъекты, сети, паркинг" },
+  h_business: { price:553,  vat:false, cycle:34, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:205, land:110, design:28, nets:25, salesPct:.06,
+                g:{ price:16, direct:12, land:10, design:10, nets:10 }, dem:-30,
+                ds:[["Каркас и коробка", .42], ["Инженерия", .25], ["Фасад", .18], ["Отделка и благоустройство", .15]], netsName:"Соцобъекты, сети, паркинг" },
+  h_premium:  { price:1048, vat:false, cycle:36, mode:"escrow", cov:.68, cov25:.80, rCov:6.5, spread:3, direct:320, land:210, design:50, nets:20, salesPct:.06,
+                g:{ price:13, direct:12, land:10, design:10, nets:10 }, dem:-38.7,
+                ds:[["Каркас и коробка", .35], ["Инженерия", .25], ["Фасад", .22], ["Отделка и благоустройство", .18]], netsName:"Соцобъекты, сети, паркинг" },
+  o:          { price:556,  vat:true,  cycle:36, mode:"loan", presale:.45, spread:3.5, direct:307, land:70, design:18, nets:12, salesPct:.05,
+                g:{ price:8, direct:15, land:8, design:100, nets:10 }, dem:-23,
+                ds:[["Каркас и общестрой", .38], ["Инженерия", .26], ["Фасад", .18], ["Отделка МОП и благоустройство", .18]], netsName:"Сети и техприсоединение" },
+  l:          { price:120,  vat:true,  cycle:16, mode:"loan", presale:.50, spread:4, direct:84.3, land:6, design:3, nets:5, salesPct:.05,
+                g:{ price:1.2, direct:1.9, land:5, design:5, nets:5 }, dem:-21,
+                ds:[["Каркас и фундамент", .45], ["Оболочка: панели, кровля, ворота", .25], ["Инженерия и мощность", .20], ["Полы, офисы, благоустройство", .10]], netsName:"Сети и электрическая мощность" }
+};
+const COST_MK = [["h", "Жильё"], ["o", "Офисы A"], ["l", "Light industrial"]];
+const unitKey = (k, hk) => k === "h" ? "h_" + hk : k;
+
+function unit(u, p) {
+  const y25 = p.year === 2025;
+  const sc = (x, g) => y25 ? x / (1 + g / 100) : x;
+  const price = sc(u.price, u.g.price);
+  const direct = sc(u.direct, u.g.direct) * (y25 ? 1 : 1 + (p.dc || 0) / 100);
+  const ind = y25 ? 1 : 1 + (p.di || 0) / 100;
+  const land = sc(u.land, u.g.land) * ind, design = sc(u.design, u.g.design) * ind, nets = sc(u.nets, u.g.nets) * ind;
+  const sales = u.salesPct * price;
+  const C = direct + land + design + nets + sales;
+  const key = p.key ?? (y25 ? KEY25 : 14);
+  const dd = y25 ? 0 : (p.dd || 0);
+  const cl = (x, a, b) => Math.max(a, Math.min(b, x));
+  const cov = u.mode === "escrow" ? (p.cov ?? (y25 ? u.cov25 : cl(u.cov * (1 + dd / 100 * 0.6), .2, .95))) : 0;
+  const presale = u.mode === "loan" ? (p.presale ?? (y25 ? cl(u.presale / (1 + u.dem / 100 * 0.8), 0, .75) : cl(u.presale * (1 + dd / 100 * 0.8), 0, .75))) : 0;
+  const dur = cl(1 - dd / 100 * 0.5, .7, 1.8);
+  const rate = u.mode === "escrow" ? cov * u.rCov + (1 - cov) * (key + u.spread) : key + u.spread;
+  const debt = u.mode === "escrow" ? 0.85 : Math.max(0, 0.85 - presale);
+  const fin = C * debt * 0.55 * rate / 100 * (u.cycle / 12) * dur;
+  const vr = y25 ? 20 : 22, f = vr / (100 + vr);
+  const Cv = direct + design + nets + sales;
+  const vatPay = u.vat ? Math.max(0, price - Cv) * f : 0;
+  const pre = price - C - fin - vatPay, tax = Math.max(0, pre) * 0.25, net = pre - tax;
+  const be = u.vat ? ((C - sales) + fin - (Cv - sales) * f) / (1 - u.salesPct - f * (1 - u.salesPct)) : (C - sales + fin) / (1 - u.salesPct);
+  return { price, direct, land, design, nets, sales, ind: land + design + nets + sales, C, fin, rate, cov, presale, vatPay, tax, taxes: vatPay + tax, pre, net, be, key };
+}
+function costState() {
+  return { key: state.ckey ?? 14, dd: state.cdd ?? 0, dc: state.cdc ?? 0 };
+}
+function costCompute(v) {
+  const p = costState();
+  const rows = COST_MK.map(([k, n]) => {
+    const u = UNIT[unitKey(k, v.s.hk)];
+    const nm = k === "h" ? v.markets[0].n : n;
+    const now = unit(u, { ...p, year: 2026 }), base = unit(u, { year: 2026 }), y25 = unit(u, { year: 2025 });
+    /* мост: рост затрат → ставка → спрос */
+    const C26 = now.C;
+    const fB = unit(u, { ...p, year: 2026, key: KEY25, cov: y25.cov, presale: y25.presale }).fin;
+    const fC = unit(u, { ...p, year: 2026, cov: y25.cov, presale: y25.presale }).fin;
+    const bridge = [
+      ["Цена 2025", y25.price, "total"],
+      ["Прямые", now.direct - y25.direct],
+      ["Косвенные", now.ind - y25.ind],
+      ["Финансирование: рост затрат", fB - y25.fin],
+      ["Финансирование: ставка", fC - fB],
+      ["Финансирование: спрос", now.fin - fC],
+      ["Налоги", now.taxes - y25.taxes],
+      ["Маржа девелопера", now.net - y25.net, "margin"],
+      ["Цена 2026", now.price, "total"]
+    ];
+    /* чувствительность безубыточной цены */
+    const shock = q => (unit(u, { ...p, ...q, year: 2026 }).be / now.be - 1) * 100;
+    const sens = { direct: shock({ dc: (p.dc || 0) + 10 }), indirect: shock({ di: 10 }), key: shock({ key: p.key + 5 }), demand: shock({ dd: p.dd - 20 }) };
+    return { k, n: nm, u, now, base, y25, bridge, sens, C26 };
+  });
+  return { p, rows };
+}
+
+function renderCost(v) {
+  const c = costCompute(v), p = c.p;
+  const setSl = (id, val, txt) => { const el = document.getElementById(id); if (+el.value !== val) el.value = val; document.getElementById(id + "Val").textContent = txt; };
+  setSl("ckey", p.key, fmt(p.key, 2) + "%");
+  setSl("cdd", p.dd, sgn(p.dd, 0) + "%");
+  setSl("cdc", p.dc, sgn(p.dc, 0) + "%");
+  const pct = (x, r) => fmt(x / r.now.price * 100, 0) + "%";
+
+  const comp = [
+    ["Прямые затраты", r => r.now.direct, "direct"], ["Земля и права", r => r.now.land, "land"],
+    ["Проектирование и согласования", r => r.now.design, "design"], [null, r => r.now.nets, "nets"],
+    ["Коммерческие и управленческие", r => r.now.sales, "sales"], ["Финансирование", r => r.now.fin, "finCost"],
+    ["НДС к уплате", r => r.now.vatPay, "vatPay"], ["Налог на прибыль", r => r.now.tax, "profitTax"],
+    ["Маржа после налога", r => r.now.net, "margin"], ["Цена продажи", r => r.now.price, null]
+  ];
+  document.getElementById("costTable").innerHTML = `<thead><tr><th>Статья</th>${c.rows.map(r => `<th>${r.n}</th>`).join("")}</tr></thead><tbody>` +
+    comp.map(([name, f, tip]) => `<tr${tip === null ? ' class="tot"' : ""}><td>${name || "Сети, соцобъекты, паркинг"}${tip ? ti(tip) : ""}</td>${c.rows.map(r => {
+      const x = f(r); const nm = name || r.u.netsName;
+      return `<td><b>${fmt(x, 0)}</b> <span class="sub">${pct(x, r)}</span>${name ? "" : `<div class="sub">${esc(nm)}</div>`}</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+
+  document.getElementById("beTable").innerHTML = `<thead><tr><th>Рынок</th><th>Цена</th><th>Безубыточная</th><th>Запас</th><th>Ставка ПФ</th></tr></thead><tbody>` +
+    c.rows.map(r => { const m = (r.now.price / r.now.be - 1) * 100;
+      return `<tr><td><span class="mdot" style="background:var(--${["sc1","sc2","sc3"][COST_MK.findIndex(x => x[0] === r.k)]})"></span>${r.n}</td><td>${fmt(r.now.price, 0)}</td><td>${fmt(r.now.be, 0)}</td>
+      <td class="${m >= 15 ? "dn" : m >= 0 ? "" : "up"}">${sgn(m, 0)}%</td><td>${fmt(r.now.rate, 1)}%</td></tr>`; }).join("") + "</tbody>";
+  const weakest = [...c.rows].sort((a, b) => (a.now.price / a.now.be) - (b.now.price / b.now.be))[0];
+  document.getElementById("beOut").innerHTML = `Самый тонкий запас у рынка «${esc(weakest.n)}»: цена выше безубыточной на ${fmt((weakest.now.price / weakest.now.be - 1) * 100, 0)}%. ` +
+    `Эффективная ставка проектного финансирования в жилье ${fmt(c.rows[0].now.rate, 1)}% благодаря эскроу, в коммерческой недвижимости ${fmt(c.rows[1].now.rate, 1)}% без него.`;
+
+  /* bridge market */
+  const cm = state.cm && COST_MK.some(x => x[0] === state.cm) ? state.cm : "h";
+  const r = c.rows.find(x => x.k === cm);
+  document.getElementById("dsUnit").textContent = r.n + ", тыс. ₽ за м²";
+  document.getElementById("dsTable").innerHTML = `<thead><tr><th>Статья</th><th>2026</th><th>Доля прямых</th><th>Доля цены</th></tr></thead><tbody>` +
+    r.u.ds.map(([n, sh]) => `<tr><td>${n}</td><td>${fmt(r.now.direct * sh, 0)}</td><td>${fmt(sh * 100, 0)}%</td><td>${fmt(r.now.direct * sh / r.now.price * 100, 0)}%</td></tr>`).join("") +
+    `<tr class="tot"><td>Прямые затраты</td><td>${fmt(r.now.direct, 0)}</td><td>100%</td><td>${fmt(r.now.direct / r.now.price * 100, 0)}%</td></tr></tbody>`;
+  const b = r.bridge, costPush = b[1][1] + b[2][1] + b[3][1], finRD = b[4][1] + b[5][1], dM = b[7][1], dP = r.now.price - r.y25.price;
+  document.getElementById("bridgeOut").innerHTML = `За год цена ${sgn(dP, 0)} тыс. ₽ за м². Затраты на стройку и косвенные добавили ${sgn(costPush, 0)}, ставка и спрос через финансирование ${sgn(finRD, 0)}, налоги ${sgn(b[6][1], 0)}. ` +
+    (dM >= 0 ? `Маржа девелопера выросла на ${fmt(dM, 0)}: цена обогнала затраты.` : `Маржа девелопера сжалась на ${fmt(-dM, 0)}: рост затрат не переложен в цену, и разницу съел спрос.`);
+
+  document.getElementById("costLegend").innerHTML = COST_SEG.map(s => `<span><i class="sq ${s.hatch ? "hatch" : ""}" style="${s.hatch ? "" : `background:${s.css}`}"></i>${s.n}</span>`).join("");
+  document.getElementById("costYoyLegend").innerHTML = document.getElementById("sensLegend").innerHTML =
+    c.rows.map((r, i) => `<span><i class="sq" style="background:var(--sc${i + 1})"></i>${r.n}</span>`).join("");
+}
+const COST_SEG = [
+  { k:"direct", n:"Прямые", css:"var(--sc3)" }, { k:"land", n:"Земля и права", css:"var(--sc2)" },
+  { k:"other", n:"Прочие косвенные", css:"rgba(31,158,120,.5)" }, { k:"fin", n:"Финансирование", css:"var(--sc1)" },
+  { k:"taxes", n:"Налоги", hatch:true }, { k:"net", n:"Маржа", css:"var(--ink-2)" }
+];
+
+function renderCostCharts(v) {
+  const t = T(), c = costCompute(v);
+  const tip = () => baseOpts(t).plugins.tooltip;
+  const segVal = (r, k) => ({ direct: r.now.direct, land: r.now.land, other: r.now.design + r.now.nets + r.now.sales, fin: r.now.fin, taxes: r.now.taxes, net: r.now.net }[k]);
+  const colOf = s => s.hatch ? hatch() : s.k === "direct" ? t.sc3 : s.k === "land" ? t.sc2 : s.k === "other" ? hexA(t.sc2, .5) : s.k === "fin" ? t.sc1 : t.ink2;
+  upsert("chCostStruct", {
+    type: "bar",
+    data: { labels: c.rows.map(r => r.n), datasets: COST_SEG.map(s => ({ label: s.n, data: c.rows.map(r => +(segVal(r, s.k) / r.now.price * 100).toFixed(1)),
+      backgroundColor: () => colOf(s), borderColor: t.panel, borderWidth: { right: 2 }, borderSkipped: false, maxBarThickness: 30, categoryPercentage: .7 })) },
+    options: baseOpts(t, {
+      indexAxis: "y",
+      scales: { x: axis(t, { stacked: true, min: Math.min(0, ...c.rows.map(r => Math.floor(r.now.net / r.now.price * 100 / 10) * 10)), max: 100, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }),
+        y: axis(t, { stacked: true, grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => Math.abs(x) >= 8 ? fmt(x, 0) + "%" : "", inside: true, color: di => di === 5 ? "#1a1008" : "#ffffff" },
+        tooltip: Object.assign(tip(), { mode: "index", intersect: false, callbacks: {
+          label: c2 => { const r = c.rows[c2.dataIndex]; return ` ${c2.dataset.label}: ${fmt(segVal(r, COST_SEG[c2.datasetIndex].k), 0)} тыс. ₽/м², ${fmt(c2.parsed.x, 0)}%`; },
+          footer: c2 => `Цена ${fmt(c.rows[c2[0].dataIndex].now.price, 0)} тыс. ₽/м²`
+        } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  const cm = state.cm && COST_MK.some(x => x[0] === state.cm) ? state.cm : "h";
+  const r = c.rows.find(x => x.k === cm);
+  let run = 0;
+  const bars = r.bridge.map(([n, val, kind]) => {
+    if (kind === "total") { run = val; return { n, lo: 0, hi: val, val, kind }; }
+    const lo = run, hi = run + val; run = hi; return { n, lo: Math.min(lo, hi), hi: Math.max(lo, hi), val, kind };
+  });
+  const lo = Math.min(...bars.map(b => b.lo)), hi = Math.max(...bars.map(b => b.hi));
+  const floor = Math.max(0, Math.floor(Math.min(...bars.filter(b => b.kind !== "total").map(b => b.lo), r.y25.price) * 0.8 / 10) * 10);
+  upsert("chBridge", {
+    type: "bar",
+    data: { labels: bars.map(b => b.n.replace("Финансирование: ", "Фин.: ")), datasets: [{ label: "тыс. ₽/м²", data: bars.map(b => [b.kind === "total" ? floor : b.lo, b.hi]),
+      backgroundColor: bars.map(b => b.kind === "total" ? t.dim : b.kind === "margin" ? t.sc3 : b.val >= 0 ? t.accent : t.sc2),
+      borderRadius: 4, borderSkipped: false, maxBarThickness: 40, categoryPercentage: .8 }] },
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 11 }, maxRotation: 40, minRotation: 0 } }),
+        y: axis(t, { min: floor, max: Math.ceil(hi * 1.06 / 10) * 10 }) },
+      plugins: Object.assign(baseOpts(t).plugins, {
+        tooltip: Object.assign(tip(), { callbacks: { label: c2 => { const b = bars[c2.dataIndex]; return b.kind === "total" ? ` ${fmt(b.val, 0)} тыс. ₽/м²` : ` ${sgn(b.val, 1)} тыс. ₽/м²`; } } })
+      })
+    }),
+    plugins: [{ id: "bridgeLabels", afterDatasetsDraw(ch) { const ctx = ch.ctx; ctx.save(); ctx.font = `700 11.5px ${FONT}`; ctx.fillStyle = t.ink; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+      ch.getDatasetMeta(0).data.forEach((el, i) => { const b = bars[i]; const txt = b.kind === "total" ? fmt(b.val, 0) : sgn(b.val, 0); ctx.fillText(txt, el.x, Math.min(el.y, el.base) - 4); }); ctx.restore(); } }]
+  });
+
+  upsert("chCostYoy", {
+    type: "bar",
+    data: { labels: COST_YOY.years, datasets: COST_MK.map(([k], i) => ({ label: c.rows[i].n, data: COST_YOY[k], backgroundColor: [t.sc1, t.sc2, t.sc3][i],
+      borderRadius: 6, borderSkipped: "start", maxBarThickness: 26, categoryPercentage: .72, barPercentage: .9 })) },
+    options: baseOpts(t, {
+      scales: { x: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }), y: axis(t, { beginAtZero: true, max: 22, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => x + "%" } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => sgn(x, 1) + "%", vertical: true },
+        tooltip: Object.assign(tip(), { callbacks: { label: c2 => c2.raw == null ? ` ${c2.dataset.label}: нет данных` : ` ${c2.dataset.label}: ${sgn(c2.parsed.y, 1)}%` } }) })
+    }),
+    plugins: [valueLabels]
+  });
+
+  const SL = [["direct", "Прямые +10%"], ["indirect", "Косвенные +10%"], ["key", "Ставка +5 п.п."], ["demand", "Спрос −20%"]];
+  upsert("chSens", {
+    type: "bar",
+    data: { labels: SL.map(x => x[1]), datasets: c.rows.map((r, i) => ({ label: r.n, data: SL.map(([k]) => +r.sens[k].toFixed(1)), backgroundColor: [t.sc1, t.sc2, t.sc3][i],
+      borderRadius: 4, borderSkipped: "start", maxBarThickness: 14, categoryPercentage: .8, barPercentage: .88 })) },
+    options: baseOpts(t, {
+      indexAxis: "y", layout: { padding: { right: 36 } },
+      scales: { x: axis(t, { beginAtZero: true, ticks: { color: t.muted, font: { family: FONT, size: 12 }, callback: x => "+" + x + "%" } }),
+        y: axis(t, { grid: { display: false }, ticks: { color: t.ink2, font: { family: FONT, size: 12.5 } } }) },
+      plugins: Object.assign(baseOpts(t).plugins, { valueLabels: { fmt: x => sgn(x, 1) + "%" },
+        tooltip: Object.assign(tip(), { callbacks: { label: c2 => ` ${c2.dataset.label}: безубыточная цена ${sgn(c2.parsed.x, 1)}%` } }) })
+    }),
+    plugins: [valueLabels]
+  });
+}
+
 /* ================= STATE ================= */
-const OPTS = { hk: [["all","Все классы"],["business","Бизнес"],["premium","Премиум"]] };
-let state = { dep: DEP0, hk: "all" };
+const OPTS = { hk: [["all","Все классы"],["business","Бизнес"],["premium","Премиум"]], cm: [["h","Жильё"],["o","Офисы A"],["l","Light industrial"]] };
+let state = { dep: DEP0, hk: "all", cm: "h", ckey: 14, cdd: 0, cdc: 0 };
 const STORE_KEY = "msk-re-compare";
-try { const sv = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (sv && sv.dep >= 8 && sv.dep <= 16) state.dep = sv.dep; if (sv && HOUSING[sv.hk]) state.hk = sv.hk; } catch (e) {}
+try { const sv = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); if (sv && sv.dep >= 8 && sv.dep <= 16) state.dep = sv.dep; if (sv && HOUSING[sv.hk]) state.hk = sv.hk;
+  if (sv && ["h","o","l"].includes(sv.cm)) state.cm = sv.cm;
+  for (const [k, a, b] of [["ckey", 8, 21], ["cdd", -40, 40], ["cdc", -10, 30]]) if (sv && sv[k] >= a && sv[k] <= b) state[k] = sv[k]; } catch (e) {}
+for (const id of ["ckey", "cdd", "cdc"]) document.getElementById(id).addEventListener("input", e => { state[id] = +e.target.value; save(); refresh(); });
 const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} };
 const fmt = (n, d = 1) => Number(n).toLocaleString("ru-RU", { maximumFractionDigits: d, minimumFractionDigits: 0 });
 const sgn = (n, d = 1) => (n > 0 ? "+" : n < 0 ? "−" : "") + fmt(Math.abs(n), d);
@@ -641,6 +916,8 @@ const stYoy = {
 function compute() {
   if (state.dep == null) state.dep = DEP0;
   if (!HOUSING[state.hk]) state.hk = "all";
+  if (!["h","o","l"].includes(state.cm)) state.cm = "h";
+  if (state.ckey == null) state.ckey = 14; if (state.cdd == null) state.cdd = 0; if (state.cdc == null) state.cdc = 0;
   const dep = state.dep;
   const s = { dep, hk: state.hk };
   MK[0] = HOUSING[state.hk];
@@ -670,6 +947,41 @@ const GLOSS = {
   hk: { g:"Сравнение", t:"Класс жилья",
     d:"Какой срез первичного жилья сравнивается с офисами и light industrial: весь рынок, бизнес-класс или премиум вместе с элитом.",
     h:"Для ставок аренды и ввода отдельных цифр по классам нет, там показан весь рынок. Спрос, цена, предложение и доходности меняются вместе с классом." },
+  unitModel: { g:"Себестоимость", t:"Модель юнит-экономики",
+    d:"Расчёт на метр продаваемой площади: прямые затраты, земля, проект, сети и обременения, продажи, проценты по кредиту, налоги и маржа. Опорные цифры по стройке и ставкам взяты из публикаций, остальное задают допущения модели.",
+    h:"Смотрите на соотношения и направление изменений, а не на точную маржу конкретного проекта." },
+  direct: { g:"Себестоимость", t:"Прямые затраты",
+    d:"Строительно-монтажные работы: каркас, инженерия, фасад или оболочка, отделка и благоустройство. Ползунок меняет их на −10…+30% к уровню 2026 года.",
+    h:"Офисы класса A: около 215 тыс. ₽ за м² общей площади, +15% за год. Склад класса A: 69,1 тыс. ₽ без НДС, +1,9%. Жильё: рост около 9% в 2025 году и до 12% в 2026 году." },
+  indirect: { g:"Себестоимость", t:"Косвенные затраты",
+    d:"Всё, кроме стройки: земля и права, плата за ВРИ, проектирование и согласования, сети, соцобъекты и паркинг, маркетинг, продажи и управление.",
+    h:"В центре Москвы и в премиуме земля может быть сопоставима с половиной прямых затрат." },
+  finCost: { g:"Себестоимость", t:"Финансирование",
+    d:"Проценты по проектному кредиту за время стройки и продаж. Для жилья ставка снижается за счёт денег на эскроу-счетах, для офисов и light industrial эскроу нет, ставка равна ключевой плюс маржа банка.",
+    h:"Средневзвешенная ставка проектного финансирования жилья около 9,9%. Покрытие кредитов деньгами на эскроу упало с 88% до 68%, поэтому снижение ключевой почти не удешевило кредит." },
+  demandShock: { g:"Себестоимость", t:"Спрос к текущему",
+    d:"Изменение темпа продаж относительно нынешнего. Слабее спрос: меньше денег на эскроу или меньше предпродаж, дольше экспозиция.",
+    h:"Падение спроса бьёт по цене через финансирование: кредит дороже и дольше, даже если стройка не дорожает." },
+  costStruct: { g:"Себестоимость", t:"Структура цены метра",
+    d:"Доля каждой статьи в цене продажи метра в 2026 году.",
+    h:"Чем больше доля маржи, тем больше запас на снижение цены или рост затрат." },
+  breakeven: { g:"Себестоимость", t:"Безубыточная цена",
+    d:"Цена метра, при которой девелопер покрывает все затраты, проценты и НДС, но не зарабатывает.",
+    h:"Запас выше 15% комфортен. Около нуля девелопер теряет стимул запускать новые проекты, и предложение сокращается." },
+  bridge: { g:"Себестоимость", t:"Мост цены",
+    d:"Разложение изменения цены метра за год на вклад затрат, финансирования, налогов и маржи девелопера.",
+    h:"Если маржа растёт, цена обогнала затраты. Если сжимается, рост затрат не удалось переложить в цену из-за слабого спроса." },
+  costYoy: { g:"Себестоимость", t:"Рост прямых затрат",
+    d:"Годовое изменение стоимости строительно-монтажных работ по публикациям.",
+    h:"Офисы дорожают быстрее всех: инженерия, фасады и проектирование. Склады почти остановились: работы +10,5%, материалы −4%." },
+  sens: { g:"Себестоимость", t:"Чувствительность",
+    d:"На сколько процентов вырастет безубыточная цена при росте прямых затрат на 10%, косвенных на 10%, ключевой ставки на 5 п.п. или падении спроса на 20%.",
+    h:"Показывает, что для каждого рынка опаснее: стройка, земля или деньги." },
+  vatPay: { g:"Себестоимость", t:"НДС к уплате",
+    d:"Для коммерческой недвижимости: НДС с цены продажи минус входящий НДС по затратам. Квартиры продаются без НДС.",
+    h:"Рост ставки до 22% увеличил эту статью для офисов и light industrial." },
+  profitTax: { g:"Себестоимость", t:"Налог на прибыль", d:"25% от прибыли девелопера до налога.", h:"При убытке не начисляется." },
+  margin: { g:"Себестоимость", t:"Маржа девелопера", d:"Что остаётся с метра после всех затрат, процентов и налогов.", h:"Именно она поглощает разницу между ростом затрат и ростом цены." },
   levels: { g:"Сравнение", t:"Уровни сейчас",
     d:"Объём рынка, свободные или непроданные площади, цена, аренда и основной покупатель.",
     h:"Изменение г/г показывает направление, уровень показывает, с какой точки рынок движется." },
@@ -801,6 +1113,7 @@ function renderHtml(v) {
     { k:"Что изменит картину", t:"Ставка, переносы и льготы",
       b:"Снижение ключевой ставки опускает планку вклада. Для офисов и light industrial решает, сколько из заявленного ввода сдвинется на 2027 год. Для жилья решает, как семьи примут новую шкалу семейной ипотеки." }
   ].map(i => `<div class="card"><span class="kind">${esc(i.k)}</span><h3>${esc(i.t)}</h3><p>${esc(i.b)}</p></div>`).join("");
+  renderCost(v);
 }
 
 function renderCharts(v) {
@@ -865,6 +1178,7 @@ function renderCharts(v) {
     }),
     plugins: [valueLabels]
   });
+  renderCostCharts(v);
 }
 
 /* ================= TERMS ================= */
@@ -880,6 +1194,11 @@ const TERMS = [
   ["gross", "валов[а-яё]*\\s+доходност[а-яё]*"],
   ["stage", "рост[а-яё]*\\s+к\\s+вводу"],
   ["leverage", "плеч[а-яё]*"],
+  ["finCost", "проектн[а-яё]*\\s+финансировани[а-яё]*|проектн[а-яё]*\\s+кредит[а-яё]*"],
+  ["breakeven", "безубыточн[а-яё]*"],
+  ["direct", "прямы[а-яё]*\\s+затрат[а-яё]*"],
+  ["indirect", "косвенн[а-яё]*(?:\\s+затрат[а-яё]*)?"],
+  ["vatPay", "НДС"],
   ["unsold", "непроданн[а-яё]*|не\\s+продано"],
   ["vacancy", "вакансия|вакансии|вакансию"],
   ["classA", "класс[а-яё]*\\s+[AА]"],
@@ -1004,7 +1323,7 @@ const valueLabels = {
     chart.data.datasets.forEach((ds, di) => {
       chart.getDatasetMeta(di).data.forEach((bar, i) => {
         const val = ds.data[i]; if (val == null) return;
-        if (opts.inside) { const txt = opts.fmt(val); if (!txt) return; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = di === 0 ? "#1a1008" : t.ink; ctx.fillText(txt, (bar.x + bar.base) / 2, bar.y); ctx.fillStyle = t.ink; return; }
+        if (opts.inside) { const txt = opts.fmt(val); if (!txt) return; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = opts.color ? opts.color(di) : (di === 0 ? "#1a1008" : t.ink); ctx.fillText(txt, (bar.x + bar.base) / 2, bar.y); ctx.fillStyle = t.ink; return; }
         if (opts.vertical) { ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText(opts.fmt(val), bar.x, bar.y - 5); }
         else { const neg = val < 0; ctx.textBaseline = "middle"; ctx.textAlign = neg ? "right" : "left"; ctx.fillText(opts.fmt(val), bar.x + (neg ? -6 : 6), bar.y); }
       });
@@ -1095,7 +1414,7 @@ refresh();
 (() => {
   const groups = {};
   Object.values(GLOSS).forEach(e => (groups[e.g] = groups[e.g] || []).push(e));
-  const cols = [["Сравнение","Рынки"], ["Доходность","Деньги и ставки"], ["Источники"]];
+  const cols = [["Сравнение","Рынки"], ["Себестоимость"], ["Доходность","Деньги и ставки","Источники"]];
   document.getElementById("gloss").innerHTML = cols.map(c => `<div class="gcol">${c.filter(g => groups[g]).map(g => `<h3>${g}</h3>` +
     groups[g].map(e => `<div class="gitem"><b>${esc(e.t)}</b><p>${esc(e.d)}</p><p class="h">${esc(e.h)}</p></div>`).join("")).join("")}</div>`).join("");
 })();
